@@ -28,8 +28,8 @@ const skills = [
         icon: 'fas fa-brain',
         color: 'green',
         title: 'AI & Machine Learning',
-        desc: 'Implementing intelligent features using modern ML frameworks and LLMs.',
-        techs: ['TensorFlow', 'PyTorch', 'Scikit', 'OpenAI', 'LangChain'],
+        desc: ' i am still learning about AI & Machine Learning',
+        techs: [],
     },
     {
         icon: 'fas fa-mobile-alt',
@@ -66,6 +66,13 @@ const skills = [
         desc: 'Crafting compelling stories across platforms — from social media to YouTube.',
         techs: ['YouTube', 'Instagram', 'TikTok', 'Facebook', 'Photoshop'],
     },
+    {
+        icon: 'fas fa-network-wired',
+        color: 'blue',
+        title: 'Networking and Cybersecurity',
+        desc: 'I am still learning about Networking and Cybersecurity.',
+        techs: [],
+    },
 ];
 
 const colorMap = {
@@ -77,6 +84,7 @@ const colorMap = {
     red: { bg: 'rgba(239,68,68,0.12)', color: '#f87171', glow: 'rgba(239,68,68,0.25)' },
     indigo: { bg: 'rgba(99,102,241,0.12)', color: '#818cf8', glow: 'rgba(99,102,241,0.25)' },
     teal: { bg: 'rgba(20,184,166,0.12)', color: '#2dd4bf', glow: 'rgba(20,184,166,0.25)' },
+    blue: { bg: 'rgba(59,130,246,0.12)', color: '#60a5fa', glow: 'rgba(59,130,246,0.25)' },
 };
 
 function SkillCard({ skill, index, isMobile }) {
