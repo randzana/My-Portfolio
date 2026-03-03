@@ -12,7 +12,7 @@
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border-bottom: 1px solid var(--glass-border);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: padding 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .navbar.scrolled {
@@ -28,6 +28,8 @@
     cursor: pointer;
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 1002;
 }
 
 .logo-text {
@@ -44,29 +46,30 @@
     line-height: 1;
 }
 
-.nav-links {
+/* ===== DESKTOP NAV ===== */
+.nav-links-desktop {
     display: flex;
     gap: 6px;
     align-items: center;
 }
 
-.nav-links a {
+.nav-link {
     color: var(--text-secondary);
     padding: 8px 18px;
     border-radius: 50px;
     font-size: 0.88rem;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background 0.3s ease;
     position: relative;
     letter-spacing: 0.2px;
 }
 
-.nav-links a:hover {
+.nav-link:hover {
     color: var(--text-primary);
     background: var(--glass-strong);
 }
 
-.nav-links a.active {
+.nav-link.active {
     color: var(--text-primary);
 }
 
@@ -89,13 +92,19 @@
     box-shadow: 0 4px 20px var(--accent-glow);
     border-radius: 50px;
     margin-left: 8px;
+    font-size: 0.88rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .nav-cta:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 30px var(--accent-glow) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px var(--accent-glow);
 }
 
+/* ===== HAMBURGER TOGGLE ===== */
 .menu-toggle {
     display: none;
     background: none;
@@ -106,25 +115,34 @@
     width: 44px;
     height: 44px;
     border-radius: 12px;
-    transition: all 0.3s ease;
-    z-index: 1001;
+    transition: background 0.3s ease;
+    z-index: 1002;
+    position: relative;
 }
 
 .menu-toggle:hover {
     background: var(--glass-strong);
 }
 
-/* Mobile overlay */
+/* ===== MOBILE OVERLAY ===== */
 .mobile-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(5, 5, 8, 0.98) !important;
+    background: rgba(5, 5, 8, 0.98);
     backdrop-filter: blur(30px);
     -webkit-backdrop-filter: blur(30px);
-    z-index: 999;
+    z-index: 1001;
     display: flex;
     align-items: center;
     justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-overlay.open {
+    opacity: 1;
+    visibility: visible;
 }
 
 .mobile-nav-content {
@@ -139,20 +157,38 @@
     font-size: 1.8rem;
     font-weight: 600;
     color: var(--text-secondary);
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
     letter-spacing: -0.5px;
+    opacity: 0;
+    transform: translateY(20px);
 }
 
-.mobile-link:hover {
+.mobile-overlay.open .mobile-link {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.mobile-link:hover,
+.mobile-link:active {
     color: var(--text-primary);
 }
 
 .mobile-cta {
     margin-top: 16px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: color 0.3s ease, transform 0.3s ease, opacity 0.3s ease,
+        background 0.3s ease, box-shadow 0.3s ease;
 }
 
+.mobile-overlay.open .mobile-cta {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
-    .nav-links {
+    .nav-links-desktop {
         display: none;
     }
 

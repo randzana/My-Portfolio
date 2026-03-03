@@ -299,15 +299,16 @@ section {
   }
 }
 
-/* Reduce motion for mobile performance */
+/* Reduce heavy animations on mobile for performance */
 @media (max-width: 900px) {
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.2s !important;
+  .particle,
+  .about-avatar-ring,
+  .badge-dot,
+  .scroll-dot,
+  .hero-gradient-1,
+  .hero-gradient-2 {
+    animation: none !important;
   }
 
   .hero-gradient-text,
