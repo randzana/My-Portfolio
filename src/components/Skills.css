@@ -1,6 +1,6 @@
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
 
@@ -8,8 +8,8 @@
     background: var(--bg-card);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius);
-    padding: 32px;
-    transition: var(--transition);
+    padding: 28px;
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
     cursor: default;
@@ -55,15 +55,15 @@
 }
 
 .skill-icon {
-    width: 52px;
-    height: 52px;
+    width: 48px;
+    height: 48px;
     border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.3rem;
-    margin-bottom: 22px;
-    transition: var(--transition);
+    font-size: 1.2rem;
+    margin-bottom: 18px;
+    transition: all 0.3s ease;
 }
 
 .skill-card:hover .skill-icon {
@@ -72,16 +72,16 @@
 
 .skill-card h3 {
     font-family: var(--font-display);
-    font-size: 1.15rem;
-    margin-bottom: 10px;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
     font-weight: 700;
     letter-spacing: -0.3px;
 }
 
 .skill-card p {
     color: var(--text-secondary);
-    font-size: 0.88rem;
-    margin-bottom: 22px;
+    font-size: 0.85rem;
+    margin-bottom: 18px;
     line-height: 1.7;
 }
 
@@ -92,13 +92,13 @@
 }
 
 .skill-tech-tag {
-    padding: 5px 14px;
+    padding: 4px 12px;
     border-radius: var(--radius-xs);
     background: rgba(255, 255, 255, 0.04);
     font-size: 0.72rem;
     color: var(--text-muted);
     font-family: var(--font-mono);
-    transition: var(--transition-fast);
+    transition: all 0.2s ease;
     border: 1px solid transparent;
 }
 
@@ -108,8 +108,32 @@
     color: var(--text-secondary);
 }
 
+/* ===== SKILLS MOBILE ===== */
 @media (max-width: 900px) {
     .skills-grid {
         grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .skill-card {
+        padding: 22px;
+    }
+
+    .skill-card:hover .skill-icon {
+        transform: none;
+    }
+
+    .skill-card-glow {
+        display: none;
+    }
+}
+
+@media (max-width: 380px) {
+    .skill-card h3 {
+        font-size: 1rem;
+    }
+
+    .skill-card p {
+        font-size: 0.82rem;
     }
 }

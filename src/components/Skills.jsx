@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import './Skills.css';
 
@@ -79,11 +79,12 @@ const colorMap = {
     teal: { bg: 'rgba(20,184,166,0.12)', color: '#2dd4bf', glow: 'rgba(20,184,166,0.25)' },
 };
 
-function SkillCard({ skill, index }) {
+function SkillCard({ skill, index, isMobile }) {
     const cardRef = useRef(null);
     const colors = colorMap[skill.color];
 
     const handleMouseMove = (e) => {
+        if (isMobile) return;
         const card = cardRef.current;
         if (!card) return;
         const rect = card.getBoundingClientRect();
@@ -100,14 +101,14 @@ function SkillCard({ skill, index }) {
         <motion.div
             ref={cardRef}
             className="skill-card"
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: isMobile ? 20 : 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.5, delay: index * 0.08 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: isMobile ? 0.3 : 0.5, delay: isMobile ? 0 : index * 0.08 }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
         >
-            <div className="skill-card-glow" style={{ background: colors.glow }} />
+            {!isMobile && <div className="skill-card-glow" style={{ background: colors.glow }} />}
             <div
                 className="skill-icon"
                 style={{ background: colors.bg, color: colors.color }}
@@ -126,16 +127,25 @@ function SkillCard({ skill, index }) {
 }
 
 export default function Skills() {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const check = () => setIsMobile(window.innerWidth <= 900);
+        check();
+        window.addEventListener('resize', check);
+        return () => window.removeEventListener('resize', check);
+    }, []);
+
     return (
         <section id="skills">
-            <div className="gradient-orb gradient-orb-1" />
+            {!isMobile && <div className="gradient-orb gradient-orb-1" />}
             <div className="container">
                 <motion.div
                     className="section-header"
-                    initial={{ opacity: 0, y: 40 }}
+                    initial={{ opacity: 0, y: isMobile ? 20 : 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-80px' }}
-                    transition={{ duration: 0.6 }}
+                    viewport={{ once: true, margin: '-60px' }}
+                    transition={{ duration: isMobile ? 0.3 : 0.6 }}
                 >
                     <div className="section-tag">My Toolkit</div>
                     <h2 className="section-title">Skills & Technologies</h2>
@@ -146,7 +156,7 @@ export default function Skills() {
 
                 <div className="skills-grid">
                     {skills.map((skill, i) => (
-                        <SkillCard key={skill.title} skill={skill} index={i} />
+                        <SkillCard key={skill.title} skill={skill} index={i} isMobile={isMobile} />
                     ))}
                 </div>
             </div>

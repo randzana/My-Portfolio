@@ -29,7 +29,7 @@
     border: 1px solid var(--glass-border);
     color: var(--text-secondary);
     font-size: 1rem;
-    transition: var(--transition);
+    transition: all 0.3s ease;
 }
 
 .footer-socials a:hover {
@@ -56,17 +56,25 @@
 .heart {
     color: var(--pink);
     display: inline-block;
-    animation: heartBeat 1.5s ease-in-out infinite;
 }
 
-@keyframes heartBeat {
-
-    0%,
-    100% {
-        transform: scale(1);
+/* ===== FOOTER MOBILE ===== */
+@media (max-width: 900px) {
+    .footer {
+        padding: 36px 20px;
     }
 
-    50% {
-        transform: scale(1.15);
+    .footer-socials a {
+        width: 40px;
+        height: 40px;
+    }
+
+    .footer-socials a:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .footer p {
+        font-size: 0.78rem;
     }
 }

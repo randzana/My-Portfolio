@@ -1,5 +1,7 @@
 /* ===== RESET & BASE ===== */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -168,8 +170,15 @@ section {
 }
 
 @keyframes btnGradient {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .btn-primary:hover {
@@ -241,11 +250,69 @@ section {
 @media (max-width: 900px) {
   section {
     padding: 80px 20px;
+    overflow-x: clip;
+  }
+
+  .section-header {
+    margin-bottom: 48px;
+  }
+
+  .section-desc {
+    font-size: 0.95rem;
+  }
+
+  .gradient-orb {
+    opacity: 0.08;
   }
 }
 
 @media (max-width: 600px) {
   section {
     padding: 60px 16px;
+  }
+
+  .section-title {
+    font-size: clamp(1.6rem, 6vw, 2.2rem);
+    letter-spacing: -0.8px;
+  }
+
+  .section-tag {
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+  }
+
+  .section-desc {
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .btn {
+    padding: 12px 24px;
+    font-size: 0.85rem;
+  }
+
+  .gradient-orb-1,
+  .gradient-orb-2,
+  .gradient-orb-3 {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+/* Reduce motion for mobile performance */
+@media (max-width: 900px) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.2s !important;
+  }
+
+  .hero-gradient-text,
+  .btn-primary {
+    animation: none !important;
+    background-size: 100% 100% !important;
   }
 }
