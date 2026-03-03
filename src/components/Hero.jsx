@@ -50,9 +50,9 @@ export default function Hero() {
 
             <motion.div
                 className="hero-content"
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+                transition={{ duration: 0.7, ease: 'easeOut' }}
             >
                 <motion.div
                     className="hero-badge"
@@ -65,9 +65,9 @@ export default function Hero() {
                 </motion.div>
 
                 <motion.h1
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, duration: 0.7 }}
+                    transition={{ delay: 0.2, duration: 0.7, ease: 'easeOut' }}
                 >
                     I Build{' '}
                     <span className="hero-gradient-text">Digital Experiences</span>
@@ -76,9 +76,9 @@ export default function Hero() {
 
                 <motion.p
                     className="hero-desc"
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5, duration: 0.6 }}
+                    transition={{ delay: 0.35, duration: 0.6, ease: 'easeOut' }}
                 >
                     Software Engineer, Videographer & Content Creator crafting elegant digital
                     experiences. Passionate about clean code, cinematic storytelling, and building
@@ -87,9 +87,9 @@ export default function Hero() {
 
                 <motion.div
                     className="hero-buttons"
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7, duration: 0.5 }}
+                    transition={{ delay: 0.5, duration: 0.5, ease: 'easeOut' }}
                 >
                     <a href="#projects" className="btn btn-primary" onClick={e => {
                         e.preventDefault();
@@ -107,9 +107,9 @@ export default function Hero() {
 
                 <motion.div
                     className="hero-stats"
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.9, duration: 0.6 }}
+                    transition={{ delay: 0.65, duration: 0.6, ease: 'easeOut' }}
                 >
                     <div className="stat">
                         <Counter target={3} />

@@ -51,10 +51,10 @@ export default function Contact() {
             <div className="container">
                 <motion.div
                     className="section-header"
-                    initial={{ opacity: 0, y: 40 }}
+                    initial={{ opacity: 0, y: 15 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-80px' }}
-                    transition={{ duration: 0.6 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.7, ease: 'easeOut' }}
                 >
                     <div className="section-tag">Get In Touch</div>
                     <h2 className="section-title">Let's Work Together</h2>
@@ -66,10 +66,10 @@ export default function Contact() {
                 <div className="contact-wrapper">
                     <motion.div
                         className="contact-info"
-                        initial={{ opacity: 0, y: 40 }}
+                        initial={{ opacity: 0, y: 15 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-60px' }}
-                        transition={{ duration: 0.6 }}
+                        viewport={{ once: true, amount: 0.2 }}
+                        transition={{ duration: 0.7, ease: 'easeOut' }}
                     >
                         <h3>Contact Information</h3>
                         <p>
@@ -84,11 +84,10 @@ export default function Contact() {
                                     target="_blank"
                                     rel="noreferrer"
                                     className="contact-link"
-                                    initial={{ opacity: 0, x: -20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
+                                    initial={{ opacity: 0 }}
+                                    whileInView={{ opacity: 1 }}
                                     viewport={{ once: true }}
-                                    transition={{ delay: i * 0.1 }}
-                                    whileHover={{ x: 6 }}
+                                    transition={{ duration: 0.4, delay: i * 0.06, ease: 'easeOut' }}
                                 >
                                     <div className="contact-link-icon" style={{ background: `${link.color}18`, color: link.color }}>
                                         <i className={link.icon} />
@@ -105,10 +104,10 @@ export default function Contact() {
                     <motion.form
                         className="contact-form"
                         onSubmit={handleSubmit}
-                        initial={{ opacity: 0, y: 40 }}
+                        initial={{ opacity: 0, y: 15 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-60px' }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
+                        viewport={{ once: true, amount: 0.2 }}
+                        transition={{ duration: 0.7, ease: 'easeOut', delay: 0.1 }}
                     >
                         <div className="form-row">
                             <div className="form-group">

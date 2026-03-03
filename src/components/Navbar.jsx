@@ -27,7 +27,6 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Lock body scroll when mobile menu is open
     useEffect(() => {
         if (menuOpen) {
             document.body.style.overflow = 'hidden';
@@ -85,8 +84,17 @@ export default function Navbar() {
                 </button>
             </nav>
 
-            {/* Mobile full-screen overlay — outside nav for proper stacking */}
+            {/* Mobile full-screen overlay */}
             <div className={`mobile-overlay ${menuOpen ? 'open' : ''}`}>
+                {/* Close button inside the overlay */}
+                <button
+                    className="mobile-close-btn"
+                    onClick={() => setMenuOpen(false)}
+                    aria-label="Close menu"
+                >
+                    <i className="fas fa-times" />
+                </button>
+
                 <div className="mobile-nav-content">
                     {navItems.map((item, i) => (
                         <a

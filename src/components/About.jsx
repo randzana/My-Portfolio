@@ -12,8 +12,8 @@ const tags = [
     '✍️ Content Creator',
 ];
 
-const fadeUp = {
-    hidden: { opacity: 0, y: 40 },
+const fadeIn = {
+    hidden: { opacity: 0, y: 15 },
     visible: { opacity: 1, y: 0 },
 };
 
@@ -23,11 +23,11 @@ export default function About() {
             <div className="container">
                 <motion.div
                     className="section-header"
-                    variants={fadeUp}
+                    variants={fadeIn}
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: '-80px' }}
-                    transition={{ duration: 0.6 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.7, ease: 'easeOut' }}
                 >
                     <div className="section-tag">About Me</div>
                     <h2 className="section-title">Turning Vision Into Reality</h2>
@@ -39,11 +39,10 @@ export default function About() {
                 <div className="about-grid">
                     <motion.div
                         className="about-avatar-wrapper"
-                        variants={fadeUp}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: '-80px' }}
-                        transition={{ duration: 0.6, delay: 0.1 }}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true, amount: 0.3 }}
+                        transition={{ duration: 0.8, ease: 'easeOut' }}
                     >
                         <div className="about-avatar">
                             <div className="about-avatar-ring" />
@@ -59,21 +58,17 @@ export default function About() {
 
                     <motion.div
                         className="about-text"
-                        variants={fadeUp}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: '-80px' }}
-                        transition={{ duration: 0.6, delay: 0.3 }}
+                        initial={{ opacity: 0, y: 15 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.3 }}
+                        transition={{ duration: 0.7, ease: 'easeOut', delay: 0.15 }}
                     >
                         <h3>Hello! I'm <span className="about-name-highlight">Rand Zana</span> 👋</h3>
                         <p>
-                            I'm a multi-disciplinary creative — a software engineer who also wields a camera
-                            and builds brands. From architecting backend systems to shooting cinematic videos
-                            and crafting marketing strategies, I thrive at the intersection of technology and creativity.
+                            I bridge the gap between tech and creativity. As a software engineer, photographer, and brand strategist, I do everything from architecting complex systems to crafting marketing campaigns and cinematic content.
                         </p>
                         <p>
-                            Whether I'm writing clean code, producing engaging content, or managing a brand's
-                            digital presence, I bring the same obsession with quality and detail to everything I do.
+                            From clean code to engaging content, I'm obsessed with the details. I apply the same high standards to every project, whether it's technical or creative.
                         </p>
 
                         <div className="about-tags">
@@ -81,11 +76,10 @@ export default function About() {
                                 <motion.span
                                     key={tag}
                                     className="about-tag"
-                                    initial={{ opacity: 0, scale: 0.8 }}
-                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    initial={{ opacity: 0 }}
+                                    whileInView={{ opacity: 1 }}
                                     viewport={{ once: true }}
-                                    transition={{ delay: 0.4 + i * 0.05 }}
-                                    whileHover={{ scale: 1.05, borderColor: 'var(--accent)' }}
+                                    transition={{ duration: 0.4, delay: 0.3 + i * 0.04, ease: 'easeOut' }}
                                 >
                                     {tag}
                                 </motion.span>
