@@ -1,3 +1,4 @@
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import CursorGlow from './components/CursorGlow';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -23,6 +24,7 @@ export default function App() {
         <Contact />
       </main>
       <Footer />
+      <SpeedInsights />
     </>
   );
 }
