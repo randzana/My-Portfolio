@@ -1,0 +1,115 @@
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 20px;
+}
+
+.skill-card {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 32px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    will-change: transform;
+}
+
+.skill-card:hover {
+    border-color: var(--glass-border-hover);
+    background: var(--bg-card-hover);
+}
+
+.skill-card-glow {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    filter: blur(50px);
+    opacity: 0;
+    transition: opacity 0.5s;
+    pointer-events: none;
+}
+
+.skill-card:hover .skill-card-glow {
+    opacity: 0.5;
+}
+
+.skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-light), transparent);
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+
+.skill-card:hover::before {
+    opacity: 0.6;
+}
+
+.skill-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 22px;
+    transition: var(--transition);
+}
+
+.skill-card:hover .skill-icon {
+    transform: scale(1.1);
+}
+
+.skill-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+.skill-card p {
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+    margin-bottom: 22px;
+    line-height: 1.7;
+}
+
+.skill-techs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.skill-tech-tag {
+    padding: 5px 14px;
+    border-radius: var(--radius-xs);
+    background: rgba(255, 255, 255, 0.04);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    transition: var(--transition-fast);
+    border: 1px solid transparent;
+}
+
+.skill-card:hover .skill-tech-tag {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--glass-border);
+    color: var(--text-secondary);
+}
+
+@media (max-width: 900px) {
+    .skills-grid {
+        grid-template-columns: 1fr;
+    }
+}
