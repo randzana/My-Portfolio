@@ -4,6 +4,7 @@ import './Navbar.css';
 const navItems = [
     { label: 'About', href: '#about' },
     { label: 'Skills', href: '#skills' },
+    { label: 'Certificates', href: '#certificates' },
     { label: 'Projects', href: '#projects' },
     { label: 'Experience', href: '#experience' },
 ];
