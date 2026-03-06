@@ -11,7 +11,7 @@
 .hero-bg {
     position: absolute;
     inset: 0;
-    background: url('/hero-bg.png') center/cover no-repeat;
+    background: url('/randv.png') center/cover no-repeat;
     opacity: 0.15;
     filter: saturate(0.8);
 }

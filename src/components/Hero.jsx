@@ -50,8 +50,8 @@ export default function Hero() {
 
             <motion.div
                 className="hero-content"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
+                animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
                 transition={{ duration: 0.7, ease: 'easeOut' }}
             >
                 <motion.div
@@ -65,8 +65,8 @@ export default function Hero() {
                 </motion.div>
 
                 <motion.h1
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
+                    animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
                     transition={{ delay: 0.2, duration: 0.7, ease: 'easeOut' }}
                 >
                     I Build{' '}
@@ -76,8 +76,8 @@ export default function Hero() {
 
                 <motion.p
                     className="hero-desc"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
+                    animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
                     transition={{ delay: 0.35, duration: 0.6, ease: 'easeOut' }}
                 >
                     Software Engineer, Videographer & Content Creator crafting elegant digital
@@ -87,8 +87,8 @@ export default function Hero() {
 
                 <motion.div
                     className="hero-buttons"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
+                    animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
                     transition={{ delay: 0.5, duration: 0.5, ease: 'easeOut' }}
                 >
                     <a href="#projects" className="btn btn-primary" onClick={e => {
@@ -107,8 +107,8 @@ export default function Hero() {
 
                 <motion.div
                     className="hero-stats"
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
+                    animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
                     transition={{ delay: 0.65, duration: 0.6, ease: 'easeOut' }}
                 >
                     <div className="stat">

@@ -50,9 +50,9 @@ function ProjectCard({ project, index }) {
     return (
         <motion.div
             className="project-card"
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+            viewport={{ once: true, amount: 0.1, margin: "0px 0px -50px 0px" }}
             transition={{ duration: 0.6, ease: 'easeOut', delay: index * 0.08 }}
         >
             <div className="project-preview" style={{ background: project.gradient }}>
@@ -93,9 +93,9 @@ export default function Projects() {
             <div className="container">
                 <motion.div
                     className="section-header"
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.3 }}
+                    initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                    viewport={{ once: true, amount: 0.1, margin: "0px 0px -50px 0px" }}
                     transition={{ duration: 0.7, ease: 'easeOut' }}
                 >
                     <div className="section-tag">Portfolio</div>

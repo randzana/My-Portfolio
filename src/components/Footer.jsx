@@ -14,10 +14,10 @@ export default function Footer() {
             <div className="footer-content">
                 <motion.div
                     className="footer-socials"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
+                    initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                    viewport={{ once: true, amount: 0.1, margin: "0px 0px -20px 0px" }}
+                    transition={{ duration: 0.7, ease: 'easeOut' }}
                 >
                     {socials.map(s => (
                         <a key={s.label} href={s.href} target="_blank" rel="noreferrer" aria-label={s.label}>

@@ -22,9 +22,9 @@ export default function Experience() {
             <div className="container">
                 <motion.div
                     className="section-header"
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.3 }}
+                    initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                    viewport={{ once: true, amount: 0.1, margin: "0px 0px -50px 0px" }}
                     transition={{ duration: 0.7, ease: 'easeOut' }}
                 >
                     <div className="section-tag">Journey</div>
@@ -38,9 +38,9 @@ export default function Experience() {
                         <motion.div
                             key={i}
                             className={`timeline-item ${i % 2 === 0 ? 'left' : 'right'}`}
-                            initial={{ opacity: 0, y: 15 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, amount: 0.3 }}
+                            initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
+                            whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                            viewport={{ once: true, amount: 0.1, margin: "0px 0px -50px 0px" }}
                             transition={{ duration: 0.6, ease: 'easeOut', delay: i * 0.1 }}
                         >
                             <div className="timeline-dot">

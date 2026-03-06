@@ -13,8 +13,8 @@ const tags = [
 ];
 
 const fadeIn = {
-    hidden: { opacity: 0, y: 15 },
-    visible: { opacity: 1, y: 0 },
+    hidden: { opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 },
+    visible: { opacity: 1, y: 0, scale: 1, rotateX: 0 },
 };
 
 export default function About() {
@@ -26,7 +26,7 @@ export default function About() {
                     variants={fadeIn}
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, amount: 0.3 }}
+                    viewport={{ once: true, amount: 0.1, margin: "0px 0px -50px 0px" }}
                     transition={{ duration: 0.7, ease: 'easeOut' }}
                 >
                     <div className="section-tag">About Me</div>
@@ -41,7 +41,7 @@ export default function About() {
                         className="about-avatar-wrapper"
                         initial={{ opacity: 0, scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true, amount: 0.3 }}
+                        viewport={{ once: true, amount: 0.1, margin: "0px 0px -50px 0px" }}
                         transition={{ duration: 0.8, ease: 'easeOut' }}
                     >
                         <div className="about-avatar">
@@ -49,7 +49,7 @@ export default function About() {
                             <div className="about-avatar-ring ring-2" />
                             <div className="about-avatar-inner">
                                 <div className="about-avatar-img">
-                                    <img src="/profile.jpg" alt="Rand Zana" />
+                                    <img src="/randv.png" alt="Rand Zana" />
                                 </div>
                             </div>
                             <div className="about-avatar-glow" />
@@ -58,9 +58,9 @@ export default function About() {
 
                     <motion.div
                         className="about-text"
-                        initial={{ opacity: 0, y: 15 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.3 }}
+                        initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
+                        whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                        viewport={{ once: true, amount: 0.1, margin: "0px 0px -50px 0px" }}
                         transition={{ duration: 0.7, ease: 'easeOut', delay: 0.15 }}
                     >
                         <h3>Hello! I'm <span className="about-name-highlight">Rand Zana</span> 👋</h3>

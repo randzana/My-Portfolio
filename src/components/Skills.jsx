@@ -109,10 +109,10 @@ function SkillCard({ skill, index, isMobile }) {
         <motion.div
             ref={cardRef}
             className="skill-card"
-            initial={{ opacity: 0, y: isMobile ? 20 : 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: isMobile ? 0.3 : 0.5, delay: isMobile ? 0 : index * 0.08 }}
+            initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+            viewport={{ once: true, amount: 0.1, margin: "0px 0px -50px 0px" }}
+            transition={{ duration: 0.7, delay: index * 0.08, ease: 'easeOut' }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
         >
@@ -150,10 +150,10 @@ export default function Skills() {
             <div className="container">
                 <motion.div
                     className="section-header"
-                    initial={{ opacity: 0, y: isMobile ? 20 : 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-60px' }}
-                    transition={{ duration: isMobile ? 0.3 : 0.6 }}
+                    initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                    viewport={{ once: true, amount: 0.1, margin: "0px 0px -50px 0px" }}
+                    transition={{ duration: 0.7, ease: 'easeOut' }}
                 >
                     <div className="section-tag">My Toolkit</div>
                     <h2 className="section-title">Skills & Technologies</h2>

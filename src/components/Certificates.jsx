@@ -147,9 +147,9 @@ export default function Certificates() {
             <div className="container">
                 <motion.div
                     className="section-header"
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.3 }}
+                    initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                    viewport={{ once: true, amount: 0.1, margin: "0px 0px -50px 0px" }}
                     transition={{ duration: 0.7, ease: 'easeOut' }}
                 >
                     <div className="section-tag">Achievements</div>
@@ -164,9 +164,9 @@ export default function Certificates() {
                         <motion.div
                             key={cert.title}
                             className="cert-card"
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, amount: 0.2 }}
+                            initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
+                            whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                            viewport={{ once: true, amount: 0.1, margin: "0px 0px -50px 0px" }}
                             transition={{ duration: 0.5, ease: 'easeOut', delay: i * 0.05 }}
                             onClick={() => setSelected(cert)}
                         >
