@@ -32,7 +32,7 @@ const projects = [
         github: null,
         live: 'https://www.figma.com/design/npfRyscSUXG7W4tz3eBtwK/Easy-Sale?node-id=4-2&t=GtJvMQxcpTZqNBXM-1',
         liveLabel: 'Figma',
-        liveIcon: 'fab fa-figma',
+        liveIcon: 'fa-brands fa-figma',
     },
     {
         title: 'Live Menu for Restaurant',
@@ -71,13 +71,13 @@ function ProjectCard({ project, index }) {
                 <div className="project-links">
                     {project.live && (
                         <a href={project.live} target="_blank" rel="noreferrer" className="project-link">
-                            <i className={project.liveIcon || 'fas fa-external-link-alt'} />
+                            <i className={project.liveIcon || 'fa-solid fa-external-link-alt'} />
                             <span>{project.liveLabel || 'Live Demo'}</span>
                         </a>
                     )}
                     {project.github && (
                         <a href={project.github} target="_blank" rel="noreferrer" className="project-link">
-                            <i className="fab fa-github" />
+                            <i className="fa-brands fa-github" />
                             <span>Source Code</span>
                         </a>
                     )}

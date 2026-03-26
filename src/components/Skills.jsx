@@ -1,73 +1,74 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { FaCode, FaServer, FaDatabase, FaBrain, FaMobileAlt, FaTools, FaVideo, FaBullhorn, FaPenFancy, FaNetworkWired } from 'react-icons/fa';
 import './Skills.css';
 
 const skills = [
     {
-        icon: 'fas fa-code',
+        Icon: FaCode,
         color: 'purple',
         title: 'Frontend Development',
         desc: 'Building responsive, accessible, and performant user interfaces with modern frameworks.',
         techs: ['React'],
     },
     {
-        icon: 'fas fa-server',
+        Icon: FaServer,
         color: 'cyan',
         title: 'Backend Development',
         desc: 'Designing robust APIs and microservices with scalable architectures.',
         techs: ['Python', 'Java', 'PHP'],
     },
     {
-        icon: 'fas fa-database',
+        Icon: FaDatabase,
         color: 'pink',
         title: 'Database',
         desc: 'Managing data at scale with modern databases and cloud-native solutions.',
         techs: ['MySQL'],
     },
     {
-        icon: 'fas fa-brain',
+        Icon: FaBrain,
         color: 'green',
         title: 'AI & Machine Learning',
         desc: ' i am still learning about AI & Machine Learning',
         techs: [],
     },
     {
-        icon: 'fas fa-mobile-alt',
+        Icon: FaMobileAlt,
         color: 'orange',
         title: 'Mobile Development',
         desc: 'Creating cross-platform mobile experiences that feel truly native.',
         techs: ['Flutter', 'Kotlin'],
     },
     {
-        icon: 'fas fa-tools',
+        Icon: FaTools,
         color: 'purple',
         title: 'DevOps & Tools',
         desc: 'Streamlining development workflows with CI/CD and modern tooling.',
         techs: ['Git', 'GitHub Actions'],
     },
     {
-        icon: 'fas fa-video',
+        Icon: FaVideo,
         color: 'red',
         title: 'Videography & Editing',
         desc: 'Producing cinematic videos from concept to final cut — shooting, color grading, motion graphics.',
         techs: ['Premiere Pro', 'CapCut', 'After Effects', 'Drone'],
     },
     {
-        icon: 'fas fa-bullhorn',
+        Icon: FaBullhorn,
         color: 'indigo',
         title: 'Marketing Management',
         desc: 'Building brand strategies, running campaigns, and driving growth through data-driven marketing.',
         techs: ['SEO/SEM', 'Google Ads', 'Meta Ads', 'Analytics', 'Email Marketing'],
     },
     {
-        icon: 'fas fa-pen-fancy',
+        Icon: FaPenFancy,
         color: 'teal',
         title: 'Content Creation',
         desc: 'Crafting compelling stories across platforms — from social media to YouTube.',
         techs: ['YouTube', 'Instagram', 'TikTok', 'Facebook', 'Photoshop'],
     },
     {
-        icon: 'fas fa-network-wired',
+        Icon: FaNetworkWired,
         color: 'blue',
         title: 'Networking and Cybersecurity',
         desc: 'I am still learning about Networking and Cybersecurity.',
@@ -121,7 +122,7 @@ function SkillCard({ skill, index, isMobile }) {
                 className="skill-icon"
                 style={{ background: colors.bg, color: colors.color }}
             >
-                <i className={skill.icon} />
+                <skill.Icon />
             </div>
             <h3>{skill.title}</h3>
             <p>{skill.desc}</p>

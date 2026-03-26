@@ -186,7 +186,7 @@ export default function Certificates() {
                             <div className="cert-info">
                                 <h3>{cert.title}</h3>
                                 <p>
-                                    <i className="fas fa-calendar-alt" /> {cert.date}
+                                    <i className="fa-solid fa-calendar-alt" /> {cert.date}
                                 </p>
                             </div>
                         </motion.div>
@@ -206,7 +206,7 @@ export default function Certificates() {
                             onClick={(e) => e.stopPropagation()}
                         >
                             <button className="lightbox-close" onClick={() => setSelected(null)}>
-                                <i className="fas fa-times" />
+                                <i className="fa-solid fa-times" />
                             </button>
                             <img
                                 src={selected.image}

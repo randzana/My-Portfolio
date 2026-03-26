@@ -95,13 +95,13 @@ export default function Hero() {
                         e.preventDefault();
                         document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
                     }}>
-                        <i className="fas fa-rocket" /> View My Work
+                        <i className="fa-solid fa-rocket" /> View My Work
                     </a>
                     <a href="#contact" className="btn btn-outline" onClick={e => {
                         e.preventDefault();
                         document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
                     }}>
-                        <i className="fas fa-paper-plane" /> Get in Touch
+                        <i className="fa-solid fa-paper-plane" /> Get in Touch
                     </a>
                 </motion.div>
 

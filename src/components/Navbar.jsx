@@ -72,7 +72,7 @@ export default function Navbar() {
                         className="nav-cta"
                         onClick={e => scrollTo(e, '#contact')}
                     >
-                        <i className="fas fa-paper-plane" /> Let's Talk
+                        <i className="fa-solid fa-paper-plane" /> Let's Talk
                     </a>
                 </div>
 
@@ -81,7 +81,7 @@ export default function Navbar() {
                     onClick={() => setMenuOpen(!menuOpen)}
                     aria-label="Toggle navigation"
                 >
-                    <i className={`fas ${menuOpen ? 'fa-times' : 'fa-bars'}`} />
+                    <i className={`fa-solid ${menuOpen ? 'fa-times' : 'fa-bars'}`} />
                 </button>
             </nav>
 
@@ -93,7 +93,7 @@ export default function Navbar() {
                     onClick={() => setMenuOpen(false)}
                     aria-label="Close menu"
                 >
-                    <i className="fas fa-times" />
+                    <i className="fa-solid fa-times" />
                 </button>
 
                 <div className="mobile-nav-content">
@@ -114,7 +114,7 @@ export default function Navbar() {
                         onClick={e => scrollTo(e, '#contact')}
                         style={{ transitionDelay: menuOpen ? '320ms' : '0ms' }}
                     >
-                        <i className="fas fa-paper-plane" /> Let's Talk
+                        <i className="fa-solid fa-paper-plane" /> Let's Talk
                     </a>
                 </div>
             </div>
