@@ -36,13 +36,13 @@ const projects = [
     },
     {
         title: 'Live Menu for Restaurant',
-        desc: 'The real project for live menu for restaurant.',
-        techs: ['HTML', 'CSS', 'JS'],
-        tag: 'Web',
+        desc: 'The real project for live menu , live ordering and management system for restaurant.',
+        techs: ['React.js', 'Laravel', 'PostgreSQL', 'JWT Auth', 'Docker'],
+        tag: 'WebApp',
         tagClass: 'tag-web2',
-        gradient: 'linear-gradient(135deg, #1a1a2e, #f59e0b)',
+        gradient: 'linear-gradient(135deg, #1a1a2e, #f5590bff)',
         github: 'https://github.com/randzana/LIive-Menu-For-Diwaxani-Nali.git',
-        live: 'https://diwaxan.netlify.app/',
+        live: 'https://cafemanagement.randvision.tech/',
     },
 ];
 
