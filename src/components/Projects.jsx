@@ -35,6 +35,16 @@ const projects = [
         liveIcon: 'fa-brands fa-figma',
     },
     {
+        title: 'Live Menu',
+        desc: 'The real project for live menu for restaurant.',
+        techs: ['HTML', 'CSS', 'JS'],
+        tag: 'Web',
+        tagClass: 'tag-web2',
+        gradient: 'linear-gradient(135deg, #1a1a2e, #f59e0b)',
+        github: 'https://github.com/randzana/LIive-Menu-For-Diwaxani-Nali.git',
+        live: 'https://diwaxan.netlify.app/',
+    },
+    {
         title: 'Live Menu for Restaurant',
         desc: 'The real project for live menu , live ordering and management system for restaurant.',
         techs: ['React.js', 'Laravel', 'PostgreSQL', 'JWT Auth', 'Docker'],
