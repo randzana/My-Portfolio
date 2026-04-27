@@ -14,6 +14,18 @@ const items = [
         company: 'Koya University',
         desc: 'Studying Software Engineering at Koya University. Learning about software development, algorithms, data structures, and other related topics.',
     },
+    {
+        date: '2026',
+        title: 'Media Manager & Sales Manager',
+        company: 'kurddetective',
+        desc: 'Marketing Manager at kurddetective, an AI-powered platform that helps businesses to automate their marketing tasks.',
+    },
+    {
+        date: '2025',
+        title: 'Videographer',
+        company: 'Self-employed',
+        desc: 'in Diwaxani Nali and koya university social media at many events.',
+    }
 ];
 
 export default function Experience() {
