@@ -23,6 +23,16 @@ const projects = [
         live: '#',
     },
     {
+        title: 'Animal Conditions',
+        desc: 'A uni project for diagnosing animal conditions using Machine Learning algorithms.',
+        techs: ['Python'],
+        tag: 'AI',
+        tagClass: 'tag-ai',
+        gradient: 'linear-gradient(135deg, #2d5553ff, #107285ff)',
+        github: 'https://github.com/randzana/Animal-Condition.git',
+        live: '#',
+    },
+    {
         title: 'UI/UX Design for a Mobile App',
         desc: 'First project for UI/UX design for a mobile app with real-world scenario.',
         techs: ['Figma'],
