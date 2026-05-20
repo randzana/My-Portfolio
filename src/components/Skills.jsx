@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaCode, FaServer, FaDatabase, FaBrain, FaMobileAlt, FaTools, FaVideo, FaBullhorn, FaPenFancy, FaNetworkWired } from 'react-icons/fa';
+import { FaCode, FaServer, FaDatabase, FaBrain, FaMobileAlt, FaTools, FaVideo, FaBullhorn, FaPenFancy, FaNetworkWired, FaLayerGroup } from 'react-icons/fa';
 import './Skills.css';
 
 const skills = [
@@ -29,7 +29,7 @@ const skills = [
         category: 'tech',
     },
     {
-        Icon: FaDatabase,
+        Icon: FaLayerGroup,
         color: 'pink',
         title: 'FullStack Development',
         desc: 'Managing data at scale with modern databases and cloud-native solutions.',
