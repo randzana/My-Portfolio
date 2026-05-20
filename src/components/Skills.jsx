@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useRef, useState, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FaCode, FaServer, FaDatabase, FaBrain, FaMobileAlt, FaTools, FaVideo, FaBullhorn, FaPenFancy, FaNetworkWired } from 'react-icons/fa';
 import './Skills.css';
 
@@ -10,6 +10,7 @@ const skills = [
         title: 'Frontend Development',
         desc: 'Building responsive, accessible, and performant user interfaces with modern frameworks.',
         techs: ['React'],
+        category: 'tech',
     },
     {
         Icon: FaServer,
@@ -17,6 +18,7 @@ const skills = [
         title: 'Backend Development',
         desc: 'Designing robust APIs and microservices with scalable architectures.',
         techs: ['Python', 'Java', 'PHP'],
+        category: 'tech',
     },
     {
         Icon: FaDatabase,
@@ -24,13 +26,15 @@ const skills = [
         title: 'Database',
         desc: 'Managing data at scale with modern databases and cloud-native solutions.',
         techs: ['MySQL'],
+        category: 'tech',
     },
     {
         Icon: FaBrain,
         color: 'green',
         title: 'AI & Machine Learning',
-        desc: ' i am still learning about AI & Machine Learning',
+        desc: 'Actively learning and exploring AI/ML concepts and practical model integrations.',
         techs: [],
+        category: 'tech',
     },
     {
         Icon: FaMobileAlt,
@@ -38,13 +42,15 @@ const skills = [
         title: 'Mobile Development',
         desc: 'Creating cross-platform mobile experiences that feel truly native.',
         techs: ['Flutter', 'Kotlin'],
+        category: 'tech',
     },
     {
         Icon: FaTools,
         color: 'purple',
         title: 'DevOps & Tools',
-        desc: 'Streamlining development workflows with CI/CD and modern tooling.',
+        desc: 'Streamlining development workflows with version control and modern tooling.',
         techs: ['Git', 'GitHub Actions'],
+        category: 'tech',
     },
     {
         Icon: FaVideo,
@@ -52,6 +58,7 @@ const skills = [
         title: 'Videography & Editing',
         desc: 'Producing cinematic videos from concept to final cut — shooting, color grading, motion graphics.',
         techs: ['Premiere Pro', 'CapCut', 'After Effects', 'Drone'],
+        category: 'creative',
     },
     {
         Icon: FaBullhorn,
@@ -59,6 +66,7 @@ const skills = [
         title: 'Marketing Management',
         desc: 'Building brand strategies, running campaigns, and driving growth through data-driven marketing.',
         techs: ['SEO/SEM', 'Google Ads', 'Meta Ads', 'Analytics', 'Email Marketing'],
+        category: 'marketing',
     },
     {
         Icon: FaPenFancy,
@@ -66,13 +74,15 @@ const skills = [
         title: 'Content Creation',
         desc: 'Crafting compelling stories across platforms — from social media to YouTube.',
         techs: ['YouTube', 'Instagram', 'TikTok', 'Facebook', 'Photoshop'],
+        category: 'creative',
     },
     {
         Icon: FaNetworkWired,
         color: 'blue',
         title: 'Networking and Cybersecurity',
-        desc: 'I am still learning about Networking and Cybersecurity.',
+        desc: 'Exploring computer networks, protocol suites, and modern cybersecurity strategies.',
         techs: [],
+        category: 'tech',
     },
 ];
 
@@ -87,6 +97,13 @@ const colorMap = {
     teal: { bg: 'rgba(20,184,166,0.12)', color: '#2dd4bf', glow: 'rgba(20,184,166,0.25)' },
     blue: { bg: 'rgba(59,130,246,0.12)', color: '#60a5fa', glow: 'rgba(59,130,246,0.25)' },
 };
+
+const skillCategories = [
+    { id: 'all', label: 'All Toolkit' },
+    { id: 'tech', label: 'Tech & Development' },
+    { id: 'creative', label: 'Media & Creative' },
+    { id: 'marketing', label: 'Brand & Marketing' }
+];
 
 function SkillCard({ skill, index, isMobile }) {
     const cardRef = useRef(null);
@@ -110,10 +127,11 @@ function SkillCard({ skill, index, isMobile }) {
         <motion.div
             ref={cardRef}
             className="skill-card"
-            initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-            viewport={{ once: true, amount: 0.1, margin: "0px 0px -50px 0px" }}
-            transition={{ duration: 0.7, delay: index * 0.08, ease: 'easeOut' }}
+            layout
+            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
         >
@@ -137,6 +155,7 @@ function SkillCard({ skill, index, isMobile }) {
 
 export default function Skills() {
     const [isMobile, setIsMobile] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState('all');
 
     useEffect(() => {
         const check = () => setIsMobile(window.innerWidth <= 900);
@@ -144,6 +163,11 @@ export default function Skills() {
         window.addEventListener('resize', check);
         return () => window.removeEventListener('resize', check);
     }, []);
+
+    const filteredSkills = useMemo(() => {
+        if (selectedCategory === 'all') return skills;
+        return skills.filter(s => s.category === selectedCategory);
+    }, [selectedCategory]);
 
     return (
         <section id="skills">
@@ -163,11 +187,44 @@ export default function Skills() {
                     </p>
                 </motion.div>
 
-                <div className="skills-grid">
-                    {skills.map((skill, i) => (
-                        <SkillCard key={skill.title} skill={skill} index={i} isMobile={isMobile} />
-                    ))}
+                {/* Filter tabs */}
+                <div className="skills-controls">
+                    <div className="filter-tabs">
+                        {skillCategories.map(cat => (
+                            <button
+                                key={cat.id}
+                                className={`filter-tab-btn ${selectedCategory === cat.id ? 'active' : ''}`}
+                                onClick={() => setSelectedCategory(cat.id)}
+                            >
+                                {cat.label}
+                                {selectedCategory === cat.id && (
+                                    <motion.span
+                                        className="tab-pill-indicator"
+                                        layoutId="activeSkillTab"
+                                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                    />
+                                )}
+                            </button>
+                        ))}
+                    </div>
                 </div>
+
+                {/* Skills Grid */}
+                <motion.div 
+                    className="skills-grid"
+                    layout
+                >
+                    <AnimatePresence mode="popLayout">
+                        {filteredSkills.map((skill, i) => (
+                            <SkillCard 
+                                key={skill.title} 
+                                skill={skill} 
+                                index={i} 
+                                isMobile={isMobile} 
+                            />
+                        ))}
+                    </AnimatePresence>
+                </motion.div>
             </div>
         </section>
     );

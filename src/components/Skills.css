@@ -1,3 +1,53 @@
+.skills-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 48px;
+}
+
+/* Filter Tabs Styling */
+.filter-tabs {
+    display: flex;
+    gap: 8px;
+    background: var(--glass);
+    padding: 6px;
+    border-radius: 50px;
+    border: 1px solid var(--glass-border);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.filter-tab-btn {
+    position: relative;
+    padding: 10px 22px;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 1;
+}
+
+.filter-tab-btn:hover {
+    color: var(--text-primary);
+}
+
+.filter-tab-btn.active {
+    color: #fff;
+}
+
+.tab-pill-indicator {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--accent), #9333ea);
+    border-radius: 50px;
+    z-index: -1;
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.25);
+}
+
 .skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -110,6 +160,20 @@
 
 /* ===== SKILLS MOBILE ===== */
 @media (max-width: 900px) {
+    .skills-controls {
+        margin-bottom: 32px;
+    }
+
+    .filter-tabs {
+        border-radius: 16px;
+        padding: 4px;
+    }
+
+    .filter-tab-btn {
+        padding: 8px 14px;
+        font-size: 0.76rem;
+    }
+
     .skills-grid {
         grid-template-columns: 1fr;
         gap: 14px;

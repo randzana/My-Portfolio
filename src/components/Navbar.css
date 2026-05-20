@@ -21,6 +21,25 @@
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 
+/* Scroll Progress Bar */
+.scroll-progress-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: transparent;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.scroll-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--cyan), var(--pink));
+    width: 0%;
+    transition: width 0.05s ease-out;
+}
+
 .nav-logo {
     font-family: var(--font-display);
     font-size: 1.6rem;
@@ -73,12 +92,12 @@
     color: var(--text-primary);
 }
 
+/* Optimized for Framer Motion LayoutId animations */
 .nav-indicator {
     position: absolute;
     bottom: 2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 24px;
+    left: 20%;
+    right: 20%;
     height: 2px;
     background: linear-gradient(90deg, var(--accent), var(--cyan));
     border-radius: 2px;
@@ -177,11 +196,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 28px;
+    gap: 28pxPers;
 }
 
 .mobile-nav-content {
     perspective: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
 }
 
 .mobile-link {
@@ -230,6 +253,35 @@
     transform: translateY(0) rotateX(0deg);
 }
 
+/* Floating Back-to-Top button */
+.scroll-to-top-btn {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 30px rgba(124, 58, 237, 0.15);
+    z-index: 999;
+    outline: none;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.scroll-to-top-btn:hover {
+    border-color: var(--accent);
+    background: var(--bg-card-hover);
+    color: var(--accent-light);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 35px rgba(124, 58, 237, 0.3);
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
     .nav-links-desktop {
@@ -252,5 +304,13 @@
 
     .nav-logo {
         font-size: 1.4rem;
+    }
+    
+    .scroll-to-top-btn {
+        bottom: 20px;
+        right: 20px;
+        width: 42px;
+        height: 42px;
+        font-size: 0.9rem;
     }
 }

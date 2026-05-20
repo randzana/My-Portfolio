@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import './Navbar.css';
 
 const navItems = [
@@ -13,18 +14,38 @@ export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('');
+    const [scrollProgress, setScrollProgress] = useState(0);
+    const [showScrollTop, setShowScrollTop] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
+            // Background opacity trigger
             setScrolled(window.scrollY > 50);
+
+            // Back to top visibility trigger
+            setShowScrollTop(window.scrollY > 500);
+
+            // Active section highlighting
             const sections = document.querySelectorAll('section[id]');
             let current = '';
             sections.forEach(s => {
-                if (window.scrollY >= s.offsetTop - 200) current = s.id;
+                if (window.scrollY >= s.offsetTop - 220) {
+                    current = s.id;
+                }
             });
             setActiveSection(current);
+
+            // Scroll progress percentage calculation
+            const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+            if (totalScroll > 0) {
+                setScrollProgress((window.scrollY / totalScroll) * 100);
+            }
         };
+
         window.addEventListener('scroll', handleScroll);
+        // Initial call
+        handleScroll();
+        
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
@@ -47,6 +68,11 @@ export default function Navbar() {
     return (
         <>
             <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+                {/* Top progress indicator */}
+                <div className="scroll-progress-container">
+                    <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} />
+                </div>
+
                 <a href="#" className="nav-logo" onClick={e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
                     <span className="logo-text">RZ</span>
                     <span className="logo-dot">.</span>
@@ -63,7 +89,11 @@ export default function Navbar() {
                         >
                             {item.label}
                             {activeSection === item.href.slice(1) && (
-                                <span className="nav-indicator" />
+                                <motion.span 
+                                    className="nav-indicator"
+                                    layoutId="navActiveIndicator"
+                                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                />
                             )}
                         </a>
                     ))}
@@ -118,6 +148,25 @@ export default function Navbar() {
                     </a>
                 </div>
             </div>
+
+            {/* Back to top button */}
+            <AnimatePresence>
+                {showScrollTop && (
+                    <motion.button
+                        className="scroll-to-top-btn"
+                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                        initial={{ opacity: 0, scale: 0.7, y: 15 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.7, y: 15 }}
+                        whileHover={{ scale: 1.1, translateY: -3 }}
+                        whileTap={{ scale: 0.95 }}
+                        transition={{ duration: 0.25 }}
+                        aria-label="Scroll to top"
+                    >
+                        <i className="fa-solid fa-arrow-up" />
+                    </motion.button>
+                )}
+            </AnimatePresence>
         </>
     );
 }
