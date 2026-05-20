@@ -5,6 +5,22 @@ import './Certificates.css';
 
 const certificates = [
     {
+        title: 'Leader of the SOFTSPACE Group',
+        issuer: 'Koya University - Faculty of Engineering',
+        date: 'Academic Year 2025-2026',
+        image: '/certificates/koya-softspace-leader.png',
+        color: '#0d56a6',
+        category: 'coding',
+    },
+    {
+        title: 'Introduction to ERP with Odoo',
+        issuer: 'Koya Lab - The Foundation',
+        date: '13 May, 2025',
+        image: '/certificates/koya-odoo-erp.png',
+        color: '#875a7b',
+        category: 'coding',
+    },
+    {
         title: 'Getting Started with Cisco Packet Tracer',
         issuer: 'Cisco Networking Academy',
         date: '01 March, 2026',
