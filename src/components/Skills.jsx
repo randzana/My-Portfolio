@@ -30,10 +30,10 @@ const skills = [
     },
     {
         Icon: FaLayerGroup,
-        color: 'pink',
+        color: 'purple',
         title: 'FullStack Development',
-        desc: 'Managing data at scale with modern databases and cloud-native solutions.',
-        techs: ['React', 'Laravel', 'PostgreSQL'],
+        desc: 'Orchestrating robust end-to-end applications. Key areas a modern fullstack developer must master include: System Design & Patterns, RESTful/GraphQL APIs, Client & Server-side State Management, Web Security (CORS, CSRF, JWT), Database Optimization (indexing), and Deployment pipelines (Docker, CI/CD).',
+        techs: ['React/Next.js', 'Laravel', 'PostgreSQL', 'System Design', 'APIs & Security', 'Docker/Git'],
         category: 'tech',
     },
     {
