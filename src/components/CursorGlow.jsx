@@ -27,7 +27,7 @@ export default function CursorGlow() {
         borderRadius: '50%',
         pointerEvents: 'none',
         zIndex: 0,
-        background: 'radial-gradient(circle, rgba(124,58,237,0.12) 0%, rgba(6,182,212,0.06) 30%, transparent 60%)',
+        background: 'radial-gradient(circle, var(--cursor-glow-1) 0%, var(--cursor-glow-2) 30%, transparent 60%)',
         transform: `translate(${pos.x - 350}px, ${pos.y - 350}px)`,
         transition: 'transform 0.08s linear',
         willChange: 'transform',

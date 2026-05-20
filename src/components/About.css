@@ -39,7 +39,7 @@
 
 .about-avatar-ring.ring-2 {
     inset: -28px;
-    border: 1px dashed rgba(255, 255, 255, 0.04);
+    border: 1px dashed var(--ring-dashed);
     animation-duration: 40s;
     animation-direction: reverse;
 }
