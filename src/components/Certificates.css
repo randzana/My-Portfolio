@@ -121,7 +121,7 @@
 .cert-card:hover {
     border-color: var(--glass-border-hover);
     transform: translateY(-6px);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    box-shadow: var(--shadow-hover);
 }
 
 .cert-preview {
@@ -225,9 +225,9 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: var(--bg-card);
+    background: #111122;
     border: 1px solid var(--glass-border);
-    color: var(--text-primary);
+    color: #eeeef5;
     font-size: 1.1rem;
     cursor: pointer;
     display: flex;
@@ -246,7 +246,7 @@
 .lightbox-img-wrapper {
     overflow: hidden;
     border-radius: 16px;
-    background: var(--bg-card);
+    background: #111122;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
 }
 

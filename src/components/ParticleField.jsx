@@ -92,7 +92,8 @@ export default function ParticleField({ count = 60 }) {
             }
 
             draw() {
-                ctx.fillStyle = 'rgba(167, 139, 250, 0.4)'; // violet-400 with opacity
+                const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+                ctx.fillStyle = isLight ? 'rgba(109, 40, 217, 0.45)' : 'rgba(167, 139, 250, 0.4)';
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.closePath();
@@ -111,6 +112,7 @@ export default function ParticleField({ count = 60 }) {
         const drawConnections = () => {
             const maxDistance = 110;
             const mouse = mouseRef.current;
+            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
 
             for (let i = 0; i < particles.length; i++) {
                 const p1 = particles[i];
@@ -123,8 +125,8 @@ export default function ParticleField({ count = 60 }) {
                     const dist = Math.hypot(dx, dy);
 
                     if (dist < maxDistance) {
-                        const alpha = (1 - dist / maxDistance) * 0.15;
-                        ctx.strokeStyle = `rgba(124, 58, 237, ${alpha})`; // purple-600 tint
+                        const alpha = (1 - dist / maxDistance) * (isLight ? 0.08 : 0.15);
+                        ctx.strokeStyle = isLight ? `rgba(109, 40, 217, ${alpha})` : `rgba(124, 58, 237, ${alpha})`;
                         ctx.lineWidth = 0.6;
                         ctx.beginPath();
                         ctx.moveTo(p1.x, p1.y);
@@ -140,11 +142,16 @@ export default function ParticleField({ count = 60 }) {
                     const dist = Math.hypot(dx, dy);
 
                     if (dist < mouse.radius) {
-                        const alpha = (1 - dist / mouse.radius) * 0.22;
+                        const alpha = (1 - dist / mouse.radius) * (isLight ? 0.14 : 0.22);
                         // Linear gradient connection from purple to cyan
                         const grad = ctx.createLinearGradient(p1.x, p1.y, mouse.x, mouse.y);
-                        grad.addColorStop(0, `rgba(167, 139, 250, ${alpha})`); // purple
-                        grad.addColorStop(1, `rgba(34, 211, 238, ${alpha})`); // cyan
+                        if (isLight) {
+                            grad.addColorStop(0, `rgba(109, 40, 217, ${alpha})`); // purple
+                            grad.addColorStop(1, `rgba(8, 145, 178, ${alpha})`); // cyan
+                        } else {
+                            grad.addColorStop(0, `rgba(167, 139, 250, ${alpha})`); // purple
+                            grad.addColorStop(1, `rgba(34, 211, 238, ${alpha})`); // cyan
+                        }
                         
                         ctx.strokeStyle = grad;
                         ctx.lineWidth = 0.8;

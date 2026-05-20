@@ -17,15 +17,27 @@ export default function Navbar() {
     const [scrollProgress, setScrollProgress] = useState(0);
     const [showScrollTop, setShowScrollTop] = useState(false);
 
+    // Theme initialization (localStorage -> system setting -> default dark)
+    const [theme, setTheme] = useState(() => {
+        const saved = localStorage.getItem('theme');
+        if (saved) return saved;
+        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    });
+
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    }, [theme]);
+
+    const toggleTheme = () => {
+        setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+    };
+
     useEffect(() => {
         const handleScroll = () => {
-            // Background opacity trigger
             setScrolled(window.scrollY > 50);
-
-            // Back to top visibility trigger
             setShowScrollTop(window.scrollY > 500);
 
-            // Active section highlighting
             const sections = document.querySelectorAll('section[id]');
             let current = '';
             sections.forEach(s => {
@@ -35,7 +47,6 @@ export default function Navbar() {
             });
             setActiveSection(current);
 
-            // Scroll progress percentage calculation
             const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
             if (totalScroll > 0) {
                 setScrollProgress((window.scrollY / totalScroll) * 100);
@@ -43,7 +54,6 @@ export default function Navbar() {
         };
 
         window.addEventListener('scroll', handleScroll);
-        // Initial call
         handleScroll();
         
         return () => window.removeEventListener('scroll', handleScroll);
@@ -68,7 +78,6 @@ export default function Navbar() {
     return (
         <>
             <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-                {/* Top progress indicator */}
                 <div className="scroll-progress-container">
                     <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} />
                 </div>
@@ -97,6 +106,16 @@ export default function Navbar() {
                             )}
                         </a>
                     ))}
+                    
+                    {/* Theme Toggle Button */}
+                    <button
+                        className="theme-toggle-btn"
+                        onClick={toggleTheme}
+                        aria-label="Toggle theme"
+                    >
+                        <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`} />
+                    </button>
+
                     <a
                         href="#contact"
                         className="nav-cta"
@@ -106,18 +125,27 @@ export default function Navbar() {
                     </a>
                 </div>
 
-                <button
-                    className="menu-toggle"
-                    onClick={() => setMenuOpen(!menuOpen)}
-                    aria-label="Toggle navigation"
-                >
-                    <i className={`fa-solid ${menuOpen ? 'fa-times' : 'fa-bars'}`} />
-                </button>
+                {/* Mobile actions container */}
+                <div className="nav-right-mobile">
+                    <button
+                        className="theme-toggle-btn"
+                        onClick={toggleTheme}
+                        aria-label="Toggle theme"
+                    >
+                        <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`} />
+                    </button>
+                    <button
+                        className="menu-toggle"
+                        onClick={() => setMenuOpen(!menuOpen)}
+                        aria-label="Toggle navigation"
+                    >
+                        <i className={`fa-solid ${menuOpen ? 'fa-times' : 'fa-bars'}`} />
+                    </button>
+                </div>
             </nav>
 
             {/* Mobile full-screen overlay */}
             <div className={`mobile-overlay ${menuOpen ? 'open' : ''}`}>
-                {/* Close button inside the overlay */}
                 <button
                     className="mobile-close-btn"
                     onClick={() => setMenuOpen(false)}
