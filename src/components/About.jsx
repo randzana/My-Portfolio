@@ -10,6 +10,10 @@ const tags = [
     '🎬 Videographer',
     '📈 Marketing',
     '✍️ Content Creator',
+    '🔍 Curiosity',
+    '🧩 Understanding Context',
+    '⚙️ Technical Mindset',
+    '📊 Data Strategy',
 ];
 
 const fadeIn = {

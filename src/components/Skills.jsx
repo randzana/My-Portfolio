@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaCode, FaServer, FaDatabase, FaBrain, FaMobileAlt, FaTools, FaVideo, FaBullhorn, FaPenFancy, FaNetworkWired, FaLayerGroup } from 'react-icons/fa';
+import { FaCode, FaServer, FaDatabase, FaBrain, FaMobileAlt, FaTools, FaVideo, FaBullhorn, FaPenFancy, FaNetworkWired, FaLayerGroup, FaChartBar } from 'react-icons/fa';
 import './Skills.css';
 
 const skills = [
@@ -42,6 +42,14 @@ const skills = [
         title: 'AI & Machine Learning',
         desc: 'can built Agent for any task ',
         techs: ['Python'],
+        category: 'tech',
+    },
+    {
+        Icon: FaChartBar,
+        color: 'teal',
+        title: 'Data Analysis',
+        desc: 'Extracting insights and making data-informed decisions through structured analytical thinking.',
+        techs: ['Curiosity', 'Understanding Context', 'Technical Mindset', 'Data Strategy'],
         category: 'tech',
     },
     {
