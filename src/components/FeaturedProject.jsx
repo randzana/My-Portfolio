@@ -56,22 +56,26 @@ export default function FeaturedProject() {
                         </div>
 
                         <p className="fp-desc">
-                            A high-performance, dual-portal platform powering Nali Cafe's operations — from self-service tablet kiosk ordering with real-time kitchen sync to a comprehensive admin dashboard with live analytics, financial reporting, and multi-currency/bilingual support.
+                            A high-performance, dual-portal platform powering Nali Cafe — customers scan a QR code at their table, browse the full menu on their phone, and place orders directly to the kitchen in real-time. Zero staff needed. The admin dashboard delivers live analytics, financial reporting, and multi-currency/bilingual management.
                         </p>
 
                         {/* Feature Pills */}
                         <div className="fp-features">
-                            <span className="fp-feature fp-feature--kiosk">
-                                <i className="fa-solid fa-tablet-screen-button" />
-                                Smart Kiosk
+                            <span className="fp-feature fp-feature--qr">
+                                <i className="fa-solid fa-qrcode" />
+                                QR Code Ordering
                             </span>
-                            <span className="fp-feature fp-feature--analytics">
-                                <i className="fa-solid fa-chart-line" />
-                                Analytics
+                            <span className="fp-feature fp-feature--selfservice">
+                                <i className="fa-solid fa-hand-pointer" />
+                                Zero Staff Needed
                             </span>
                             <span className="fp-feature fp-feature--realtime">
                                 <i className="fa-solid fa-bolt" />
                                 Real-Time Orders
+                            </span>
+                            <span className="fp-feature fp-feature--analytics">
+                                <i className="fa-solid fa-chart-line" />
+                                Analytics
                             </span>
                             <span className="fp-feature fp-feature--locale">
                                 <i className="fa-solid fa-globe" />
@@ -138,8 +142,12 @@ export default function FeaturedProject() {
                 {/* Bottom Stats Bar */}
                 <div className="fp-stats-bar">
                     <div className="fp-stat">
-                        <span className="fp-stat-value">2</span>
-                        <span className="fp-stat-label">Portals</span>
+                        <span className="fp-stat-value"><i className="fa-solid fa-qrcode" style={{ fontSize: '0.9rem' }} /></span>
+                        <span className="fp-stat-label">Scan & Order</span>
+                    </div>
+                    <div className="fp-stat">
+                        <span className="fp-stat-value">0</span>
+                        <span className="fp-stat-label">Staff Required</span>
                     </div>
                     <div className="fp-stat">
                         <span className="fp-stat-value">IQD/USD</span>
@@ -148,10 +156,6 @@ export default function FeaturedProject() {
                     <div className="fp-stat">
                         <span className="fp-stat-value">KU/EN</span>
                         <span className="fp-stat-label">Bilingual</span>
-                    </div>
-                    <div className="fp-stat">
-                        <span className="fp-stat-value">JWT</span>
-                        <span className="fp-stat-label">Sanctum Auth</span>
                     </div>
                 </div>
             </div>
