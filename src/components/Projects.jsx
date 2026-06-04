@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import FeaturedProject from './FeaturedProject';
 import './Projects.css';
 
 const projects = [
@@ -53,16 +54,6 @@ const projects = [
         gradient: 'linear-gradient(135deg, #1a1a2e, #f59e0b)',
         github: 'https://github.com/randzana/LIive-Menu-For-Diwaxani-Nali.git',
         live: 'https://diwaxan.netlify.app/',
-    },
-    {
-        title: 'Live Menu for Restaurant',
-        desc: 'The real project for live menu , live ordering and management system for restaurant.',
-        techs: ['React.js', 'Laravel', 'PostgreSQL', 'JWT Auth', 'Docker'],
-        tag: 'WebApp',
-        tagClass: 'tag-web2',
-        gradient: 'linear-gradient(135deg, #1a1a2e, #f5590bff)',
-        github: 'https://github.com/randzana/LIive-Menu-For-Diwaxani-Nali.git',
-        live: 'https://cafemanagement.randvision.tech/',
     },
 ];
 
@@ -124,6 +115,16 @@ export default function Projects() {
                         A selection of projects that showcase my skills and passion for building great software.
                     </p>
                 </motion.div>
+
+                {/* ★ Featured Project — Nali Cafe */}
+                <FeaturedProject />
+
+                {/* Divider */}
+                <div className="fp-divider">
+                    <div className="fp-divider-line" />
+                    <span className="fp-divider-text">Other Projects</span>
+                    <div className="fp-divider-line" />
+                </div>
 
                 <div className="projects-grid">
                     {projects.map((project, i) => (
