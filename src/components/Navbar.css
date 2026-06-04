@@ -347,3 +347,18 @@
         font-size: 0.9rem;
     }
 }
+
+/* ===== When mobile tab bar is active ===== */
+@media (max-width: 900px) {
+    body.mobile-app-mode .nav-right-mobile .menu-toggle {
+        display: none;
+    }
+
+    body.mobile-app-mode .mobile-overlay {
+        display: none !important;
+    }
+
+    body.mobile-app-mode .scroll-to-top-btn {
+        bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    }
+}
