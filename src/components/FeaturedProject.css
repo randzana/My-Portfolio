@@ -1,4 +1,4 @@
-/* ===== FEATURED PROJECT — NALI CAFE ===== */
+/* ===== FEATURED PROJECTS ===== */
 
 .featured-project {
     position: relative;
@@ -45,6 +45,34 @@
     width: 300px;
     height: 300px;
     background: #ec4899;
+    top: 50%;
+    left: 60%;
+    animation-delay: -2s;
+}
+
+/* — Green theme orbs (Zanko GreenLegacy) — */
+.fp-ambient-orb--emerald {
+    width: 500px;
+    height: 500px;
+    background: #10b981;
+    top: -100px;
+    right: -50px;
+    animation-delay: 0s;
+}
+
+.fp-ambient-orb--teal {
+    width: 400px;
+    height: 400px;
+    background: #0d9488;
+    bottom: -80px;
+    left: -60px;
+    animation-delay: -4s;
+}
+
+.fp-ambient-orb--lime {
+    width: 300px;
+    height: 300px;
+    background: #22c55e;
     top: 50%;
     left: 60%;
     animation-delay: -2s;
@@ -314,6 +342,12 @@
 .fp-feature--locale { --pill-accent: #06b6d4; }
 .fp-feature--security { --pill-accent: #10b981; }
 .fp-feature--realtime { --pill-accent: #ec4899; }
+.fp-feature--kiosk { --pill-accent: #f59e0b; }
+.fp-feature--map { --pill-accent: #10b981; }
+.fp-feature--ai { --pill-accent: #06b6d4; }
+.fp-feature--gamify { --pill-accent: #f59e0b; }
+.fp-feature--ndvi { --pill-accent: #22c55e; }
+.fp-feature--video { --pill-accent: #8b5cf6; }
 
 .fp-feature--qr:hover { border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.08); color: #fbbf24; }
 .fp-feature--selfservice:hover { border-color: rgba(34, 197, 94, 0.3); background: rgba(34, 197, 94, 0.08); color: #4ade80; }
@@ -321,6 +355,12 @@
 .fp-feature--locale:hover { border-color: rgba(6, 182, 212, 0.3); background: rgba(6, 182, 212, 0.08); color: #22d3ee; }
 .fp-feature--security:hover { border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.08); color: #34d399; }
 .fp-feature--realtime:hover { border-color: rgba(236, 72, 153, 0.3); background: rgba(236, 72, 153, 0.08); color: #f472b6; }
+.fp-feature--kiosk:hover { border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.08); color: #fbbf24; }
+.fp-feature--map:hover { border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.08); color: #34d399; }
+.fp-feature--ai:hover { border-color: rgba(6, 182, 212, 0.3); background: rgba(6, 182, 212, 0.08); color: #22d3ee; }
+.fp-feature--gamify:hover { border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.08); color: #fbbf24; }
+.fp-feature--ndvi:hover { border-color: rgba(34, 197, 94, 0.3); background: rgba(34, 197, 94, 0.08); color: #4ade80; }
+.fp-feature--video:hover { border-color: rgba(139, 92, 246, 0.3); background: rgba(139, 92, 246, 0.08); color: #a78bfa; }
 
 /* ---- Tech Stack Floating Grid ---- */
 .fp-tech-stack {
@@ -363,6 +403,11 @@
 .fp-tech--postgres i { color: #336791; }
 .fp-tech--docker i { color: #2496ed; }
 .fp-tech--framer { color: #c4b5fd; }
+.fp-tech--flutter i { color: #02569B; }
+.fp-tech--flask i { color: #10b981; }
+.fp-tech--pillow i { color: #22d3ee; }
+.fp-tech--osm i { color: #7EB540; }
+.fp-tech--jwt i { color: #f59e0b; }
 
 /* ---- Action Buttons ---- */
 .fp-actions {
@@ -527,6 +572,63 @@
     font-weight: 600;
     font-family: var(--font-mono);
     white-space: nowrap;
+}
+
+/* ===== GREEN THEME (Zanko GreenLegacy) ===== */
+.fp-theme--green .fp-ribbon-badge {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(13, 148, 136, 0.15));
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: #34d399;
+}
+
+.fp-theme--green .fp-card:hover {
+    box-shadow:
+        0 50px 120px rgba(0, 0, 0, 0.5),
+        0 0 80px rgba(16, 185, 129, 0.06),
+        0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+        0 2px 0 rgba(255, 255, 255, 0.06) inset;
+}
+
+.fp-theme--green .fp-title {
+    background: linear-gradient(135deg, #ffffff 0%, #34d399 60%, #10b981 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.fp-theme--green .fp-feature:hover {
+    border-color: rgba(16, 185, 129, 0.3);
+    background: rgba(16, 185, 129, 0.06);
+    color: #34d399;
+}
+
+.fp-theme--green .fp-action--primary {
+    background: linear-gradient(135deg, #10b981, #0d9488, #059669);
+    background-size: 200% 200%;
+    box-shadow: 0 4px 30px rgba(16, 185, 129, 0.25), 0 0 60px rgba(13, 148, 136, 0.1);
+}
+
+.fp-theme--green .fp-action--primary:hover {
+    box-shadow: 0 8px 40px rgba(16, 185, 129, 0.35), 0 0 80px rgba(13, 148, 136, 0.15);
+}
+
+.fp-theme--green .fp-action--secondary:hover {
+    border-color: rgba(16, 185, 129, 0.3);
+    background: rgba(16, 185, 129, 0.06);
+    box-shadow: 0 4px 25px rgba(16, 185, 129, 0.12);
+}
+
+.fp-theme--green .fp-status-dot {
+    background: #10b981;
+    box-shadow: 0 0 12px #10b981;
+}
+
+.fp-theme--green .fp-ribbon-status {
+    color: #34d399;
+}
+
+.fp-theme--green .fp-stat-value i {
+    color: #34d399;
 }
 
 /* ===== RESPONSIVE ===== */
