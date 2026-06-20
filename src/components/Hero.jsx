@@ -112,17 +112,17 @@ export default function Hero() {
                     transition={{ delay: 0.65, duration: 0.6, ease: 'easeOut' }}
                 >
                     <div className="stat">
-                        <Counter target={3} />
+                        <Counter target={4} />
                         <div className="stat-label">Years Exp.</div>
                     </div>
                     <div className="stat-divider" />
                     <div className="stat">
-                        <Counter target={4} />
+                        <Counter target={7} />
                         <div className="stat-label">Projects</div>
                     </div>
                     <div className="stat-divider" />
                     <div className="stat">
-                        <Counter target={8} />
+                        <Counter target={12} />
                         <div className="stat-label">Technologies</div>
                     </div>
                     <div className="stat-divider" />

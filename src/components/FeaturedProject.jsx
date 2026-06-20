@@ -41,9 +41,9 @@ const featuredProjects = [
     {
         id: 'zanko-greenlegacy',
         theme: 'green',
-        ribbonBadge: 'Featured Project',
-        ribbonSubtitle: 'IoT & Mobile Eco-System',
-        status: 'University Project',
+        ribbonBadge: 'Award Winner',
+        ribbonSubtitle: 'Zanko Award (2nd Place)',
+        status: 'Zanko Award (2nd Place)',
         image: '/greenlegacy-preview.png',
         imageAlt: 'Zanko GreenLegacy — Smart Campus Eco-System with Interactive Map & AI Verification',
         title: 'Zanko GreenLegacy',
@@ -65,6 +65,7 @@ const featuredProjects = [
         ],
         actions: [
             { href: 'https://github.com/randzana', icon: 'fa-brands fa-github', label: 'Source Code', type: 'primary' },
+            { href: '#certificates', icon: 'fa-solid fa-award', label: 'View Certificate', type: 'secondary' },
         ],
         stats: [
             { value: 'AI', label: 'Vision Engine' },
