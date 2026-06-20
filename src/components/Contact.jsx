@@ -77,51 +77,26 @@ export default function Contact() {
         return Object.keys(tempErrors).length === 0;
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         if (!validateForm()) return;
 
         setStatus('sending');
         setFormError('');
 
-        const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
-        if (!accessKey) {
-            setStatus('error');
-            setFormError('Web3Forms Access Key is missing in .env. Please configure VITE_WEB3FORMS_ACCESS_KEY or email directly at randzana1920@gmail.com.');
-            return;
-        }
+        // Build the mailto link with form data
+        const mailtoSubject = encodeURIComponent(formData.subject);
+        const mailtoBody = encodeURIComponent(
+            `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`
+        );
+        
+        window.open(
+            `mailto:randzana1920@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`,
+            '_blank'
+        );
 
-        try {
-            const response = await fetch("https://api.web3forms.com/submit", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({
-                    access_key: accessKey,
-                    name: formData.name,
-                    email: formData.email,
-                    subject: formData.subject,
-                    message: formData.message,
-                    from_name: formData.name
-                })
-            });
-
-            const result = await response.json();
-            if (result.success) {
-                setStatus('success');
-                setFormData({ name: '', email: '', subject: '', message: '' });
-            } else {
-                console.error("Web3Forms submission failed:", result);
-                setStatus('error');
-                setFormError(result.message || 'Something went wrong. Please try again or email directly at randzana1920@gmail.com.');
-            }
-        } catch (error) {
-            console.error("Error submitting form:", error);
-            setStatus('error');
-            setFormError('Failed to send message. Please check your network connection or email directly at randzana1920@gmail.com.');
-        }
+        setStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
     };
 
     return (
