@@ -45,6 +45,7 @@ export default function Contact() {
     const [focusedField, setFocusedField] = useState(null);
     const [status, setStatus] = useState('idle'); // idle, sending, success, error
     const [errors, setErrors] = useState({});
+    const [formError, setFormError] = useState('');
 
     const handleFocus = (field) => setFocusedField(field);
     const handleBlur = () => setFocusedField(null);
@@ -55,6 +56,9 @@ export default function Contact() {
         // Clear field error as user types
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
+        }
+        if (formError) {
+            setFormError('');
         }
     };
 
@@ -73,17 +77,51 @@ export default function Contact() {
         return Object.keys(tempErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validateForm()) return;
 
         setStatus('sending');
-        
-        // Simulate API call
-        setTimeout(() => {
-            setStatus('success');
-            setFormData({ name: '', email: '', subject: '', message: '' });
-        }, 1800);
+        setFormError('');
+
+        const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+        if (!accessKey) {
+            setStatus('error');
+            setFormError('Web3Forms Access Key is missing in .env. Please configure VITE_WEB3FORMS_ACCESS_KEY or email directly at randzana1920@gmail.com.');
+            return;
+        }
+
+        try {
+            const response = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    access_key: accessKey,
+                    name: formData.name,
+                    email: formData.email,
+                    subject: formData.subject,
+                    message: formData.message,
+                    from_name: formData.name
+                })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                setStatus('success');
+                setFormData({ name: '', email: '', subject: '', message: '' });
+            } else {
+                console.error("Web3Forms submission failed:", result);
+                setStatus('error');
+                setFormError(result.message || 'Something went wrong. Please try again or email directly at randzana1920@gmail.com.');
+            }
+        } catch (error) {
+            console.error("Error submitting form:", error);
+            setStatus('error');
+            setFormError('Failed to send message. Please check your network connection or email directly at randzana1920@gmail.com.');
+        }
     };
 
     return (
@@ -218,6 +256,12 @@ export default function Contact() {
                                         />
                                         {errors.message && <span className="error-text">{errors.message}</span>}
                                     </div>
+
+                                    {formError && (
+                                        <div className="form-error-message">
+                                            {formError}
+                                        </div>
+                                    )}
 
                                     <button
                                         type="submit"
