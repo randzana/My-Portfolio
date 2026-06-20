@@ -5,6 +5,14 @@ import './Certificates.css';
 
 const certificates = [
     {
+        title: 'Zanko Award (2nd Place)',
+        issuer: 'Koya University',
+        date: '18 June, 2026',
+        image: '/certificates/koya-zanko-award.png',
+        color: '#15803d',
+        category: 'coding',
+    },
+    {
         title: 'Leader of the SOFTSPACE Group',
         issuer: 'Koya University - Faculty of Engineering',
         date: 'Academic Year 2025-2026',
