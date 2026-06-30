@@ -64,8 +64,8 @@ const skills = [
         Icon: FaTools,
         color: 'purple',
         title: 'DevOps & Tools',
-        desc: 'Streamlining development workflows with version control and modern tooling.',
-        techs: ['Git', 'GitHub Actions'],
+        desc: 'Streamlining development workflows with version control, containerization, and automated pipelines.',
+        techs: ['Git', 'GitHub Actions', 'CI/CD', 'Docker', 'Kubernetes'],
         category: 'tech',
     },
     {

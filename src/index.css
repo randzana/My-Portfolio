@@ -376,3 +376,348 @@ section {
     background-size: 100% 100% !important;
   }
 }
+
+/* =========================================================
+   iOS SYSTEM DESIGN — MOBILE GLASSMORPHISM OVERRIDES
+   ========================================================= */
+@media (max-width: 900px) {
+  /* ---- iOS-style font stack ---- */
+  body.mobile-app-mode {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', var(--font-primary);
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* ---- Section padding — tighter iOS feel ---- */
+  body.mobile-app-mode section {
+    padding: 48px 20px;
+  }
+
+  /* ---- iOS Frosted Glass Cards ---- */
+  body.mobile-app-mode .skill-card,
+  body.mobile-app-mode .project-card,
+  body.mobile-app-mode .timeline-card,
+  body.mobile-app-mode .cert-card,
+  body.mobile-app-mode .contact-form-container,
+  body.mobile-app-mode .contact-link {
+    background: rgba(28, 28, 32, 0.65);
+    backdrop-filter: blur(30px) saturate(1.6);
+    -webkit-backdrop-filter: blur(30px) saturate(1.6);
+    border: 0.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    box-shadow:
+      0 2px 16px rgba(0, 0, 0, 0.2),
+      inset 0 0.5px 0 rgba(255, 255, 255, 0.05);
+    transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.25s ease;
+  }
+
+  /* Light theme frosted cards */
+  :root[data-theme='light'] body.mobile-app-mode .skill-card,
+  :root[data-theme='light'] body.mobile-app-mode .project-card,
+  :root[data-theme='light'] body.mobile-app-mode .timeline-card,
+  :root[data-theme='light'] body.mobile-app-mode .cert-card,
+  :root[data-theme='light'] body.mobile-app-mode .contact-form-container,
+  :root[data-theme='light'] body.mobile-app-mode .contact-link {
+    background: rgba(255, 255, 255, 0.72);
+    border: 0.5px solid rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0 2px 16px rgba(0, 0, 0, 0.06),
+      inset 0 0.5px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  /* ---- iOS tap feedback ---- */
+  body.mobile-app-mode .skill-card:active,
+  body.mobile-app-mode .project-card:active,
+  body.mobile-app-mode .cert-card:active,
+  body.mobile-app-mode .contact-link:active {
+    transform: scale(0.97);
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  /* ---- Frosted section headers ---- */
+  body.mobile-app-mode .section-header {
+    margin-bottom: 32px;
+  }
+
+  body.mobile-app-mode .section-tag {
+    font-family: -apple-system, 'SF Pro Text', var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    font-weight: 600;
+    opacity: 0.7;
+  }
+
+  body.mobile-app-mode .section-title {
+    font-family: -apple-system, 'SF Pro Display', var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  /* ---- iOS-style buttons ---- */
+  body.mobile-app-mode .btn {
+    border-radius: 14px;
+    font-family: -apple-system, 'SF Pro Text', var(--font-primary);
+    font-weight: 600;
+    padding: 14px 28px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  body.mobile-app-mode .btn:active {
+    transform: scale(0.96);
+    opacity: 0.85;
+  }
+
+  body.mobile-app-mode .btn-primary {
+    border-radius: 14px;
+    box-shadow: 0 4px 20px var(--accent-glow);
+  }
+
+  body.mobile-app-mode .btn-outline {
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 0.5px solid rgba(255, 255, 255, 0.12);
+  }
+
+  :root[data-theme='light'] body.mobile-app-mode .btn-outline {
+    background: rgba(255, 255, 255, 0.7);
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+  }
+
+  /* ---- iOS frosted tech tags / pills ---- */
+  body.mobile-app-mode .skill-tech-tag,
+  body.mobile-app-mode .project-tag,
+  body.mobile-app-mode .about-tag {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 0.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  :root[data-theme='light'] body.mobile-app-mode .skill-tech-tag,
+  :root[data-theme='light'] body.mobile-app-mode .project-tag,
+  :root[data-theme='light'] body.mobile-app-mode .about-tag {
+    background: rgba(0, 0, 0, 0.04);
+    border: 0.5px solid rgba(0, 0, 0, 0.06);
+  }
+
+  /* ---- iOS-style frosted filter tabs ---- */
+  body.mobile-app-mode .filter-tabs {
+    background: rgba(28, 28, 32, 0.55);
+    backdrop-filter: blur(30px) saturate(1.5);
+    -webkit-backdrop-filter: blur(30px) saturate(1.5);
+    border: 0.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 3px;
+    gap: 2px;
+  }
+
+  :root[data-theme='light'] body.mobile-app-mode .filter-tabs {
+    background: rgba(245, 245, 249, 0.7);
+    border: 0.5px solid rgba(0, 0, 0, 0.06);
+  }
+
+  body.mobile-app-mode .filter-tab-btn {
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 0.76rem;
+    font-family: -apple-system, 'SF Pro Text', var(--font-primary);
+    font-weight: 500;
+  }
+
+  body.mobile-app-mode .filter-tab-btn.active {
+    font-weight: 600;
+  }
+
+  body.mobile-app-mode .tab-pill-indicator {
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.2);
+  }
+
+  /* ---- Frosted hero stats bar ---- */
+  body.mobile-app-mode .hero-stats {
+    background: rgba(28, 28, 32, 0.55);
+    backdrop-filter: blur(30px) saturate(1.5);
+    -webkit-backdrop-filter: blur(30px) saturate(1.5);
+    border: 0.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  :root[data-theme='light'] body.mobile-app-mode .hero-stats {
+    background: rgba(255, 255, 255, 0.72);
+    border: 0.5px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
+  }
+
+  /* ---- Frosted search boxes ---- */
+  body.mobile-app-mode .search-box input {
+    background: rgba(28, 28, 32, 0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 0.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    font-family: -apple-system, 'SF Pro Text', var(--font-primary);
+  }
+
+  :root[data-theme='light'] body.mobile-app-mode .search-box input {
+    background: rgba(255, 255, 255, 0.65);
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+  }
+
+  /* ---- Frosted form inputs ---- */
+  body.mobile-app-mode .input-group input,
+  body.mobile-app-mode .input-group textarea {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 0.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    font-family: -apple-system, 'SF Pro Text', var(--font-primary);
+  }
+
+  :root[data-theme='light'] body.mobile-app-mode .input-group input,
+  :root[data-theme='light'] body.mobile-app-mode .input-group textarea {
+    background: rgba(255, 255, 255, 0.65);
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+  }
+
+  /* ---- iOS-style frosted navbar ---- */
+  body.mobile-app-mode .navbar {
+    background: rgba(18, 18, 22, 0.72);
+    backdrop-filter: blur(40px) saturate(1.8) brightness(1.05);
+    -webkit-backdrop-filter: blur(40px) saturate(1.8) brightness(1.05);
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
+    box-shadow: none;
+  }
+
+  :root[data-theme='light'] body.mobile-app-mode .navbar {
+    background: rgba(249, 249, 249, 0.78);
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+  }
+
+  body.mobile-app-mode .navbar.scrolled {
+    background: rgba(18, 18, 22, 0.88);
+    box-shadow: 0 0.5px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  :root[data-theme='light'] body.mobile-app-mode .navbar.scrolled {
+    background: rgba(249, 249, 249, 0.92);
+    box-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  /* ---- iOS-style frosted skill icons ---- */
+  body.mobile-app-mode .skill-icon {
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* ---- iOS-style contact link icons ---- */
+  body.mobile-app-mode .contact-link-icon {
+    border-radius: 12px;
+  }
+
+  /* ---- iOS-style timeline enhancements ---- */
+  body.mobile-app-mode .timeline-line {
+    background: linear-gradient(180deg,
+      var(--accent) 0%,
+      rgba(124, 58, 237, 0.3) 50%,
+      transparent 100%);
+    width: 1.5px;
+    opacity: 0.6;
+  }
+
+  body.mobile-app-mode .timeline-dot {
+    border: 1.5px solid var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+
+  /* ---- iOS divider-style separators ---- */
+  body.mobile-app-mode .footer {
+    border-top: 0.5px solid rgba(255, 255, 255, 0.06);
+  }
+
+  :root[data-theme='light'] body.mobile-app-mode .footer {
+    border-top: 0.5px solid rgba(0, 0, 0, 0.06);
+  }
+
+  /* ---- Smooth scrolling for iOS feel ---- */
+  body.mobile-app-mode main {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ---- iOS-style scroll-to-top button ---- */
+  body.mobile-app-mode .scroll-to-top-btn {
+    background: rgba(28, 28, 32, 0.65);
+    backdrop-filter: blur(30px) saturate(1.5);
+    -webkit-backdrop-filter: blur(30px) saturate(1.5);
+    border: 0.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  :root[data-theme='light'] body.mobile-app-mode .scroll-to-top-btn {
+    background: rgba(255, 255, 255, 0.72);
+    border: 0.5px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  body.mobile-app-mode .scroll-to-top-btn:active {
+    transform: scale(0.92);
+  }
+
+  /* ---- Certificate card frosted overlay ---- */
+  body.mobile-app-mode .cert-overlay {
+    background: linear-gradient(to top,
+      rgba(28, 28, 32, 0.85) 0%,
+      transparent 60%);
+  }
+
+  :root[data-theme='light'] body.mobile-app-mode .cert-overlay {
+    background: linear-gradient(to top,
+      rgba(255, 255, 255, 0.85) 0%,
+      transparent 60%);
+  }
+
+  /* ---- Lightbox frosted backdrop ---- */
+  body.mobile-app-mode .lightbox-backdrop {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(40px) saturate(1.2);
+    -webkit-backdrop-filter: blur(40px) saturate(1.2);
+  }
+
+  /* ---- Featured project iOS polish ---- */
+  body.mobile-app-mode .fp-card {
+    border-radius: 20px;
+    border: 0.5px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  :root[data-theme='light'] body.mobile-app-mode .fp-card {
+    border: 0.5px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+  }
+
+  /* ---- Hero badge frosted ---- */
+  body.mobile-app-mode .hero-badge {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(20px) saturate(1.5);
+    -webkit-backdrop-filter: blur(20px) saturate(1.5);
+    border: 0.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50px;
+  }
+
+  :root[data-theme='light'] body.mobile-app-mode .hero-badge {
+    background: rgba(255, 255, 255, 0.65);
+    border: 0.5px solid rgba(0, 0, 0, 0.06);
+  }
+}

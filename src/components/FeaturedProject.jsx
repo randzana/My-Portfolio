@@ -29,7 +29,7 @@ const featuredProjects = [
         ],
         actions: [
             { href: 'https://cafemanagement.randvision.tech/', icon: 'fa-solid fa-rocket', label: 'View Live Demo', type: 'primary' },
-            { href: 'https://github.com/randzana/LIive-Menu-For-Diwaxani-Nali.git', icon: 'fa-brands fa-github', label: 'Source Code', type: 'secondary' },
+            { href: 'https://github.com/randzana/Cafe-Management-System.git', icon: 'fa-brands fa-github', label: 'Source Code', type: 'secondary' },
         ],
         stats: [
             { value: '2', label: 'Portals' },
@@ -64,7 +64,7 @@ const featuredProjects = [
             { icon: 'fa-solid fa-key', label: 'PyJWT', cls: 'fp-tech--jwt' },
         ],
         actions: [
-            { href: 'https://github.com/randzana', icon: 'fa-brands fa-github', label: 'Source Code', type: 'primary' },
+            { href: 'https://github.com/randzana/Zanko-GreenLegacy.git', icon: 'fa-brands fa-github', label: 'Source Code', type: 'primary' },
             { href: '#certificates', icon: 'fa-solid fa-award', label: 'View Certificate', type: 'secondary' },
         ],
         stats: [
