@@ -4,9 +4,9 @@ import './MobileTabBar.css';
 
 const tabs = [
     { id: 'home',       label: 'Home',     icon: 'fa-solid fa-house',       sections: ['hero', 'about'] },
-    { id: 'projects',   label: 'Projects', icon: 'fa-solid fa-play-circle', sections: ['projects'] },
+    { id: 'projects',   label: 'Projects', icon: 'fa-solid fa-code',        sections: ['projects'] },
     { id: 'skills',     label: 'Skills',   icon: 'fa-solid fa-layer-group', sections: ['skills', 'certificates'] },
-    { id: 'experience', label: 'Work',     icon: 'fa-solid fa-magnifying-glass', sections: ['experience'] },
+    { id: 'experience', label: 'Work',     icon: 'fa-solid fa-briefcase',   sections: ['experience'] },
     { id: 'contact',    label: 'Contact',  icon: 'fa-solid fa-paper-plane', sections: ['contact'] },
 ];
 
