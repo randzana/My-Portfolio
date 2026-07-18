@@ -78,6 +78,26 @@
     animation-delay: -2s;
 }
 
+/* — Indigo theme orbs (School Administration & Financial Management System) — */
+.fp-ambient-orb--indigo {
+    width: 500px;
+    height: 500px;
+    background: #4338ca;
+    top: -100px;
+    right: -50px;
+    animation-delay: 0s;
+}
+
+.fp-ambient-orb--sky {
+    width: 300px;
+    height: 300px;
+    background: #0284c7;
+    top: 50%;
+    left: 60%;
+    animation-delay: -2s;
+}
+
+
 @keyframes fpOrbFloat {
     0% { transform: translate(0, 0) scale(1); }
     100% { transform: translate(20px, -15px) scale(1.08); }
@@ -348,6 +368,10 @@
 .fp-feature--gamify { --pill-accent: #f59e0b; }
 .fp-feature--ndvi { --pill-accent: #22c55e; }
 .fp-feature--video { --pill-accent: #8b5cf6; }
+.fp-feature--tuition { --pill-accent: #6366f1; }
+.fp-feature--reports { --pill-accent: #3b82f6; }
+.fp-feature--receipt { --pill-accent: #f43f5e; }
+.fp-feature--ledger { --pill-accent: #0ea5e9; }
 
 .fp-feature--qr:hover { border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.08); color: #fbbf24; }
 .fp-feature--selfservice:hover { border-color: rgba(34, 197, 94, 0.3); background: rgba(34, 197, 94, 0.08); color: #4ade80; }
@@ -361,6 +385,10 @@
 .fp-feature--gamify:hover { border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.08); color: #fbbf24; }
 .fp-feature--ndvi:hover { border-color: rgba(34, 197, 94, 0.3); background: rgba(34, 197, 94, 0.08); color: #4ade80; }
 .fp-feature--video:hover { border-color: rgba(139, 92, 246, 0.3); background: rgba(139, 92, 246, 0.08); color: #a78bfa; }
+.fp-feature--tuition:hover { border-color: rgba(99, 102, 241, 0.3); background: rgba(99, 102, 241, 0.08); color: #818cf8; }
+.fp-feature--reports:hover { border-color: rgba(59, 130, 246, 0.3); background: rgba(59, 130, 246, 0.08); color: #60a5fa; }
+.fp-feature--receipt:hover { border-color: rgba(244, 63, 94, 0.3); background: rgba(244, 63, 94, 0.08); color: #fb7185; }
+.fp-feature--ledger:hover { border-color: rgba(14, 165, 233, 0.3); background: rgba(14, 165, 233, 0.08); color: #38bdf8; }
 
 /* ---- Tech Stack Floating Grid ---- */
 .fp-tech-stack {
@@ -408,6 +436,10 @@
 .fp-tech--pillow i { color: #22d3ee; }
 .fp-tech--osm i { color: #7EB540; }
 .fp-tech--jwt i { color: #f59e0b; }
+.fp-tech--next i { color: #ffffff; }
+.fp-tech--tailwind i { color: #38bdf8; }
+.fp-tech--typescript i { color: #3178c6; }
+
 
 /* ---- Action Buttons ---- */
 .fp-actions {
@@ -630,6 +662,64 @@
 .fp-theme--green .fp-stat-value i {
     color: #34d399;
 }
+
+/* ===== INDIGO THEME (School Administration & Financial Management) ===== */
+.fp-theme--indigo .fp-ribbon-badge {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(79, 70, 229, 0.15));
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    color: #818cf8;
+}
+
+.fp-theme--indigo .fp-card:hover {
+    box-shadow:
+        0 50px 120px rgba(0, 0, 0, 0.5),
+        0 0 80px rgba(99, 102, 241, 0.06),
+        0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+        0 2px 0 rgba(255, 255, 255, 0.06) inset;
+}
+
+.fp-theme--indigo .fp-title {
+    background: linear-gradient(135deg, #ffffff 0%, #818cf8 60%, #6366f1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.fp-theme--indigo .fp-feature:hover {
+    border-color: rgba(99, 102, 241, 0.3);
+    background: rgba(99, 102, 241, 0.06);
+    color: #818cf8;
+}
+
+.fp-theme--indigo .fp-action--primary {
+    background: linear-gradient(135deg, #6366f1, #4f46e5, #3b82f6);
+    background-size: 200% 200%;
+    box-shadow: 0 4px 30px rgba(99, 102, 241, 0.25), 0 0 60px rgba(79, 70, 229, 0.1);
+}
+
+.fp-theme--indigo .fp-action--primary:hover {
+    box-shadow: 0 8px 40px rgba(99, 102, 241, 0.35), 0 0 80px rgba(79, 70, 229, 0.15);
+}
+
+.fp-theme--indigo .fp-action--secondary:hover {
+    border-color: rgba(99, 102, 241, 0.3);
+    background: rgba(99, 102, 241, 0.06);
+    box-shadow: 0 4px 25px rgba(99, 102, 241, 0.12);
+}
+
+.fp-theme--indigo .fp-status-dot {
+    background: #6366f1;
+    box-shadow: 0 0 12px #6366f1;
+}
+
+.fp-theme--indigo .fp-ribbon-status {
+    color: #818cf8;
+}
+
+.fp-theme--indigo .fp-stat-value i {
+    color: #818cf8;
+}
+
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {

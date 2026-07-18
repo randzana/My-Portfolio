@@ -3,6 +3,41 @@ import './FeaturedProject.css';
 
 const featuredProjects = [
     {
+        id: 'school-management',
+        theme: 'indigo',
+        ribbonBadge: 'Featured Project',
+        ribbonSubtitle: 'Full-Stack Enterprise',
+        status: 'Production Ready',
+        image: '/school-preview.png',
+        imageAlt: 'School Administration & Financial Management System — Dashboard Preview',
+        title: 'School Administration & Financial Management System',
+        desc: 'A production-grade, full-stack School Administration and Financial Management System featuring secure role-based access, comprehensive student profile tracking, dynamic tuition & meal balance calculators with overpayment protection, operational ledger, and automated analytical reports with PDF/CSV export.',
+        features: [
+            { icon: 'fa-solid fa-user-shield', label: 'RBAC Security', cls: 'fp-feature--security' },
+            { icon: 'fa-solid fa-calculator', label: 'Tuition Tracking', cls: 'fp-feature--tuition' },
+            { icon: 'fa-solid fa-file-invoice-dollar', label: 'Financial Audits', cls: 'fp-feature--analytics' },
+            { icon: 'fa-solid fa-scale-balanced', label: 'Disbursements & Payroll', cls: 'fp-feature--ledger' },
+            { icon: 'fa-solid fa-chart-pie', label: 'Analytical Reports', cls: 'fp-feature--reports' },
+        ],
+        techStack: [
+            { icon: 'fa-brands fa-react', label: 'Next.js 15', cls: 'fp-tech--next' },
+            { icon: 'fa-brands fa-react', label: 'React 19', cls: 'fp-tech--react' },
+            { icon: 'fa-brands fa-laravel', label: 'Laravel 11', cls: 'fp-tech--laravel' },
+            { icon: 'fa-solid fa-database', label: 'PostgreSQL 16', cls: 'fp-tech--postgres' },
+            { icon: 'fa-solid fa-wind', label: 'Tailwind CSS', cls: 'fp-tech--tailwind' },
+            { icon: 'fa-solid fa-code', label: 'TypeScript', cls: 'fp-tech--typescript' },
+        ],
+        actions: [
+            { href: 'https://github.com/randzana/schoolMangment.git', icon: 'fa-brands fa-github', label: 'Source Code', type: 'primary' },
+        ],
+        stats: [
+            { value: 'Laravel 11', label: 'Backend API' },
+            { value: 'Next.js 15', label: 'Frontend App' },
+            { value: 'PGSQL 16', label: 'Database' },
+            { value: 'Sanctum', label: 'Token Auth' },
+        ],
+    },
+    {
         id: 'nali-cafe',
         theme: 'amber',
         ribbonBadge: 'Featured Project',
@@ -80,6 +115,7 @@ function FeaturedProjectCard({ project }) {
     const orbClasses = {
         amber: ['fp-ambient-orb--amber', 'fp-ambient-orb--violet', 'fp-ambient-orb--rose'],
         green: ['fp-ambient-orb--emerald', 'fp-ambient-orb--teal', 'fp-ambient-orb--lime'],
+        indigo: ['fp-ambient-orb--indigo', 'fp-ambient-orb--violet', 'fp-ambient-orb--sky'],
     };
 
     const orbs = orbClasses[project.theme] || orbClasses.amber;
