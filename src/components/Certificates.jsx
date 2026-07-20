@@ -5,6 +5,14 @@ import './Certificates.css';
 
 const certificates = [
     {
+        title: 'The Complete Python Bootcamp From Zero to Hero in Python',
+        issuer: 'Udemy',
+        date: '20 July, 2026',
+        image: '/certificates/udemy-python-bootcamp.jpg',
+        color: '#a435f0',
+        category: 'coding',
+    },
+    {
         title: 'Zanko Award (2nd Place)',
         issuer: 'Koya University',
         date: '18 June, 2026',
