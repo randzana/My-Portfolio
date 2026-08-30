@@ -1,96 +1,8 @@
+/* Single column since the avatar was removed — the portrait already leads the
+   hero, so About is a centred measure of text rather than a two-up layout. */
 .about-grid {
-    display: grid;
-    grid-template-columns: 0.8fr 1.2fr;
-    gap: 80px;
-    align-items: center;
-}
-
-.about-avatar-wrapper {
-    display: flex;
-    justify-content: center;
-}
-
-.about-avatar {
-    position: relative;
-    width: 300px;
-    height: 300px;
-}
-
-.about-avatar-ring {
-    position: absolute;
-    inset: -12px;
-    border-radius: 50%;
-    border: 1.5px solid var(--glass-border);
-    animation: avatarSpin 25s linear infinite;
-}
-
-.about-avatar-ring::before {
-    content: '';
-    position: absolute;
-    top: -5px;
-    left: 50%;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--accent);
-    transform: translateX(-50%);
-    box-shadow: 0 0 15px var(--accent-glow);
-}
-
-.about-avatar-ring.ring-2 {
-    inset: -28px;
-    border: 1px dashed var(--ring-dashed);
-    animation-duration: 40s;
-    animation-direction: reverse;
-}
-
-.about-avatar-ring.ring-2::before {
-    background: var(--cyan);
-    box-shadow: 0 0 12px var(--cyan-glow);
-    width: 6px;
-    height: 6px;
-}
-
-@keyframes avatarSpin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.about-avatar-inner {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), var(--cyan));
-    padding: 3px;
-    position: relative;
-    z-index: 2;
-}
-
-.about-avatar-img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    overflow: hidden;
-    background: var(--bg-card);
-}
-
-.about-avatar-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-}
-
-.about-avatar-glow {
-    position: absolute;
-    inset: 20%;
-    border-radius: 50%;
-    background: var(--accent);
-    filter: blur(60px);
-    opacity: 0.2;
-    z-index: 0;
-    pointer-events: none;
+    max-width: 780px;
+    margin: 0 auto;
 }
 
 .about-text h3 {
@@ -141,19 +53,9 @@
 
 /* ===== ABOUT MOBILE ===== */
 @media (max-width: 900px) {
+    /* Kept from the previous two-column collapse — mobile stays centred. */
     .about-grid {
-        grid-template-columns: 1fr;
         text-align: center;
-        gap: 40px;
-    }
-
-    .about-avatar {
-        width: 220px;
-        height: 220px;
-    }
-
-    .about-avatar-ring.ring-2 {
-        display: none;
     }
 
     .about-tags {
@@ -173,18 +75,9 @@
         padding: 6px 14px;
         font-size: 0.75rem;
     }
-
-    .about-avatar-glow {
-        display: none;
-    }
 }
 
 @media (max-width: 380px) {
-    .about-avatar {
-        width: 180px;
-        height: 180px;
-    }
-
     .about-text h3 {
         font-size: 1.3rem;
     }

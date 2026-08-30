@@ -42,25 +42,6 @@ export default function About() {
 
                 <div className="about-grid">
                     <motion.div
-                        className="about-avatar-wrapper"
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true, amount: 0.1, margin: "0px 0px -50px 0px" }}
-                        transition={{ duration: 0.8, ease: 'easeOut' }}
-                    >
-                        <div className="about-avatar">
-                            <div className="about-avatar-ring" />
-                            <div className="about-avatar-ring ring-2" />
-                            <div className="about-avatar-inner">
-                                <div className="about-avatar-img">
-                                    <img src="/randv.png" alt="Rand Zana" />
-                                </div>
-                            </div>
-                            <div className="about-avatar-glow" />
-                        </div>
-                    </motion.div>
-
-                    <motion.div
                         className="about-text"
                         initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
                         whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}

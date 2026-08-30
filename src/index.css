@@ -25,6 +25,8 @@
   --pink-glow: rgba(236, 72, 153, 0.25);
   --green: #10b981;
   --orange: #f59e0b;
+  --warm: #ef4444;
+  --warm-glow: rgba(239, 68, 68, 0.30);
   --glass: rgba(255, 255, 255, 0.03);
   --glass-strong: rgba(255, 255, 255, 0.06);
   --glass-border: rgba(255, 255, 255, 0.07);
@@ -73,6 +75,8 @@
   --pink-glow: rgba(219, 39, 119, 0.18);
   --green: #059669;
   --orange: #d97706;
+  --warm: #dc2626;
+  --warm-glow: rgba(220, 38, 38, 0.16);
   --glass: rgba(124, 58, 237, 0.03);
   --glass-strong: rgba(124, 58, 237, 0.06);
   --glass-border: rgba(30, 30, 60, 0.08);
@@ -362,7 +366,6 @@ section {
 @media (max-width: 900px) {
 
   .particle,
-  .about-avatar-ring,
   .badge-dot,
   .scroll-dot,
   .hero-gradient-1,
@@ -389,7 +392,8 @@ section {
   }
 
   /* ---- Section padding — tighter iOS feel ---- */
-  body.mobile-app-mode section {
+  /* The hero keeps its own top padding: it has to clear the fixed navbar. */
+  body.mobile-app-mode section:not(.hero) {
     padding: 48px 20px;
   }
 
