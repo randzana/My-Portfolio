@@ -12,6 +12,7 @@ import './Hero.css';
 
 const PORTRAIT = '/portrait.jpg';
 const PORTRAIT_SM = '/portrait-sm.jpg';
+const CV_FILE = '/cv/Rand-Zana-CV.pdf';
 
 const ROLES = ['Software Engineer', 'Videographer', 'Content Creator', 'Brand Strategist'];
 
@@ -262,6 +263,9 @@ export default function Hero() {
                             }}
                         >
                             <i className="fa-solid fa-paper-plane" /> Get in Touch
+                        </a>
+                        <a href={CV_FILE} download="Rand-Zana-CV.pdf" className="btn btn-outline">
+                            <i className="fa-solid fa-download" /> Download CV
                         </a>
                     </motion.div>
 
