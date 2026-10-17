@@ -638,6 +638,11 @@ section {
     padding: 0 20px;
   }
 
+  .btn-sm {
+    --btn-h: 40px;
+    padding: 0 16px;
+  }
+
   .btn-lg {
     --btn-h: 52px;
   }

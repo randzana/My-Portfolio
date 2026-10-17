@@ -128,10 +128,6 @@
     body.mobile-app-mode .mobile-page {
         animation: dockPageIn 0.5s var(--ease-out) backwards;
     }
-
-    body.mobile-app-mode .scroll-indicator {
-        display: none;
-    }
 }
 
 @keyframes dockPageIn {

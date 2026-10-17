@@ -15,10 +15,6 @@
         box-shadow var(--dur) ease;
 }
 
-.resume-card:hover {
-    border-color: var(--line-strong);
-}
-
 /* ===== STAGE + PAPER ===== */
 .resume-stage {
     position: relative;
@@ -261,8 +257,10 @@
     transition: color var(--dur) ease;
 }
 
-.resume-contents-item:hover .resume-contents-icon {
-    color: var(--accent);
+@media (hover: hover) {
+    .resume-contents-item:hover .resume-contents-icon {
+        color: var(--accent);
+    }
 }
 
 /* ===== ACTIONS ===== */
@@ -346,16 +344,24 @@
 
     .resume-actions {
         align-self: stretch;
-        flex-direction: column;
         padding-top: 28px;
     }
 
     .resume-actions .btn {
-        width: 100%;
+        flex: 1 1 0;
     }
 }
 
 @media (max-width: 600px) {
+    .resume-actions {
+        flex-direction: column;
+    }
+
+    .resume-actions .btn {
+        flex: none;
+        width: 100%;
+    }
+
     .resume-stage-meta {
         left: 16px;
         right: 16px;
@@ -382,7 +388,9 @@
         display: grid;
     }
 
+    /* Uneven columns: "Leadership & Awards" (right) keeps to one line at 360-414px. */
     .resume-contents-list {
+        grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
         column-gap: 12px;
     }
 
@@ -397,7 +405,7 @@
     }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 359px) {
     .resume-contents-list {
         grid-template-columns: minmax(0, 1fr);
     }

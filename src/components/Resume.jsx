@@ -28,7 +28,7 @@ export default function Resume() {
                     desc="Everything on one page — my skills, projects and experience, ready to save or print."
                 />
 
-                <Reveal className="resume-card card spotlight" onPointerMove={trackSpotlight} delay={0.1}>
+                <Reveal className="resume-card card card-hover spotlight" onPointerMove={trackSpotlight} delay={0.1}>
                     <a
                         href={CV_FILE}
                         target="_blank"

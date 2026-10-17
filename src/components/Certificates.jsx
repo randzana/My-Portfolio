@@ -1,13 +1,29 @@
-import { useState, useMemo, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaSearch, FaTimes, FaChevronLeft, FaChevronRight, FaCalendarAlt } from 'react-icons/fa';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { createPortal } from 'react-dom';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import {
+    LuSearch,
+    LuX,
+    LuChevronLeft,
+    LuChevronRight,
+    LuChevronDown,
+    LuMaximize2,
+    LuImageOff,
+    LuSearchX,
+} from 'react-icons/lu';
+import SectionHeader from './ui/SectionHeader';
+import Reveal from './ui/Reveal';
+import { trackSpotlight } from '../lib/spotlight';
+import { EASE_OUT } from '../lib/motion';
 import './Certificates.css';
 
-const certificates = [
+// Curated order: highlights first, then roughly newest to oldest.
+// `color` is the issuer's brand colour, used only for the small issuer dot.
+const CERTIFICATES = [
     {
         title: 'The Complete Python Bootcamp From Zero to Hero in Python',
         issuer: 'Udemy',
-        date: '20 July, 2026',
+        date: '20 July 2026',
         image: '/certificates/udemy-python-bootcamp.jpg',
         color: '#a435f0',
         category: 'coding',
@@ -15,23 +31,25 @@ const certificates = [
     {
         title: 'Zanko Award (2nd Place)',
         issuer: 'Koya University',
-        date: '18 June, 2026',
+        date: '18 June 2026',
         image: '/certificates/koya-zanko-award.png',
         color: '#15803d',
         category: 'coding',
+        badge: 'Award',
     },
     {
         title: 'Leader of the SOFTSPACE Group',
-        issuer: 'Koya University - Faculty of Engineering',
-        date: 'Academic Year 2025-2026',
+        issuer: 'Koya University, Faculty of Engineering',
+        date: 'Academic Year 2025–2026',
         image: '/certificates/koya-softspace-leader.png',
         color: '#0d56a6',
         category: 'coding',
+        badge: 'Leadership',
     },
     {
         title: 'Introduction to ERP with Odoo',
-        issuer: 'Koya Lab - The Foundation',
-        date: '13 May, 2025',
+        issuer: 'Koya Lab, The Foundation',
+        date: '13 May 2025',
         image: '/certificates/koya-odoo-erp.png',
         color: '#875a7b',
         category: 'coding',
@@ -39,7 +57,7 @@ const certificates = [
     {
         title: 'Getting Started with Cisco Packet Tracer',
         issuer: 'Cisco Networking Academy',
-        date: '01 March, 2026',
+        date: '01 March 2026',
         image: '/certificates/cisco-packet-tracer.png',
         color: '#049fd9',
         category: 'networking',
@@ -47,7 +65,7 @@ const certificates = [
     {
         title: 'Web Development',
         issuer: 'Sololearn',
-        date: '02 January, 2026',
+        date: '02 January 2026',
         image: '/certificates/sololearn-web-dev.png',
         color: '#e8573a',
         category: 'coding',
@@ -55,7 +73,7 @@ const certificates = [
     {
         title: 'Generative AI in Practice',
         issuer: 'Sololearn',
-        date: '29 December, 2024',
+        date: '29 December 2024',
         image: '/certificates/sololearn-gen-ai.png',
         color: '#e8573a',
         category: 'ai',
@@ -63,7 +81,7 @@ const certificates = [
     {
         title: 'Write with AI',
         issuer: 'Sololearn',
-        date: '29 December, 2024',
+        date: '29 December 2024',
         image: '/certificates/sololearn-write-ai.png',
         color: '#e8573a',
         category: 'ai',
@@ -71,7 +89,7 @@ const certificates = [
     {
         title: 'Brainstorm with AI',
         issuer: 'Sololearn',
-        date: '31 December, 2024',
+        date: '31 December 2024',
         image: '/certificates/sololearn-brainstorm.png',
         color: '#e8573a',
         category: 'ai',
@@ -79,7 +97,7 @@ const certificates = [
     {
         title: 'AI-Powered A/B Testing',
         issuer: 'Sololearn',
-        date: '30 December, 2024',
+        date: '30 December 2024',
         image: '/certificates/sololearn-ab-testing.png',
         color: '#e8573a',
         category: 'ai',
@@ -87,7 +105,7 @@ const certificates = [
     {
         title: 'Think Creatively with AI',
         issuer: 'Sololearn',
-        date: '23 December, 2024',
+        date: '23 December 2024',
         image: '/certificates/sololearn-think-creatively.png',
         color: '#e8573a',
         category: 'ai',
@@ -95,7 +113,7 @@ const certificates = [
     {
         title: 'AI in Data Analysis',
         issuer: 'Sololearn',
-        date: '23 December, 2024',
+        date: '23 December 2024',
         image: '/certificates/sololearn-ai-data-analysis.png',
         color: '#e8573a',
         category: 'ai',
@@ -103,7 +121,7 @@ const certificates = [
     {
         title: 'Prompt Engineering',
         issuer: 'Sololearn',
-        date: '22 December, 2024',
+        date: '22 December 2024',
         image: '/certificates/sololearn-prompt-eng.png',
         color: '#e8573a',
         category: 'ai',
@@ -111,7 +129,7 @@ const certificates = [
     {
         title: 'Introduction to LLMs',
         issuer: 'Sololearn',
-        date: '22 December, 2024',
+        date: '22 December 2024',
         image: '/certificates/sololearn-intro-llms.png',
         color: '#e8573a',
         category: 'ai',
@@ -119,7 +137,7 @@ const certificates = [
     {
         title: 'Social Media Marketing with AI',
         issuer: 'Sololearn',
-        date: '22 December, 2024',
+        date: '22 December 2024',
         image: '/certificates/sololearn-social-media-marketing.png',
         color: '#e8573a',
         category: 'networking',
@@ -127,7 +145,7 @@ const certificates = [
     {
         title: 'Java Intermediate',
         issuer: 'Sololearn',
-        date: '25 October, 2024',
+        date: '25 October 2024',
         image: '/certificates/sololearn-java-intermediate.png',
         color: '#e8573a',
         category: 'coding',
@@ -135,7 +153,7 @@ const certificates = [
     {
         title: 'SQL Intermediate',
         issuer: 'Sololearn',
-        date: '11 September, 2024',
+        date: '11 September 2024',
         image: '/certificates/sololearn-sql.png',
         color: '#e8573a',
         category: 'database',
@@ -143,7 +161,7 @@ const certificates = [
     {
         title: 'Introduction to SQL',
         issuer: 'Sololearn',
-        date: '30 August, 2024',
+        date: '30 August 2024',
         image: '/certificates/sololearn-intro-sql.png',
         color: '#e8573a',
         category: 'database',
@@ -167,7 +185,7 @@ const certificates = [
     {
         title: 'Tech for Everyone',
         issuer: 'Sololearn',
-        date: '30 March, 2024',
+        date: '30 March 2024',
         image: '/certificates/sololearn-tech.png',
         color: '#e8573a',
         category: 'networking',
@@ -190,233 +208,570 @@ const certificates = [
     },
 ];
 
-const categories = [
+const CATEGORIES = [
     { id: 'all', label: 'All Achievements' },
     { id: 'ai', label: 'AI & ML' },
     { id: 'coding', label: 'Software Eng.' },
     { id: 'database', label: 'Databases & SQL' },
-    { id: 'networking', label: 'Net & Marketing' }
-];
+    { id: 'networking', label: 'Net & Marketing' },
+].map(cat => ({
+    ...cat,
+    count: cat.id === 'all' ? CERTIFICATES.length : CERTIFICATES.filter(c => c.category === cat.id).length,
+}));
 
-export default function Certificates() {
-    const [selected, setSelected] = useState(null);
-    const [selectedCategory, setSelectedCategory] = useState('all');
-    const [searchQuery, setSearchQuery] = useState('');
+const pad = n => String(n).padStart(2, '0');
 
-    // Filter and search certificates
-    const filteredCerts = useMemo(() => {
-        return certificates.filter(cert => {
-            const matchesCategory = selectedCategory === 'all' || cert.category === selectedCategory;
-            const matchesSearch = cert.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                                 cert.issuer.toLowerCase().includes(searchQuery.toLowerCase());
-            return matchesCategory && matchesSearch;
-        });
-    }, [selectedCategory, searchQuery]);
+const PILL_SPRING = { type: 'spring', stiffness: 420, damping: 34, mass: 0.8 };
+const LAYOUT_SPRING = { type: 'spring', stiffness: 360, damping: 36, mass: 0.9 };
 
-    // Find current index inside lightbox
-    const selectedIndex = useMemo(() => {
-        if (!selected) return -1;
-        return filteredCerts.findIndex(c => c.title === selected.title);
-    }, [selected, filteredCerts]);
+// Two full rows by default: 2 × 4 on desktop and 4 × 2 on tablets, but
+// 3 × 3 where the grid has three columns, so no row is left half empty.
+const THREE_COLUMNS = '(min-width: 901px) and (max-width: 1080px)';
 
-    // Lightbox Controls
-    const handleNext = () => {
-        if (filteredCerts.length === 0) return;
-        const nextIndex = (selectedIndex + 1) % filteredCerts.length;
-        setSelected(filteredCerts[nextIndex]);
+function useMediaQuery(query) {
+    const subscribe = useCallback(
+        onChange => {
+            const mql = window.matchMedia(query);
+            mql.addEventListener('change', onChange);
+            return () => mql.removeEventListener('change', onChange);
+        },
+        [query],
+    );
+    return useSyncExternalStore(subscribe, () => window.matchMedia(query).matches, () => false);
+}
+
+function cardVariants(reduceMotion) {
+    return {
+        hidden: reduceMotion ? { opacity: 0 } : { opacity: 0, y: 24, filter: 'blur(8px)' },
+        shown: delay => ({
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            transition: { duration: 0.7, ease: EASE_OUT, delay },
+            transitionEnd: { filter: 'none' },
+        }),
+        gone: reduceMotion
+            ? { opacity: 0, transition: { duration: 0.15 } }
+            : { opacity: 0, scale: 0.96, transition: { duration: 0.22, ease: EASE_OUT } },
     };
+}
 
-    const handlePrev = () => {
-        if (filteredCerts.length === 0) return;
-        const prevIndex = (selectedIndex - 1 + filteredCerts.length) % filteredCerts.length;
-        setSelected(filteredCerts[prevIndex]);
-    };
+// A certificate scan, or a themed placeholder if the file is missing.
+// Render it with key={src} so a new image gets a fresh error state.
+function CertImage({ src, alt, className, ...rest }) {
+    const [failed, setFailed] = useState(false);
 
-    // Keyboard support for Lightbox
+    if (failed) {
+        return (
+            <span className={`certs-fallback ${className ?? ''}`} role="img" aria-label={alt}>
+                <LuImageOff aria-hidden="true" />
+                <span className="certs-fallback__text">Image pending</span>
+            </span>
+        );
+    }
+
+    return <img src={src} alt={alt} className={className} onError={() => setFailed(true)} {...rest} />;
+}
+
+// `ref` comes from AnimatePresence: popLayout needs it to lift a leaving
+// card out of the flow straight away.
+function CertCard({ cert, delay, variants, onOpen, ref }) {
+    return (
+        <motion.li
+            ref={ref}
+            // Position-only: scaling a card mid-reflow would smear its text.
+            layout="position"
+            className="certs-item"
+            variants={variants}
+            custom={delay}
+            initial="hidden"
+            whileInView="shown"
+            exit="gone"
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ layout: LAYOUT_SPRING }}
+        >
+            <button
+                type="button"
+                className="certs-card card card-hover spotlight"
+                style={{ '--cert-color': cert.color }}
+                aria-haspopup="dialog"
+                aria-label={`View certificate: ${cert.title}, ${cert.issuer}, ${cert.date}`}
+                onPointerMove={trackSpotlight}
+                onClick={event => onOpen(cert, event.currentTarget)}
+            >
+                <span className="certs-card__frame">
+                    <span className="certs-card__media">
+                        <CertImage
+                            key={cert.image}
+                            src={cert.image}
+                            alt={`${cert.title} certificate`}
+                            className="certs-card__img"
+                            width="1024"
+                            height="768"
+                            loading="lazy"
+                            decoding="async"
+                        />
+                    </span>
+                    <span className="certs-card__view" aria-hidden="true">
+                        <LuMaximize2 />
+                    </span>
+                </span>
+
+                <span className="certs-card__body">
+                    <span className="certs-card__issuer">
+                        <span className="certs-dot" aria-hidden="true" />
+                        <span className="certs-card__issuer-name">{cert.issuer}</span>
+                    </span>
+                    <span className="certs-card__title">{cert.title}</span>
+                    <span className="certs-card__foot">
+                        <span className="certs-card__date">{cert.date}</span>
+                        {cert.badge && (
+                            <span className="certs-card__badge chip chip-mono chip-accent">{cert.badge}</span>
+                        )}
+                    </span>
+                </span>
+            </button>
+        </motion.li>
+    );
+}
+
+const FOCUSABLE = 'button:not([disabled]), [href], input, [tabindex]:not([tabindex="-1"])';
+
+// Keeps Tab / Shift+Tab cycling inside the open dialog.
+function trapFocus(event, container) {
+    if (!container) return;
+    const nodes = [...container.querySelectorAll(FOCUSABLE)];
+    if (nodes.length === 0) return;
+    const first = nodes[0];
+    const last = nodes[nodes.length - 1];
+    const inside = container.contains(document.activeElement);
+    if (event.shiftKey && (document.activeElement === first || !inside)) {
+        event.preventDefault();
+        last.focus();
+    } else if (!event.shiftKey && (document.activeElement === last || !inside)) {
+        event.preventDefault();
+        first.focus();
+    }
+}
+
+function Lightbox({ items, index, onStep, onClose }) {
+    const reduceMotion = useReducedMotion();
+    const dialogRef = useRef(null);
+    const closeRef = useRef(null);
+    const [direction, setDirection] = useState(1);
+    const cert = items[index];
+    const multiple = items.length > 1;
+
+    const go = useCallback(
+        dir => {
+            setDirection(dir);
+            onStep(dir);
+        },
+        [onStep],
+    );
+
+    // Freeze the page behind the dialog (keeping the scrollbar's width so
+    // nothing shifts) and move focus into it.
     useEffect(() => {
-        if (!selected) return;
+        const { body, documentElement } = document;
+        const previous = { overflow: body.style.overflow, paddingRight: body.style.paddingRight };
+        const scrollbar = window.innerWidth - documentElement.clientWidth;
+        body.style.overflow = 'hidden';
+        if (scrollbar > 0) body.style.paddingRight = `${scrollbar}px`;
+        closeRef.current?.focus({ preventScroll: true });
+        return () => {
+            body.style.overflow = previous.overflow;
+            body.style.paddingRight = previous.paddingRight;
+        };
+    }, []);
 
-        const handleKeyDown = (e) => {
-            if (e.key === 'ArrowRight') {
-                handleNext();
-            } else if (e.key === 'ArrowLeft') {
-                handlePrev();
-            } else if (e.key === 'Escape') {
-                setSelected(null);
+    useEffect(() => {
+        const onKeyDown = event => {
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                onClose();
+            } else if (event.key === 'ArrowRight' && multiple) {
+                event.preventDefault();
+                go(1);
+            } else if (event.key === 'ArrowLeft' && multiple) {
+                event.preventDefault();
+                go(-1);
+            } else if (event.key === 'Tab') {
+                trapFocus(event, dialogRef.current);
             }
         };
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, [go, onClose, multiple]);
 
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [selected, selectedIndex, filteredCerts]);
+    // Swipe between certificates on touch screens (and drag with a mouse).
+    const onDragEnd = (event, info) => {
+        const swipe = info.offset.x + info.velocity.x * 0.2;
+        if (swipe < -60) go(1);
+        else if (swipe > 60) go(-1);
+    };
+
+    // Variants (not inline targets) so the leaving slide reads the *new*
+    // direction through AnimatePresence's `custom`.
+    const offset = reduceMotion ? 0 : 28;
+    const slide = {
+        enter: dir => ({ opacity: 0, x: dir * offset }),
+        center: { opacity: 1, x: 0 },
+        leave: dir => ({ opacity: 0, x: dir * -offset }),
+    };
 
     return (
-        <section id="certificates">
-            <div className="gradient-orb gradient-orb-3" />
-            <div className="container">
-                <motion.div
-                    className="section-header"
-                    initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-                    viewport={{ once: true, amount: 0.1, margin: "0px 0px -50px 0px" }}
-                    transition={{ duration: 0.7, ease: 'easeOut' }}
-                >
-                    <div className="section-tag">Achievements</div>
-                    <h2 className="section-title">Certificates & Courses</h2>
-                    <p className="section-desc">
-                        Continuous learning through industry-recognized platforms and certifications.
-                    </p>
-                </motion.div>
-
-                {/* Filter and Search Bar Controls */}
-                <div className="certificates-controls">
-                    <div className="filter-tabs">
-                        {categories.map(cat => (
-                            <button
-                                key={cat.id}
-                                className={`filter-tab-btn ${selectedCategory === cat.id ? 'active' : ''}`}
-                                onClick={() => setSelectedCategory(cat.id)}
-                            >
-                                {cat.label}
-                                {selectedCategory === cat.id && (
-                                    <motion.span 
-                                        className="tab-pill-indicator" 
-                                        layoutId="activeCertTab"
-                                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                                    />
-                                )}
-                            </button>
-                        ))}
-                    </div>
-
-                    <div className="search-box">
-                        <FaSearch className="search-icon" />
-                        <input
-                            type="text"
-                            placeholder="Search certificates..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                        {searchQuery && (
-                            <button className="search-clear-btn" onClick={() => setSearchQuery('')}>
-                                <FaTimes />
-                            </button>
-                        )}
-                    </div>
+        <motion.div
+            className="certs-lb"
+            onClick={onClose}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+        >
+            <motion.div
+                ref={dialogRef}
+                className="certs-lb__dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="certs-lb-title"
+                aria-describedby="certs-lb-meta"
+                onClick={event => event.stopPropagation()}
+                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 20, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.98 }}
+                transition={{ duration: 0.4, ease: EASE_OUT }}
+                style={{ '--cert-color': cert.color }}
+            >
+                <div className="certs-lb__frame">
+                    <AnimatePresence initial={false} mode="wait" custom={direction}>
+                        <motion.div
+                            key={cert.image}
+                            className={`certs-lb__slide${multiple ? ' is-draggable' : ''}`}
+                            custom={direction}
+                            variants={slide}
+                            initial="enter"
+                            animate="center"
+                            exit="leave"
+                            transition={{ duration: 0.2, ease: EASE_OUT }}
+                            drag={multiple ? 'x' : false}
+                            dragSnapToOrigin
+                            dragElastic={0.5}
+                            onDragEnd={onDragEnd}
+                        >
+                            <CertImage
+                                key={cert.image}
+                                src={cert.image}
+                                alt={`${cert.title} certificate from ${cert.issuer}`}
+                                className="certs-lb__img"
+                                draggable={false}
+                                decoding="async"
+                            />
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
 
-                {/* Certificates Grid */}
-                <motion.div 
-                    className="certificates-grid"
-                    layout
-                >
+                <div className="certs-lb__info">
+                    <div className="certs-lb__text">
+                        <h3 id="certs-lb-title" className="certs-lb__title">{cert.title}</h3>
+                        <p id="certs-lb-meta" className="certs-lb__meta">
+                            <span className="certs-dot" aria-hidden="true" />
+                            <span>
+                                {cert.issuer} <span className="certs-lb__sep" aria-hidden="true">·</span> {cert.date}
+                            </span>
+                        </p>
+                    </div>
+
+                    <div className="certs-lb__controls">
+                        {multiple && (
+                            <>
+                                <p className="certs-lb__counter">
+                                    <span className="sr-only">Certificate </span>
+                                    <span className="certs-lb__counter-num">{pad(index + 1)}</span>
+                                    <span className="certs-lb__counter-sep" aria-hidden="true">/</span>
+                                    <span className="sr-only"> of </span>
+                                    {pad(items.length)}
+                                </p>
+                                <button
+                                    type="button"
+                                    className="icon-btn certs-lb__btn"
+                                    aria-label="Previous certificate"
+                                    onClick={() => go(-1)}
+                                >
+                                    <LuChevronLeft aria-hidden="true" />
+                                </button>
+                                <button
+                                    type="button"
+                                    className="icon-btn certs-lb__btn"
+                                    aria-label="Next certificate"
+                                    onClick={() => go(1)}
+                                >
+                                    <LuChevronRight aria-hidden="true" />
+                                </button>
+                                <span className="certs-lb__divider" aria-hidden="true" />
+                            </>
+                        )}
+                        <button
+                            ref={closeRef}
+                            type="button"
+                            className="icon-btn certs-lb__btn certs-lb__close"
+                            aria-label="Close certificate viewer"
+                            onClick={onClose}
+                        >
+                            <LuX aria-hidden="true" />
+                        </button>
+                    </div>
+                </div>
+            </motion.div>
+        </motion.div>
+    );
+}
+
+export default function Certificates() {
+    const reduceMotion = useReducedMotion();
+    const [category, setCategory] = useState('all');
+    const [query, setQuery] = useState('');
+    const [expanded, setExpanded] = useState(false);
+    const [activeTitle, setActiveTitle] = useState(null);
+
+    const scrollerRef = useRef(null);
+    const searchRef = useRef(null);
+    const toggleRef = useRef(null);
+    const toggleTopRef = useRef(null);
+    const openerRef = useRef(null);
+
+    const threeColumns = useMediaQuery(THREE_COLUMNS);
+    const limit = threeColumns ? 9 : 8;
+
+    const variants = useMemo(() => cardVariants(reduceMotion), [reduceMotion]);
+
+    const results = useMemo(() => {
+        const q = query.trim().toLowerCase();
+        return CERTIFICATES.filter(cert => {
+            const inCategory = category === 'all' || cert.category === category;
+            const matches = !q || cert.title.toLowerCase().includes(q) || cert.issuer.toLowerCase().includes(q);
+            return inCategory && matches;
+        });
+    }, [category, query]);
+
+    const collapsible = results.length > limit;
+    const visible = collapsible && !expanded ? results.slice(0, limit) : results;
+    const filtered = category !== 'all' || query.trim() !== '';
+    const countNoun = filtered ? (results.length === 1 ? 'result' : 'results') : 'credentials';
+
+    const activeIndex = activeTitle ? results.findIndex(c => c.title === activeTitle) : -1;
+
+    const openCert = (cert, opener) => {
+        openerRef.current = opener;
+        setActiveTitle(cert.title);
+    };
+
+    // The viewer pages through every result, not only the cards on screen.
+    const stepCert = useCallback(
+        dir => {
+            setActiveTitle(title => {
+                // Ignore keys pressed while the viewer is fading out.
+                if (title === null || results.length === 0) return title;
+                const i = results.findIndex(c => c.title === title);
+                return results[(i + dir + results.length) % results.length].title;
+            });
+        },
+        [results],
+    );
+
+    const closeCert = useCallback(() => {
+        setActiveTitle(null);
+        openerRef.current?.focus({ preventScroll: true });
+    }, []);
+
+    const selectCategory = id => {
+        setCategory(id);
+
+        // On phones the control scrolls sideways; bring the chosen tab to the middle.
+        const scroller = scrollerRef.current;
+        if (!scroller || scroller.scrollWidth <= scroller.clientWidth) return;
+        const tab = scroller.querySelector(`[data-category="${id}"]`);
+        if (!tab) return;
+        const box = scroller.getBoundingClientRect();
+        const rect = tab.getBoundingClientRect();
+        scroller.scrollBy({
+            left: rect.left + rect.width / 2 - (box.left + box.width / 2),
+            behavior: reduceMotion ? 'auto' : 'smooth',
+        });
+    };
+
+    const clearSearch = () => {
+        setQuery('');
+        searchRef.current?.focus();
+    };
+
+    const resetFilters = () => {
+        setQuery('');
+        selectCategory('all');
+        searchRef.current?.focus();
+    };
+
+    const toggleExpanded = () => {
+        // Collapsing removes rows above the button; remember where it was so
+        // it can stay under the pointer instead of jumping up the page.
+        if (expanded && toggleRef.current) {
+            toggleTopRef.current = toggleRef.current.getBoundingClientRect().top;
+        }
+        setExpanded(value => !value);
+    };
+
+    useLayoutEffect(() => {
+        const before = toggleTopRef.current;
+        toggleTopRef.current = null;
+        if (before === null || !toggleRef.current) return;
+        const delta = toggleRef.current.getBoundingClientRect().top - before;
+        if (Math.abs(delta) > 1) window.scrollBy({ top: delta, behavior: 'instant' });
+    }, [expanded]);
+
+    return (
+        <section id="certificates" className="certs">
+            <div className="container">
+                <SectionHeader
+                    index="05"
+                    label="Certificates"
+                    title={<>Certificates & <em className="serif">courses</em></>}
+                    desc={
+                        <>
+                            Continuous learning through <span className="certs-nowrap">industry-recognized</span>{' '}
+                            platforms and certifications.
+                        </>
+                    }
+                />
+
+                <Reveal className="certs-toolbar" y={16} blur={false}>
+                    {/* layoutScroll: lets the pill's layout animation account for this scroller. */}
+                    <motion.div className="certs-filter-scroll" ref={scrollerRef} layoutScroll>
+                        <div className="certs-filter" role="group" aria-label="Filter certificates by category">
+                            {CATEGORIES.map(cat => {
+                                const active = category === cat.id;
+                                return (
+                                    <button
+                                        key={cat.id}
+                                        type="button"
+                                        className={`certs-filter__btn${active ? ' is-active' : ''}`}
+                                        data-category={cat.id}
+                                        aria-pressed={active}
+                                        onClick={() => selectCategory(cat.id)}
+                                    >
+                                        {active && (
+                                            <motion.span
+                                                className="certs-filter__pill"
+                                                layoutId="certs-filter-pill"
+                                                transition={PILL_SPRING}
+                                                aria-hidden="true"
+                                            />
+                                        )}
+                                        <span className="certs-filter__label">{cat.label}</span>
+                                        <span className="certs-filter__count" aria-hidden="true">{pad(cat.count)}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </motion.div>
+
+                    <div className="certs-toolbar__end">
+                        <div className="certs-search" role="search">
+                            <LuSearch className="certs-search__icon" aria-hidden="true" />
+                            <input
+                                ref={searchRef}
+                                type="search"
+                                className="certs-search__input"
+                                placeholder="Search certificates…"
+                                aria-label="Search certificates by title or issuer"
+                                autoComplete="off"
+                                spellCheck="false"
+                                value={query}
+                                onChange={event => setQuery(event.target.value)}
+                            />
+                            {query && (
+                                <button
+                                    type="button"
+                                    className="certs-search__clear"
+                                    aria-label="Clear search"
+                                    onClick={clearSearch}
+                                >
+                                    <LuX aria-hidden="true" />
+                                </button>
+                            )}
+                        </div>
+                        <p className="certs-count" aria-live="polite" aria-atomic="true">
+                            <span className="certs-count__num">{results.length}</span> {countNoun}
+                        </p>
+                    </div>
+                </Reveal>
+
+                <ul id="certs-grid" className="certs-grid" aria-label="Certificates">
                     <AnimatePresence mode="popLayout">
-                        {filteredCerts.map((cert, i) => (
-                            <motion.div
+                        {visible.map((cert, i) => (
+                            <CertCard
                                 key={cert.title}
-                                className="cert-card"
-                                layout
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                transition={{ duration: 0.35, ease: 'easeOut' }}
-                                onClick={() => setSelected(cert)}
-                            >
-                                <div className="cert-preview">
-                                    <img
-                                        src={cert.image}
-                                        alt={cert.title}
-                                        onError={(e) => {
-                                            e.target.src = 'https://placehold.co/600x450/111122/a78bfa?text=Certificate+Image+Pending';
-                                        }}
-                                    />
-                                    <div className="cert-overlay" />
-                                    <div className="cert-badge" style={{ color: cert.color, borderColor: `${cert.color}40`, background: `${cert.color}15` }}>
-                                        {cert.issuer}
-                                    </div>
-                                </div>
-                                <div className="cert-info">
-                                    <h3>{cert.title}</h3>
-                                    <p>
-                                        <FaCalendarAlt /> {cert.date}
-                                    </p>
-                                </div>
-                            </motion.div>
+                                cert={cert}
+                                delay={(i % 4) * 0.06}
+                                variants={variants}
+                                onOpen={openCert}
+                            />
                         ))}
                     </AnimatePresence>
-                </motion.div>
+                </ul>
 
-                {filteredCerts.length === 0 && (
-                    <motion.div 
-                        className="certs-empty-state"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
+                {results.length === 0 && (
+                    <motion.div
+                        className="certs-empty"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, ease: EASE_OUT }}
                     >
-                        <p>No certificates found matching your criteria.</p>
+                        <span className="certs-empty__icon" aria-hidden="true">
+                            <LuSearchX />
+                        </span>
+                        <p className="certs-empty__title">No certificates found matching your criteria.</p>
+                        <p className="certs-empty__hint">Try another keyword or category.</p>
+                        <button type="button" className="btn btn-secondary btn-sm" onClick={resetFilters}>
+                            Reset filters
+                        </button>
                     </motion.div>
+                )}
+
+                {collapsible && (
+                    <div className="certs-more">
+                        <span className="certs-more__rule" aria-hidden="true" />
+                        <button
+                            ref={toggleRef}
+                            type="button"
+                            className="btn btn-secondary btn-sm certs-more__btn"
+                            aria-expanded={expanded}
+                            aria-controls="certs-grid"
+                            onClick={toggleExpanded}
+                        >
+                            {expanded ? 'Show less' : `Show all ${results.length}`}
+                            <LuChevronDown className="certs-more__icon" aria-hidden="true" />
+                        </button>
+                        <span className="certs-more__rule" aria-hidden="true" />
+                    </div>
                 )}
             </div>
 
-            {/* Lightbox Modal */}
-            <AnimatePresence>
-                {selected && (
-                    <div className="lightbox-backdrop" onClick={() => setSelected(null)}>
-                        {/* Slide Left Arrow */}
-                        {filteredCerts.length > 1 && (
-                            <button 
-                                className="lightbox-nav-btn prev-btn" 
-                                onClick={(e) => { e.stopPropagation(); handlePrev(); }}
-                                aria-label="Previous certificate"
-                            >
-                                <FaChevronLeft />
-                            </button>
-                        )}
-
-                        <motion.div
-                            className="lightbox-content"
-                            initial={{ opacity: 0, scale: 0.93, y: 15 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.93, y: 15 }}
-                            transition={{ duration: 0.28, ease: 'easeOut' }}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <button className="lightbox-close" onClick={() => setSelected(null)}>
-                                <FaTimes />
-                            </button>
-                            <div className="lightbox-img-wrapper">
-                                <img
-                                    src={selected.image}
-                                    alt={selected.title}
-                                    className="lightbox-img"
-                                    onError={(e) => {
-                                        e.target.src = 'https://placehold.co/800x600/111122/a78bfa?text=Certificate+Image+Pending';
-                                    }}
-                                />
-                            </div>
-                            <div className="lightbox-info">
-                                <h3>{selected.title}</h3>
-                                <p>{selected.issuer} · {selected.date}</p>
-                                {filteredCerts.length > 1 && (
-                                    <span className="lightbox-counter">
-                                        {selectedIndex + 1} of {filteredCerts.length}
-                                    </span>
-                                )}
-                            </div>
-                        </motion.div>
-
-                        {/* Slide Right Arrow */}
-                        {filteredCerts.length > 1 && (
-                            <button 
-                                className="lightbox-nav-btn next-btn" 
-                                onClick={(e) => { e.stopPropagation(); handleNext(); }}
-                                aria-label="Next certificate"
-                            >
-                                <FaChevronRight />
-                            </button>
-                        )}
-                    </div>
-                )}
-            </AnimatePresence>
+            {/* Portalled to <body>: a transformed ancestor (dock page
+                transitions, reveals) would otherwise trap position: fixed. */}
+            {createPortal(
+                <AnimatePresence>
+                    {activeIndex >= 0 && (
+                        <Lightbox
+                            key="certs-lightbox"
+                            items={results}
+                            index={activeIndex}
+                            onStep={stepCert}
+                            onClose={closeCert}
+                        />
+                    )}
+                </AnimatePresence>,
+                document.body,
+            )}
         </section>
     );
 }

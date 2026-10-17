@@ -60,6 +60,7 @@ export default function Navbar() {
     const [condensed, setCondensed] = useState(() => window.scrollY > CONDENSE_AT);
     const [showScrollTop, setShowScrollTop] = useState(() => window.scrollY > BACK_TO_TOP_AT);
     const [activeSection, setActiveSection] = useState('');
+    const [footerInView, setFooterInView] = useState(false);
     const [theme, setTheme] = useState(initialTheme);
 
     const { scrollYProgress } = useScroll();
@@ -68,6 +69,15 @@ export default function Navbar() {
     useEffect(() => {
         applyTheme(theme);
     }, [theme]);
+
+    // The footer has its own "Back to top", so the floating one steps aside there.
+    useEffect(() => {
+        const footer = document.querySelector('footer');
+        if (!footer) return;
+        const observer = new IntersectionObserver(([entry]) => setFooterInView(entry.isIntersecting));
+        observer.observe(footer);
+        return () => observer.disconnect();
+    }, []);
 
     // Follow the OS theme until the visitor picks one themselves.
     useEffect(() => {
@@ -240,7 +250,7 @@ export default function Navbar() {
             </header>
 
             <AnimatePresence>
-                {showScrollTop && (
+                {showScrollTop && !footerInView && (
                     <motion.button
                         type="button"
                         className="icon-btn nav-top"
