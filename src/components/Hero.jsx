@@ -10,6 +10,7 @@ import {
     useTransform,
 } from 'framer-motion';
 import { EASE_OUT } from '../lib/motion';
+import { goToSection } from '../lib/scroll';
 import './Hero.css';
 
 const PORTRAIT = '/portrait.jpg';
@@ -45,27 +46,6 @@ const MARQUEE = [
     { label: 'Content Creation', serif: true },
     { label: 'Branding', serif: true },
 ];
-
-// Dock tab (its aria-label) that displays each in-page target in mobile-app-mode.
-const DOCK_TAB = { about: 'Home', projects: 'Projects', contact: 'Contact' };
-
-/* Smooth-scrolls to a section. In mobile-app-mode the dock only displays one
-   group of sections at a time, so a hidden target (no layout boxes) is
-   reached by switching to its dock tab instead. */
-function goTo(event, id) {
-    const target = document.getElementById(id);
-    if (!target) return;
-    event.preventDefault();
-
-    if (target.getClientRects().length === 0) {
-        const tab = [...document.querySelectorAll(`button[aria-label="${DOCK_TAB[id]}"]`)].find(
-            el => el.getClientRects().length > 0
-        );
-        tab?.click();
-        return;
-    }
-    target.scrollIntoView({ behavior: 'smooth' });
-}
 
 /* Counts up once the stat is half in view. Reduced motion shows the final value. */
 function Counter({ target }) {
@@ -187,6 +167,7 @@ function HeroPortrait() {
                         fetchPriority="high"
                         decoding="async"
                     />
+                    <span className="hero-frame-marks" aria-hidden="true" />
                     <motion.span
                         className="hero-sheen"
                         style={{ '--shine-x': shineX, '--shine-y': shineY }}
@@ -304,7 +285,7 @@ export default function Hero() {
                             <a
                                 href="#projects"
                                 className="btn btn-primary btn-lg hero-cta-main"
-                                onClick={e => goTo(e, 'projects')}
+                                onClick={e => goToSection(e, 'projects')}
                             >
                                 View my work
                                 <span className="btn-arrow" aria-hidden="true">
@@ -322,7 +303,7 @@ export default function Hero() {
                             <a
                                 href="#contact"
                                 className="btn btn-ghost btn-lg"
-                                onClick={e => goTo(e, 'contact')}
+                                onClick={e => goToSection(e, 'contact')}
                             >
                                 Get in touch
                             </a>
@@ -354,7 +335,7 @@ export default function Hero() {
                         ))}
                     </ul>
 
-                    <a href="#about" className="hero-scroll" onClick={e => goTo(e, 'about')}>
+                    <a href="#about" className="hero-scroll" onClick={e => goToSection(e, 'about')}>
                         Scroll
                         <span className="hero-scroll-icon" aria-hidden="true">
                             <i className="fa-solid fa-arrow-down" />

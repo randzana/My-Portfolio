@@ -1,47 +1,86 @@
+/* =========================================================
+   06 — RESUME
+   One large card: an inset "stage" holding the CV paper
+   (left, ~5/12) and the file details + actions (right).
+   ========================================================= */
+
 .resume-card {
     display: grid;
-    grid-template-columns: 0.85fr 1.15fr;
-    gap: 56px;
-    align-items: center;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 48px;
-    background: var(--bg-card);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-card);
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 10px;
+    padding: 10px;
+    /* Framer drives the entrance transform; a CSS transform transition would lag it. */
+    transition:
+        border-color var(--dur) ease,
+        box-shadow var(--dur) ease;
+}
+
+.resume-card:hover {
+    border-color: var(--line-strong);
+}
+
+/* ===== STAGE + PAPER ===== */
+.resume-stage {
     position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 100%;
+    padding: clamp(56px, 6vw, 72px) clamp(32px, 4vw, 56px);
     overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: calc(var(--radius-lg) - 10px);
+    background: var(--bg-inset);
+    isolation: isolate;
 }
 
-.resume-card::before {
-    content: '';
+.resume-stage-grid {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, var(--accent), var(--cyan), var(--pink));
+    inset: 0;
+    z-index: -1;
+    background-size: 40px 40px;
+    background-position: center;
+    pointer-events: none;
 }
 
-/* ===== PREVIEW ===== */
-.resume-preview {
-    display: block;
-    position: relative;
-    padding: 24px;
-    border-radius: var(--radius-sm);
-    background-image: radial-gradient(circle at 2px 2px, var(--dot-pattern) 1px, transparent 0);
-    background-size: 24px 24px;
+.resume-stage-meta {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--fg-subtle);
+    pointer-events: none;
+}
+
+.resume-stage-meta--top {
+    top: 20px;
+}
+
+.resume-stage-meta--bottom {
+    bottom: 20px;
 }
 
 .resume-paper {
     position: relative;
-    border-radius: var(--radius-xs);
+    display: block;
+    width: 100%;
+    max-width: 340px;
     overflow: hidden;
-    border: 1px solid var(--glass-border);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.04);
-    transform: rotate(-2deg);
-    transition: var(--transition);
+    border-radius: 6px;
+    background: #fff;
+    box-shadow:
+        0 0 0 1px var(--line),
+        var(--shadow-lg);
+    transform: rotate(-3deg);
+    transition:
+        transform 0.7s var(--ease-out),
+        box-shadow 0.7s var(--ease-out);
 }
 
 .resume-paper img {
@@ -49,186 +88,317 @@
     height: auto;
 }
 
-.resume-preview:hover .resume-paper,
-.resume-preview:focus-visible .resume-paper {
-    transform: rotate(0deg) translateY(-6px);
-    box-shadow: 0 30px 70px var(--accent-glow);
-}
-
-.resume-preview-overlay {
+/* "View full CV" affordance, revealed on hover / keyboard focus. */
+.resume-paper-cta {
     position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding: 20px;
-    background: linear-gradient(0deg, rgba(10, 10, 20, 0.7) 0%, transparent 55%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.resume-preview:hover .resume-preview-overlay,
-.resume-preview:focus-visible .resume-preview-overlay {
-    opacity: 1;
-}
-
-.resume-preview-overlay span {
+    left: 50%;
+    bottom: 18px;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 18px;
-    border-radius: 50px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(8px);
-    color: #fff;
-    font-size: 0.82rem;
-    font-weight: 600;
+    height: 38px;
+    padding: 0 16px;
+    border-radius: var(--radius-pill);
+    background: var(--inverse-bg);
+    color: var(--inverse-fg);
+    box-shadow: var(--shadow-md);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translate(-50%, 8px);
+    transition:
+        opacity var(--dur) ease,
+        transform 0.5s var(--ease-out);
 }
 
-/* ===== DETAILS ===== */
+.resume-paper-cta i {
+    font-size: 0.8em;
+}
+
+.resume-stage:focus-visible {
+    outline-offset: -4px;
+}
+
+.resume-stage:focus-visible .resume-paper {
+    transform: rotate(0deg) translateY(-6px);
+}
+
+.resume-stage:focus-visible .resume-paper-cta {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .resume-stage:hover .resume-paper {
+        transform: rotate(0deg) translateY(-6px);
+        box-shadow:
+            0 0 0 1px var(--line-strong),
+            var(--shadow-lg);
+    }
+
+    .resume-stage:hover .resume-paper-cta {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+/* ===== BODY ===== */
+.resume-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: clamp(28px, 3.4vw, 48px) clamp(24px, 3.4vw, 48px) clamp(28px, 3.4vw, 44px);
+}
+
 .resume-file {
     display: inline-flex;
     align-items: center;
-    gap: 14px;
-    padding: 10px 18px 10px 10px;
-    margin-bottom: 24px;
-    border-radius: var(--radius-sm);
-    background: var(--tag-bg);
-    border: 1px solid var(--glass-border);
+    gap: 12px;
+    padding: 6px 16px 6px 6px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    background: var(--bg-elev);
+    box-shadow: var(--highlight);
 }
 
 .resume-file-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    font-size: 0.9rem;
+}
+
+.resume-file-text {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    color: var(--warm);
-    background: var(--warm-glow);
+    align-items: baseline;
+    flex-wrap: wrap;
+    column-gap: 10px;
+    row-gap: 2px;
+    min-width: 0;
 }
 
-.resume-file strong {
-    display: block;
-    font-size: 0.88rem;
+.resume-file-text strong {
+    font-size: var(--text-sm);
     font-weight: 600;
-    line-height: 1.4;
+    letter-spacing: -0.01em;
 }
 
-.resume-file small {
-    font-size: 0.75rem;
-    color: var(--text-muted);
+.resume-file-text small {
     font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
 }
 
-.resume-details h3 {
-    font-family: var(--font-display);
-    font-size: 1.6rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    margin-bottom: 12px;
+.resume-title {
+    margin-top: clamp(28px, 3vw, 40px);
+    font-size: var(--display-sm);
+    line-height: 1.1;
+    letter-spacing: -0.04em;
 }
 
-.resume-details > p {
-    color: var(--text-secondary);
-    font-size: 0.92rem;
-    line-height: 1.8;
-    margin-bottom: 28px;
+.resume-summary {
+    max-width: 58ch;
+    margin-top: 14px;
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: var(--fg-muted);
+}
+
+/* ===== WHAT'S INSIDE ===== */
+.resume-contents {
+    align-self: stretch;
+    margin-top: clamp(28px, 3vw, 40px);
 }
 
 .resume-contents-label {
-    font-size: 0.72rem;
-    color: var(--accent-light);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    font-family: var(--font-mono);
     margin-bottom: 14px;
+    letter-spacing: 0.1em;
+    line-height: 1;
 }
 
-.resume-contents {
-    list-style: none;
+.resume-contents-list {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px 20px;
-    margin-bottom: 36px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 28px;
+    border-bottom: 1px solid var(--line);
 }
 
-.resume-contents li {
+.resume-contents-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 0.88rem;
-    color: var(--text-secondary);
+    gap: 12px;
+    min-width: 0;
+    padding: 13px 0;
+    border-top: 1px solid var(--line);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--fg);
 }
 
-.resume-contents i {
-    width: 18px;
+.resume-contents-index {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    color: var(--fg-subtle);
+    font-variant-numeric: tabular-nums;
+}
+
+.resume-contents-icon {
+    width: 16px;
+    flex-shrink: 0;
     text-align: center;
-    font-size: 0.85rem;
-    color: var(--accent-light);
+    font-size: 0.8125rem;
+    color: var(--fg-muted);
+    transition: color var(--dur) ease;
 }
 
+.resume-contents-item:hover .resume-contents-icon {
+    color: var(--accent);
+}
+
+/* ===== ACTIONS ===== */
 .resume-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: clamp(28px, 3vw, 40px);
 }
 
-/* ===== RESUME MOBILE ===== */
+.resume-actions .fa-arrow-up-right-from-square {
+    font-size: 0.75rem;
+    color: var(--fg-muted);
+}
+
+/* A download icon shouldn't spin like the arrow — it drops instead. */
+.resume-download:hover .btn-arrow {
+    transform: none;
+}
+
+.resume-download .btn-arrow i {
+    transition: transform 0.45s var(--ease-out);
+}
+
+.resume-download:hover .btn-arrow i {
+    transform: translateY(2px);
+}
+
+/* ===== LAPTOP ===== */
+@media (max-width: 1080px) {
+    .resume-card {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    }
+
+    .resume-stage {
+        padding-inline: 32px;
+    }
+
+    .resume-contents-list {
+        column-gap: 20px;
+    }
+}
+
+/* ===== TABLET + PHONE: preview on top ===== */
 @media (max-width: 900px) {
     .resume-card {
-        grid-template-columns: 1fr;
-        gap: 32px;
-        padding: 32px 24px;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 8px;
+        padding: 8px;
+        border-radius: 24px;
     }
 
-    .resume-preview {
-        max-width: 340px;
+    .resume-stage {
+        min-height: 0;
+        padding: 56px 24px;
+        border-radius: 17px;
+    }
+
+    .resume-paper {
+        width: 80%;
+        max-width: 320px;
+        transform: rotate(-2deg);
+    }
+
+    .resume-body {
+        padding: 24px 16px 16px;
+    }
+
+    .resume-title {
+        margin-top: 24px;
+    }
+
+    .resume-summary {
+        font-size: 0.9375rem;
+    }
+
+    .resume-contents {
+        margin-top: 28px;
+    }
+
+    .resume-actions {
+        align-self: stretch;
+        flex-direction: column;
+        padding-top: 28px;
+    }
+
+    .resume-actions .btn {
         width: 100%;
-        margin: 0 auto;
-        padding: 16px;
-    }
-
-    .resume-paper,
-    .resume-preview:hover .resume-paper {
-        transform: none;
-    }
-
-    .resume-preview-overlay {
-        display: none;
-    }
-
-    .resume-details h3 {
-        font-size: 1.3rem;
-    }
-
-    .resume-details > p {
-        font-size: 0.88rem;
     }
 }
 
 @media (max-width: 600px) {
-    .resume-card {
-        padding: 28px 18px;
+    .resume-stage-meta {
+        left: 16px;
+        right: 16px;
     }
 
+    .resume-stage-meta--top {
+        top: 16px;
+    }
+
+    .resume-stage-meta--bottom {
+        bottom: 16px;
+    }
+
+    .resume-stage {
+        padding-inline: 16px;
+    }
+
+    /* Name over meta, so the chip hugs its content instead of wrapping. */
     .resume-file {
-        display: flex;
+        padding-right: 20px;
     }
 
-    .resume-contents {
-        gap: 10px 12px;
+    .resume-file-text {
+        display: grid;
     }
 
-    .resume-contents li {
-        font-size: 0.82rem;
+    .resume-contents-list {
+        column-gap: 12px;
     }
 
-    .resume-actions .btn {
-        flex: 1 1 100%;
-        justify-content: center;
+    .resume-contents-item {
+        gap: 8px;
+        padding: 12px 0;
+        font-size: 0.8125rem;
+    }
+
+    .resume-contents-index {
+        display: none;
+    }
+}
+
+@media (max-width: 380px) {
+    .resume-contents-list {
+        grid-template-columns: minmax(0, 1fr);
     }
 }

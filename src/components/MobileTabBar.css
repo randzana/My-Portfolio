@@ -20,15 +20,29 @@
         pointer-events: none;
     }
 
+    /* Page colour fades in under the dock so content dissolves
+       into it rather than colliding with it. */
+    .dock::before {
+        content: '';
+        position: absolute;
+        inset: -28px 0 calc(-14px - env(safe-area-inset-bottom, 0px));
+        z-index: -1;
+        background: linear-gradient(to top, var(--bg) 30%, transparent);
+        opacity: 0.85;
+        pointer-events: none;
+    }
+
     .dock-inner {
         display: flex;
         align-items: center;
         gap: 4px;
-        width: min(356px, 100%);
+        width: min(328px, 100%);
         padding: 6px;
         border: 1px solid var(--line);
         border-radius: var(--radius-pill);
         background: var(--glass);
+        /* A touch denser than --glass: the dock must stay legible over photos. */
+        background: color-mix(in srgb, var(--bg-elev) 84%, transparent);
         box-shadow: var(--shadow-lg), var(--shadow-sm), var(--highlight);
         backdrop-filter: blur(16px) saturate(1.4);
         -webkit-backdrop-filter: blur(16px) saturate(1.4);
@@ -93,9 +107,10 @@
 
     /* ===== PAGE SYSTEM ===== */
 
-    /* Room for the dock below the last section / footer. */
+    /* Room below the last section / footer for the dock and the
+       back-to-top button that floats above it. */
     body.mobile-app-mode {
-        padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+        padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px));
     }
 
     /* The first section of every tab clears the fixed top bar… */
@@ -105,7 +120,7 @@
 
     /* …and a second section on the same tab reads as a continuation. */
     body.mobile-app-mode section.mobile-page ~ section.mobile-page {
-        padding-top: 24px;
+        padding-top: 40px;
     }
 
     /* No fill-mode forwards: a lingering transform would trap any

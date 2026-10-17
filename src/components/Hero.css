@@ -51,7 +51,7 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 12px 18px;
-    margin-bottom: clamp(28px, 3.4vw, 44px);
+    margin-bottom: clamp(24px, 2.8vw, 36px);
 }
 
 .hero-status {
@@ -99,7 +99,8 @@
 }
 
 .hero-title {
-    font-size: min(var(--display-lg), 12.6cqi);
+    /* The widest line ("experiences that") is ~6.3em, so 15cqi always fits. */
+    font-size: min(var(--display-lg), 15cqi);
     font-weight: 600;
     line-height: 0.95;
     letter-spacing: -0.05em;
@@ -168,7 +169,7 @@
     font-size: var(--text-lg);
     line-height: 1.6;
     color: var(--fg-muted);
-    margin-bottom: clamp(32px, 3.4vw, 44px);
+    margin-bottom: clamp(28px, 3vw, 40px);
 }
 
 /* ===== CTAS ===== */
@@ -226,6 +227,24 @@
     object-position: 52% 22%;
 }
 
+/* Viewfinder corners — a quiet nod to the camera work. */
+.hero-frame-marks {
+    position: absolute;
+    inset: 14px;
+    pointer-events: none;
+    --mark: rgba(255, 255, 255, 0.55);
+    background:
+        linear-gradient(var(--mark), var(--mark)) top left / 14px 1.5px,
+        linear-gradient(var(--mark), var(--mark)) top left / 1.5px 14px,
+        linear-gradient(var(--mark), var(--mark)) top right / 14px 1.5px,
+        linear-gradient(var(--mark), var(--mark)) top right / 1.5px 14px,
+        linear-gradient(var(--mark), var(--mark)) bottom left / 14px 1.5px,
+        linear-gradient(var(--mark), var(--mark)) bottom left / 1.5px 14px,
+        linear-gradient(var(--mark), var(--mark)) bottom right / 14px 1.5px,
+        linear-gradient(var(--mark), var(--mark)) bottom right / 1.5px 14px;
+    background-repeat: no-repeat;
+}
+
 .hero-sheen {
     position: absolute;
     inset: 0;
@@ -255,7 +274,7 @@
 
 .hero-chip--role {
     bottom: 9%;
-    right: -32px;
+    right: -24px;
 }
 
 .hero-chip-inner {
@@ -265,7 +284,8 @@
     padding: 9px 18px 9px 9px;
     border-radius: 16px;
     border: 1px solid var(--line-strong);
-    background: var(--glass);
+    /* Denser than --glass: half of each chip sits on the dark photo. */
+    background: color-mix(in srgb, var(--bg-elev) 82%, transparent);
     backdrop-filter: blur(18px) saturate(1.4);
     -webkit-backdrop-filter: blur(18px) saturate(1.4);
     box-shadow: var(--highlight), var(--shadow-md);
@@ -324,7 +344,7 @@
 .hero-band {
     display: flex;
     align-items: stretch;
-    margin-top: clamp(56px, 7vw, 96px);
+    margin-top: clamp(48px, 4.5vw, 64px);
     border-top: 1px solid var(--line);
 }
 
@@ -338,7 +358,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 28px 28px 30px;
+    padding: 24px 28px 26px;
     border-left: 1px solid var(--line);
 }
 
@@ -418,7 +438,7 @@
 
 .hero-marquee-viewport {
     overflow: hidden;
-    padding-block: 22px;
+    padding-block: 20px;
     mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
@@ -469,12 +489,29 @@
 
 /* ===== LAPTOP ===== */
 @media (max-width: 1080px) {
+    /* Slimmer portrait and buttons keep all three CTAs on one row down to 901px. */
+    .hero {
+        --hero-portrait-w: clamp(272px, 29vw, 420px);
+    }
+
+    .hero-ctas {
+        gap: 10px;
+    }
+
+    .hero-ctas .btn-lg {
+        padding-inline: 22px;
+    }
+
+    .hero-ctas .btn-ghost {
+        padding-inline: 14px;
+    }
+
     .hero-chip--award {
         left: -28px;
     }
 
     .hero-chip--role {
-        right: -20px;
+        right: -16px;
     }
 
     .hero-stat {
@@ -494,6 +531,12 @@
         margin-block: 0;
     }
 
+    /* Single column: scale with the column instead of the viewport, which
+       lands a touch above --display-lg's floor on phones (~50px at 390). */
+    .hero-title {
+        font-size: min(14.5cqi, 4.25rem);
+    }
+
     .hero-portrait {
         justify-self: center;
         width: min(78%, 340px);
@@ -503,6 +546,31 @@
         margin-top: 64px;
     }
 
+    .hero-stat {
+        padding: 24px 20px 26px;
+    }
+
+    .hero-scroll {
+        display: none;
+    }
+
+    .hero-marquee-viewport {
+        padding-block: 18px;
+    }
+}
+
+/* ===== PHONE ===== */
+@media (max-width: 600px) {
+    /* The location wraps under the pill here, so drop the joining hairline. */
+    .hero-loc::before {
+        display: none;
+    }
+
+    .hero-desc {
+        font-size: var(--text-base);
+    }
+
+    /* Stats as a 2 × 2 hairline grid. */
     .hero-stats {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -519,21 +587,6 @@
 
     .hero-stat:nth-child(n + 3) {
         border-top: 1px solid var(--line);
-    }
-
-    .hero-scroll {
-        display: none;
-    }
-
-    .hero-marquee-viewport {
-        padding-block: 18px;
-    }
-}
-
-/* ===== PHONE ===== */
-@media (max-width: 600px) {
-    .hero-desc {
-        font-size: var(--text-base);
     }
 
     /* Primary action full width, the two secondary ones side by side. */
@@ -556,15 +609,17 @@
     }
 
     .hero .hero-ctas .btn-ghost {
-        border-color: var(--line);
+        border-color: var(--line-strong);
     }
 
     .hero-chip--award {
         left: -22px;
     }
 
+    /* Higher than on desktop so it clears the bottom viewfinder mark. */
     .hero-chip--role {
         right: -22px;
+        bottom: 13%;
     }
 
     .hero-chip-inner {

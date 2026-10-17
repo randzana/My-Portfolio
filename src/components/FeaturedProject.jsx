@@ -1,4 +1,6 @@
-import { motion } from 'framer-motion';
+import Reveal from './ui/Reveal';
+import { trackSpotlight } from '../lib/spotlight';
+import { goToSection } from '../lib/scroll';
 import './FeaturedProject.css';
 
 const featuredProjects = [
@@ -9,23 +11,24 @@ const featuredProjects = [
         ribbonSubtitle: 'Full-Stack Enterprise',
         status: 'Production Ready',
         image: '/school-preview.png',
+        imageTrim: 0.09,
         imageAlt: 'School Administration & Financial Management System — Dashboard Preview',
         title: 'School Administration & Financial Management System',
-        desc: 'A production-grade, full-stack School Administration and Financial Management System featuring secure role-based access, comprehensive student profile tracking, dynamic tuition & meal balance calculators with overpayment protection, operational ledger, and automated analytical reports with PDF/CSV export.',
+        desc: 'A production-grade, full-stack school administration and financial management system with secure role-based access, comprehensive student profile tracking, dynamic tuition & meal-balance calculators with overpayment protection, an operational ledger, and automated analytical reports with PDF/CSV export.',
         features: [
-            { icon: 'fa-solid fa-user-shield', label: 'RBAC Security', cls: 'fp-feature--security' },
-            { icon: 'fa-solid fa-calculator', label: 'Tuition Tracking', cls: 'fp-feature--tuition' },
-            { icon: 'fa-solid fa-file-invoice-dollar', label: 'Financial Audits', cls: 'fp-feature--analytics' },
-            { icon: 'fa-solid fa-scale-balanced', label: 'Disbursements & Payroll', cls: 'fp-feature--ledger' },
-            { icon: 'fa-solid fa-chart-pie', label: 'Analytical Reports', cls: 'fp-feature--reports' },
+            { icon: 'fa-solid fa-user-shield', label: 'RBAC Security' },
+            { icon: 'fa-solid fa-calculator', label: 'Tuition Tracking' },
+            { icon: 'fa-solid fa-file-invoice-dollar', label: 'Financial Audits' },
+            { icon: 'fa-solid fa-scale-balanced', label: 'Disbursements & Payroll' },
+            { icon: 'fa-solid fa-chart-pie', label: 'Analytical Reports' },
         ],
         techStack: [
-            { icon: 'fa-brands fa-react', label: 'Next.js 15', cls: 'fp-tech--next' },
-            { icon: 'fa-brands fa-react', label: 'React 19', cls: 'fp-tech--react' },
-            { icon: 'fa-brands fa-laravel', label: 'Laravel 11', cls: 'fp-tech--laravel' },
-            { icon: 'fa-solid fa-database', label: 'PostgreSQL 16', cls: 'fp-tech--postgres' },
-            { icon: 'fa-solid fa-wind', label: 'Tailwind CSS', cls: 'fp-tech--tailwind' },
-            { icon: 'fa-solid fa-code', label: 'TypeScript', cls: 'fp-tech--typescript' },
+            { icon: 'fa-brands fa-react', label: 'Next.js 15' },
+            { icon: 'fa-brands fa-react', label: 'React 19' },
+            { icon: 'fa-brands fa-laravel', label: 'Laravel 11' },
+            { icon: 'fa-solid fa-database', label: 'PostgreSQL 16' },
+            { icon: 'fa-solid fa-wind', label: 'Tailwind CSS' },
+            { icon: 'fa-solid fa-code', label: 'TypeScript' },
         ],
         actions: [
             { href: 'https://github.com/randzana/schoolMangment.git', icon: 'fa-brands fa-github', label: 'Source Code', type: 'primary' },
@@ -44,23 +47,24 @@ const featuredProjects = [
         ribbonSubtitle: 'Full-Stack Enterprise',
         status: 'Live in Production',
         image: '/nali-cafe-preview.png',
+        imageTrim: 0.07,
         imageAlt: 'Nali Cafe Management System — Kiosk & Dashboard Preview',
         title: 'Cafe Management System',
-        desc: 'A high-performance, dual-portal platform powering Nali Cafe\'s operations — from self-service Mobile ordering with real-time kitchen sync to a comprehensive admin dashboard with live analytics, financial reporting, and multi-currency/bilingual support.',
+        desc: 'A high-performance, dual-portal platform powering Nali Cafe\'s operations — from self-service mobile ordering with real-time kitchen sync to a comprehensive admin dashboard with live analytics, financial reporting, and multi-currency/bilingual support.',
         features: [
-            { icon: 'fa-solid fa-tablet-screen-button', label: 'Smart Kiosk', cls: 'fp-feature--kiosk' },
-            { icon: 'fa-solid fa-chart-line', label: 'Analytics', cls: 'fp-feature--analytics' },
-            { icon: 'fa-solid fa-bolt', label: 'Real-Time Orders', cls: 'fp-feature--realtime' },
-            { icon: 'fa-solid fa-globe', label: 'Kurdish / English', cls: 'fp-feature--locale' },
-            { icon: 'fa-solid fa-shield-halved', label: 'JWT Auth', cls: 'fp-feature--security' },
+            { icon: 'fa-solid fa-tablet-screen-button', label: 'Smart Kiosk' },
+            { icon: 'fa-solid fa-chart-line', label: 'Analytics' },
+            { icon: 'fa-solid fa-bolt', label: 'Real-Time Orders' },
+            { icon: 'fa-solid fa-globe', label: 'Kurdish / English' },
+            { icon: 'fa-solid fa-shield-halved', label: 'JWT Auth' },
         ],
         techStack: [
-            { icon: 'fa-brands fa-react', label: 'React 19', cls: 'fp-tech--react' },
-            { icon: 'fa-solid fa-bolt-lightning', label: 'Vite', cls: 'fp-tech--vite' },
-            { icon: 'fa-brands fa-laravel', label: 'Laravel', cls: 'fp-tech--laravel' },
-            { icon: 'fa-solid fa-database', label: 'PostgreSQL', cls: 'fp-tech--postgres' },
-            { icon: 'fa-brands fa-docker', label: 'Docker', cls: 'fp-tech--docker' },
-            { icon: 'fa-solid fa-wand-magic-sparkles', label: 'Framer Motion', cls: 'fp-tech--framer' },
+            { icon: 'fa-brands fa-react', label: 'React 19' },
+            { icon: 'fa-solid fa-bolt-lightning', label: 'Vite' },
+            { icon: 'fa-brands fa-laravel', label: 'Laravel' },
+            { icon: 'fa-solid fa-database', label: 'PostgreSQL' },
+            { icon: 'fa-brands fa-docker', label: 'Docker' },
+            { icon: 'fa-solid fa-wand-magic-sparkles', label: 'Framer Motion' },
         ],
         actions: [
             { href: 'https://cafemanagement.randvision.tech/', icon: 'fa-solid fa-rocket', label: 'View Live Demo', type: 'primary' },
@@ -80,157 +84,194 @@ const featuredProjects = [
         ribbonSubtitle: 'Zanko Award (2nd Place)',
         status: 'Zanko Award (2nd Place)',
         image: '/greenlegacy-preview.png',
+        imageTrim: 0.04,
         imageAlt: 'Zanko GreenLegacy — Smart Campus Eco-System with Interactive Map & AI Verification',
         title: 'Zanko GreenLegacy',
-        desc: 'A gamified, AI-powered mobile eco-system that incentivizes environmental sustainability at Koya University — featuring an interactive campus map, automated Computer Vision task verification through image & video analysis, faculty leaderboards, and digital eco-badges.',
+        desc: 'A gamified, AI-powered mobile ecosystem that incentivizes environmental sustainability at Koya University — featuring an interactive campus map, automated computer-vision task verification through image & video analysis, faculty leaderboards, and digital eco-badges.',
         features: [
-            { icon: 'fa-solid fa-map-location-dot', label: 'Campus Map', cls: 'fp-feature--map' },
-            { icon: 'fa-solid fa-robot', label: 'AI Verification', cls: 'fp-feature--ai' },
-            { icon: 'fa-solid fa-trophy', label: 'Gamification', cls: 'fp-feature--gamify' },
-            { icon: 'fa-solid fa-seedling', label: 'NDVI Tracking', cls: 'fp-feature--ndvi' },
-            { icon: 'fa-solid fa-video', label: 'Video Analysis', cls: 'fp-feature--video' },
+            { icon: 'fa-solid fa-map-location-dot', label: 'Campus Map' },
+            { icon: 'fa-solid fa-robot', label: 'AI Verification' },
+            { icon: 'fa-solid fa-trophy', label: 'Gamification' },
+            { icon: 'fa-solid fa-seedling', label: 'NDVI Tracking' },
+            { icon: 'fa-solid fa-video', label: 'Video Analysis' },
         ],
         techStack: [
-            { icon: 'fa-solid fa-mobile-screen-button', label: 'Flutter', cls: 'fp-tech--flutter' },
-            { icon: 'fa-brands fa-python', label: 'Flask', cls: 'fp-tech--flask' },
-            { icon: 'fa-solid fa-database', label: 'PostgreSQL', cls: 'fp-tech--postgres' },
-            { icon: 'fa-solid fa-eye', label: 'Pillow CV', cls: 'fp-tech--pillow' },
-            { icon: 'fa-solid fa-map', label: 'OpenStreetMap', cls: 'fp-tech--osm' },
-            { icon: 'fa-solid fa-key', label: 'PyJWT', cls: 'fp-tech--jwt' },
+            { icon: 'fa-solid fa-mobile-screen-button', label: 'Flutter' },
+            { icon: 'fa-brands fa-python', label: 'Flask' },
+            { icon: 'fa-solid fa-database', label: 'PostgreSQL' },
+            { icon: 'fa-solid fa-eye', label: 'Pillow CV' },
+            { icon: 'fa-solid fa-map', label: 'OpenStreetMap' },
+            { icon: 'fa-solid fa-key', label: 'PyJWT' },
         ],
         actions: [
             { href: 'https://github.com/randzana/Zanko-GreenLegacy.git', icon: 'fa-brands fa-github', label: 'Source Code', type: 'primary' },
             { href: '#certificates', icon: 'fa-solid fa-award', label: 'View Certificate', type: 'secondary' },
         ],
+        // Icon values replace the old decorative emoji (map, trophy, seedling).
         stats: [
             { value: 'AI', label: 'Vision Engine' },
-            { value: '🗺️', label: 'Live Map' },
-            { value: '🏆', label: 'Leaderboards' },
-            { value: '🌱', label: 'Eco Badges' },
+            { icon: 'fa-solid fa-map-location-dot', label: 'Live Map' },
+            { icon: 'fa-solid fa-trophy', label: 'Leaderboards' },
+            { icon: 'fa-solid fa-seedling', label: 'Eco Badges' },
         ],
     },
 ];
 
-function FeaturedProjectCard({ project }) {
-    const orbClasses = {
-        amber: ['fp-ambient-orb--amber', 'fp-ambient-orb--violet', 'fp-ambient-orb--rose'],
-        green: ['fp-ambient-orb--emerald', 'fp-ambient-orb--teal', 'fp-ambient-orb--lime'],
-        indigo: ['fp-ambient-orb--indigo', 'fp-ambient-orb--violet', 'fp-ambient-orb--sky'],
-    };
+// Label for the faux browser bar: the live host when there is one, else the project slug.
+function frameLabel(project) {
+    const live = project.actions.find(a => a.href.startsWith('http') && !a.href.includes('github.com'));
+    return live ? new URL(live.href).host : project.id;
+}
 
-    const orbs = orbClasses[project.theme] || orbClasses.amber;
+const pad = n => String(n).padStart(2, '0');
+
+function ActionLink({ action }) {
+    const internal = action.href.startsWith('#');
+    const primary = action.type === 'primary';
+    const linkProps = internal
+        ? { onClick: e => goToSection(e, action.href) }
+        : { target: '_blank', rel: 'noreferrer' };
 
     return (
-        <motion.div
-            className={`featured-project fp-theme--${project.theme}`}
-            initial={{ opacity: 0, y: 60, scale: 0.96 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+        <a href={action.href} className={`btn ${primary ? 'btn-primary' : 'btn-secondary'}`} {...linkProps}>
+            <i className={action.icon} aria-hidden="true" />
+            {action.label}
+            {!internal && <span className="sr-only"> (opens in a new tab)</span>}
+            {primary && (
+                <span className="btn-arrow" aria-hidden="true">
+                    <i className={internal ? 'fa-solid fa-arrow-down' : 'fa-solid fa-arrow-right'} />
+                </span>
+            )}
+        </a>
+    );
+}
+
+function FeaturedProjectCard({ project, index, total }) {
+    const isAward = /award/i.test(project.status);
+    const titleId = `fp-title-${project.id}`;
+
+    return (
+        <article
+            className={`fp-card fp-card--${project.theme} card card-hover spotlight ${index % 2 ? 'fp-card--flip' : ''}`}
+            style={{ '--fp-trim': project.imageTrim ?? 0 }}
+            aria-labelledby={titleId}
+            onPointerMove={trackSpotlight}
         >
-            {/* Ambient background glow */}
-            <div className="fp-ambient">
-                {orbs.map((cls) => (
-                    <div key={cls} className={`fp-ambient-orb ${cls}`} />
-                ))}
-            </div>
-
-            <div className="fp-card">
-                {/* Top Ribbon */}
-                <div className="fp-ribbon">
-                    <div className="fp-ribbon-left">
-                        <span className="fp-ribbon-badge">
-                            <i className="fa-solid fa-star" />
-                            {project.ribbonBadge}
-                        </span>
-                        <span className="fp-subtitle">{project.ribbonSubtitle}</span>
+            <div className="fp-body">
+                <figure className="fp-media">
+                    <div className="fp-window">
+                        <div className="fp-window-bar" aria-hidden="true">
+                            <span className="fp-window-dots">
+                                <span />
+                                <span />
+                                <span />
+                            </span>
+                            <span className="fp-window-label">{frameLabel(project)}</span>
+                        </div>
+                        <div className="fp-shot">
+                            <img
+                                src={project.image}
+                                alt={project.imageAlt}
+                                width="1024"
+                                height="1024"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                        </div>
                     </div>
-                    <div className="fp-ribbon-status">
-                        <span className="fp-status-dot" />
-                        {project.status}
-                    </div>
-                </div>
+                </figure>
 
-                {/* Main Content Grid */}
                 <div className="fp-content">
-                    {/* Preview Image */}
-                    <div className="fp-preview">
-                        <img
-                            className="fp-preview-image"
-                            src={project.image}
-                            alt={project.imageAlt}
-                            loading="eager"
-                        />
-                        <div className="fp-preview-overlay" />
-                        <div className="fp-preview-grain" />
-                    </div>
-
-                    {/* Info Panel */}
-                    <div className="fp-info">
-                        <div className="fp-title-row">
-                            <h3 className="fp-title">{project.title}</h3>
+                    <div className="fp-intro">
+                        <div className="fp-top">
+                            <span className="fp-index">
+                                <span className="fp-index-current">{pad(index + 1)}</span> / {pad(total)}
+                            </span>
+                            <span className={`chip fp-status ${isAward ? 'chip-accent' : ''}`}>
+                                {isAward ? (
+                                    <i className="fa-solid fa-trophy" aria-hidden="true" />
+                                ) : (
+                                    <span className="status-dot" aria-hidden="true" />
+                                )}
+                                {project.status}
+                            </span>
                         </div>
 
+                        <p className="chip chip-mono fp-ribbon">
+                            <span className="fp-ribbon-badge">
+                                <i className="fa-solid fa-star" aria-hidden="true" />
+                                {project.ribbonBadge}
+                            </span>
+                            {/* GreenLegacy's subtitle repeats its status chip word for word. */}
+                            {project.ribbonSubtitle !== project.status && (
+                                <>
+                                    <span className="fp-ribbon-sep" aria-hidden="true" />
+                                    <span className="sr-only">, </span>
+                                    {project.ribbonSubtitle}
+                                </>
+                            )}
+                        </p>
+
+                        <h3 className="fp-title" id={titleId}>{project.title}</h3>
                         <p className="fp-desc">{project.desc}</p>
 
-                        {/* Feature Pills */}
-                        <div className="fp-features">
-                            {project.features.map((f) => (
-                                <span key={f.label} className={`fp-feature ${f.cls}`}>
-                                    <i className={f.icon} />
-                                    {f.label}
-                                </span>
-                            ))}
-                        </div>
-
-                        {/* Tech Stack */}
-                        <div className="fp-tech-stack">
-                            {project.techStack.map((t) => (
-                                <span key={t.label} className={`fp-tech ${t.cls}`}>
-                                    <i className={t.icon} />
-                                    {t.label}
-                                </span>
-                            ))}
-                        </div>
-
-                        {/* Action Buttons */}
                         <div className="fp-actions">
-                            {project.actions.map((a) => (
-                                <a
-                                    key={a.label}
-                                    href={a.href}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className={`fp-action fp-action--${a.type}`}
-                                >
-                                    <i className={a.icon} />
-                                    {a.label}
-                                </a>
+                            {project.actions.map(a => (
+                                <ActionLink key={a.label} action={a} />
                             ))}
                         </div>
                     </div>
-                </div>
 
-                {/* Bottom Stats Bar */}
-                <div className="fp-stats-bar">
-                    {project.stats.map((s) => (
-                        <div key={s.label} className="fp-stat">
-                            <span className="fp-stat-value">{s.value}</span>
-                            <span className="fp-stat-label">{s.label}</span>
+                    <div className="fp-specs">
+                        <div className="fp-block">
+                            <span className="fp-label">Highlights</span>
+                            <ul className="fp-features">
+                                {project.features.map(f => (
+                                    <li key={f.label} className="fp-feature">
+                                        <span className="fp-feature-icon" aria-hidden="true">
+                                            <i className={f.icon} />
+                                        </span>
+                                        {f.label}
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
-                    ))}
+
+                        <div className="fp-block">
+                            <span className="fp-label">Stack</span>
+                            <ul className="fp-tech">
+                                {project.techStack.map(t => (
+                                    <li key={t.label} className="chip">
+                                        <i className={t.icon} aria-hidden="true" />
+                                        {t.label}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </motion.div>
+
+            <dl className="fp-stats">
+                {project.stats.map(s => (
+                    <div key={s.label} className="fp-stat">
+                        <dt>{s.label}</dt>
+                        <dd>{s.icon ? <i className={s.icon} aria-hidden="true" /> : s.value}</dd>
+                    </div>
+                ))}
+            </dl>
+        </article>
     );
 }
 
 export default function FeaturedProject() {
     return (
-        <>
-            {featuredProjects.map((project) => (
-                <FeaturedProjectCard key={project.id} project={project} />
+        <div className="fp-list">
+            {featuredProjects.map((project, i) => (
+                <Reveal key={project.id} amount={0.1}>
+                    <FeaturedProjectCard project={project} index={i} total={featuredProjects.length} />
+                </Reveal>
             ))}
-        </>
+        </div>
     );
 }

@@ -9,8 +9,8 @@
 /* ----- Skip link (visible on keyboard focus only) ----- */
 .nav-skip {
     position: fixed;
-    top: 12px;
-    left: 12px;
+    top: calc(var(--nav-h) + 8px);
+    left: 50%;
     z-index: 1200;
     display: inline-flex;
     align-items: center;
@@ -21,12 +21,19 @@
     color: var(--inverse-fg);
     font-size: var(--text-sm);
     font-weight: 500;
-    transform: translateY(-200%);
-    transition: transform var(--dur) var(--ease-out);
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -8px);
+    transition:
+        opacity var(--dur) ease,
+        transform var(--dur) var(--ease-out);
 }
 
 .nav-skip:focus-visible {
-    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
 }
 
 /* ----- Scroll progress ----- */
@@ -60,6 +67,23 @@
     padding-inline: max(12px, env(safe-area-inset-left, 0px)) max(12px, env(safe-area-inset-right, 0px));
 }
 
+/* Soft fade of the page colour behind the floating pill, so text
+   scrolling past the top edge dissolves instead of being sliced. */
+.nav::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 -28px;
+    z-index: -1;
+    background: linear-gradient(to bottom, var(--bg) 25%, transparent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.nav.is-condensed::before {
+    opacity: 0.9;
+}
+
 .nav-bar {
     position: relative;
     display: grid;
@@ -90,6 +114,8 @@
     height: 58px;
     padding-inline: 8px;
     background-color: var(--glass);
+    /* A touch denser than --glass so links stay crisp over photos. */
+    background-color: color-mix(in srgb, var(--bg-elev) 82%, transparent);
     border-color: var(--line);
     box-shadow: var(--shadow-md), var(--highlight);
     backdrop-filter: blur(16px) saturate(1.4);
@@ -127,7 +153,8 @@
     box-shadow: var(--shadow-sm);
     transition:
         border-radius 0.6s var(--ease-out),
-        transform 0.5s var(--ease-out);
+        background-color var(--dur) ease,
+        color var(--dur) ease;
 }
 
 .nav.is-condensed .nav-brand-tile {
@@ -135,7 +162,8 @@
 }
 
 .nav-brand:hover .nav-brand-tile {
-    transform: rotate(-8deg);
+    background: var(--accent);
+    color: var(--on-accent);
 }
 
 .nav-brand-name {
@@ -167,7 +195,7 @@
     display: flex;
     align-items: center;
     gap: 2px;
-    padding: 4px;
+    padding: 3px;
     border: 1px solid var(--line);
     border-radius: var(--radius-pill);
     background-color: var(--glass);
@@ -194,7 +222,7 @@
     position: relative;
     display: inline-flex;
     align-items: center;
-    height: 34px;
+    height: 32px;
     padding: 0 15px;
     border-radius: var(--radius-pill);
     color: var(--fg-muted);
@@ -341,13 +369,15 @@ html.nav-theme-switching *::after {
     .nav-top.icon-btn {
         right: max(16px, env(safe-area-inset-right, 0px));
         bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-        width: 44px;
-        height: 44px;
+        width: 42px;
+        height: 42px;
     }
 
-    /* Sit above the floating dock (see MobileTabBar.css). */
+    /* Just above the floating dock, flush with its right edge
+       (the dock is 328px wide and centred — see MobileTabBar.css). */
     body.mobile-app-mode .nav-top.icon-btn {
-        bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+        right: max(12px, calc((100% - 328px) / 2));
+        bottom: calc(90px + env(safe-area-inset-bottom, 0px));
     }
 }
 

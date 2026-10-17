@@ -158,7 +158,9 @@ export default function Navbar() {
                 );
             })
             .catch(() => {});
-        transition.finished.finally(() => root.classList.remove('nav-theme-switching'));
+        transition.finished
+            .catch(() => {})
+            .finally(() => root.classList.remove('nav-theme-switching'));
     };
 
     const isDark = theme === 'dark';

@@ -545,8 +545,11 @@ section {
     box-shadow var(--dur) ease;
 }
 
-.card-hover:hover {
-  border-color: var(--line-strong);
+/* Hover-only effects stay off touch screens, where a tap would leave them stuck on. */
+@media (hover: hover) {
+  .card-hover:hover {
+    border-color: var(--line-strong);
+  }
 }
 
 /* Cursor spotlight. Add className="spotlight" and
@@ -568,8 +571,10 @@ section {
   pointer-events: none;
 }
 
-.spotlight:hover::before {
-  opacity: 1;
+@media (hover: hover) {
+  .spotlight:hover::before {
+    opacity: 1;
+  }
 }
 
 /* ===== DECORATIVE BACKGROUNDS ===== */

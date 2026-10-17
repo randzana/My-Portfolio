@@ -1,70 +1,106 @@
-import { motion } from 'framer-motion';
+import SectionHeader from './ui/SectionHeader';
+import Reveal from './ui/Reveal';
 import './Experience.css';
 
-const items = [
+// Each group is listed newest first. `end` marks a date range.
+const GROUPS = [
     {
-        date: '2025',
-        title: 'Freelance UI/UX Designer',
-        company: 'Self-Employed',
-        desc: 'Leading development of UI/UX designs for various clients, mentoring junior designers, and driving technical architecture decisions.',
+        id: 'work',
+        label: 'Experience',
+        items: [
+            {
+                start: '2026',
+                role: 'Media Manager & Sales Manager',
+                org: 'kurddetective',
+                desc: 'Marketing Manager at kurddetective, an AI-powered platform that helps businesses to automate their marketing tasks.',
+            },
+            {
+                start: '2025',
+                role: 'Freelance UI/UX Designer',
+                org: 'Self-employed',
+                desc: 'Leading development of UI/UX designs for various clients, mentoring junior designers, and driving technical architecture decisions.',
+            },
+            {
+                start: '2025',
+                role: 'Videographer',
+                org: 'Self-employed',
+                desc: "Covering events for Diwaxani Nali and Koya University's social media.",
+            },
+        ],
     },
     {
-        date: '2023 – 2027',
-        title: 'Software Engineer Student',
-        company: 'Koya University',
-        desc: 'Studying Software Engineering at Koya University. Learning about software development, algorithms, data structures, and other related topics.',
+        id: 'education',
+        label: 'Education',
+        items: [
+            {
+                start: '2023',
+                end: '2027',
+                role: 'Software Engineering Student',
+                org: 'Koya University',
+                desc: 'Studying Software Engineering at Koya University. Learning about software development, algorithms, data structures, and other related topics.',
+            },
+        ],
     },
-    {
-        date: '2026',
-        title: 'Media Manager & Sales Manager',
-        company: 'kurddetective',
-        desc: 'Marketing Manager at kurddetective, an AI-powered platform that helps businesses to automate their marketing tasks.',
-    },
-    {
-        date: '2025',
-        title: 'Videographer',
-        company: 'Self-employed',
-        desc: 'in Diwaxani Nali and koya university social media at many events.',
-    }
 ];
+
+const pad = n => String(n).padStart(2, '0');
+
+function Period({ start, end }) {
+    return (
+        <p className="exp-date">
+            <time dateTime={start}>{start}</time>
+            {end && (
+                <>
+                    <span className="exp-date-sep" aria-hidden="true"> – </span>
+                    <span className="sr-only"> to </span>
+                    <time dateTime={end}>{end}</time>
+                </>
+            )}
+        </p>
+    );
+}
 
 export default function Experience() {
     return (
-        <section id="experience">
+        <section id="experience" className="exp">
             <div className="container">
-                <motion.div
-                    className="section-header"
-                    initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-                    viewport={{ once: true, amount: 0.1, margin: "0px 0px -50px 0px" }}
-                    transition={{ duration: 0.7, ease: 'easeOut' }}
-                >
-                    <div className="section-tag">Journey</div>
-                    <h2 className="section-title">Experience & Education</h2>
-                    <p className="section-desc">A timeline of my professional growth and milestones.</p>
-                </motion.div>
+                <SectionHeader
+                    index="04"
+                    label="Experience"
+                    title={<>Experience & <em className="serif">education</em></>}
+                    desc="A timeline of my professional growth and milestones."
+                />
 
-                <div className="timeline">
-                    <div className="timeline-line" />
-                    {items.map((item, i) => (
-                        <motion.div
-                            key={i}
-                            className={`timeline-item ${i % 2 === 0 ? 'left' : 'right'}`}
-                            initial={{ opacity: 0, y: 40, scale: 0.95, rotateX: 15, transformPerspective: 1000 }}
-                            whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-                            viewport={{ once: true, amount: 0.1, margin: "0px 0px -50px 0px" }}
-                            transition={{ duration: 0.6, ease: 'easeOut', delay: i * 0.1 }}
-                        >
-                            <div className="timeline-dot">
-                                <div className="timeline-dot-inner" />
-                            </div>
-                            <div className="timeline-card">
-                                <div className="timeline-date">{item.date}</div>
-                                <h3>{item.title}</h3>
-                                <h4>{item.company}</h4>
-                                <p>{item.desc}</p>
-                            </div>
-                        </motion.div>
+                <div className="exp-groups">
+                    {GROUPS.map(group => (
+                        <div key={group.id} className="exp-group">
+                            <Reveal className="exp-group-head" y={12} blur={false}>
+                                <h3 id={`exp-${group.id}`} className="eyebrow exp-group-label">
+                                    {group.label}
+                                </h3>
+                                <span className="exp-group-count" aria-hidden="true">
+                                    {pad(group.items.length)}
+                                </span>
+                            </Reveal>
+
+                            <ol className="exp-list" aria-labelledby={`exp-${group.id}`}>
+                                {group.items.map((item, i) => (
+                                    <Reveal
+                                        as="li"
+                                        key={`${item.role}-${item.start}`}
+                                        className="exp-row"
+                                        delay={i * 0.06}
+                                    >
+                                        <Period start={item.start} end={item.end} />
+                                        <div className="exp-heading">
+                                            <h4 className="exp-role">{item.role}</h4>
+                                            <p className="exp-org">{item.org}</p>
+                                        </div>
+                                        <p className="exp-desc">{item.desc}</p>
+                                    </Reveal>
+                                ))}
+                            </ol>
+                        </div>
                     ))}
                 </div>
             </div>

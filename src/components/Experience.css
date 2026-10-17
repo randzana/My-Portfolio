@@ -1,161 +1,204 @@
-.timeline {
-    position: relative;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px 0;
+/* =========================================================
+   04 — EXPERIENCE & EDUCATION
+   Editorial list: [date] [role + company] [description],
+   hairline separated, grouped under mono eyebrows.
+   ========================================================= */
+
+.exp {
+    --exp-pad-x: 20px;
 }
 
-.timeline-line {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: linear-gradient(180deg, var(--accent), var(--cyan), var(--pink), transparent);
-    transform: translateX(-50%);
-    border-radius: 2px;
+.exp-groups {
+    display: grid;
+    gap: clamp(56px, 6vw, 88px);
 }
 
-.timeline-item {
-    display: flex;
-    position: relative;
-    margin-bottom: 48px;
-}
-
-.timeline-item.left {
-    justify-content: flex-end;
-    padding-right: calc(50% + 32px);
-}
-
-.timeline-item.right {
-    justify-content: flex-start;
-    padding-left: calc(50% + 32px);
-}
-
-.timeline-dot {
-    position: absolute;
-    left: 50%;
-    top: 24px;
-    transform: translateX(-50%);
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--bg-primary);
-    border: 2px solid var(--accent);
-    z-index: 2;
+/* ===== GROUP HEAD ===== */
+.exp-group-head {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 12px;
+    padding: 0 var(--exp-pad-x) 18px;
 }
 
-.timeline-dot-inner {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 12px var(--accent-glow);
+.exp-group-label {
+    letter-spacing: 0.1em;
+    line-height: 1;
 }
 
-.timeline-card {
-    background: var(--bg-card);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius);
-    padding: 28px;
-    max-width: 360px;
-    transition: all 0.3s ease;
-}
-
-.timeline-card:hover {
-    border-color: var(--glass-border-hover);
-}
-
-.timeline-date {
-    font-size: 0.78rem;
-    color: var(--accent-light);
-    font-weight: 600;
-    margin-bottom: 10px;
+.exp-group-count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 30px;
+    height: 22px;
+    padding: 0 8px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
     font-family: var(--font-mono);
-    letter-spacing: 1px;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: var(--fg-subtle);
 }
 
-.timeline-card h3 {
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 4px;
-    letter-spacing: -0.3px;
+/* ===== ROWS ===== */
+.exp-list {
+    border-bottom: 1px solid var(--line);
 }
 
-.timeline-card h4 {
-    font-size: 0.88rem;
-    color: var(--text-muted);
-    margin-bottom: 14px;
-    font-weight: 400;
+.exp-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 140px minmax(0, 1fr) minmax(0, 1.2fr);
+    column-gap: clamp(24px, 3vw, 48px);
+    align-items: baseline;
+    padding: 30px var(--exp-pad-x);
+    border-top: 1px solid var(--line);
+    transition: background-color var(--dur) ease;
 }
 
-.timeline-card p {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
+/* Accent marker that grows from the row's centre on hover. */
+.exp-row::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    bottom: 0;
+    width: 2px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transition: transform 0.45s var(--ease-out);
+}
+
+.exp-date {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    color: var(--fg-muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    transition: color var(--dur) ease;
+}
+
+.exp-heading {
+    min-width: 0;
+    transition: transform 0.45s var(--ease-out);
+}
+
+.exp-role {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+}
+
+.exp-org {
+    margin-top: 4px;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--fg-muted);
+}
+
+.exp-desc {
+    max-width: 54ch;
+    font-size: 0.9375rem;
     line-height: 1.7;
+    color: var(--fg-muted);
+    transition: color var(--dur) ease;
 }
 
-/* ===== TIMELINE MOBILE ===== */
-@media (max-width: 900px) {
-    .timeline-line {
-        left: 20px;
+/* Hover only where a real pointer can hover (no sticky taps). */
+@media (hover: hover) and (pointer: fine) {
+    .exp-row:hover {
+        background: var(--bg-elev);
     }
 
-    .timeline-item.left,
-    .timeline-item.right {
-        padding-left: 52px;
-        padding-right: 0;
-        justify-content: flex-start;
+    .exp-row:hover::before {
+        transform: scaleY(1);
     }
 
-    .timeline-dot {
-        left: 20px;
+    .exp-row:hover .exp-date {
+        color: var(--fg);
     }
 
-    .timeline-card {
-        max-width: 100%;
-        padding: 22px;
+    .exp-row:hover .exp-heading {
+        transform: translateX(8px);
     }
 
-    .timeline-card:hover {
-        transform: none;
-    }
-
-    .timeline-card h3 {
-        font-size: 1rem;
-    }
-
-    .timeline-card p {
-        font-size: 0.82rem;
-    }
-
-    .timeline-item {
-        margin-bottom: 32px;
+    .exp-row:hover .exp-desc {
+        color: var(--fg);
     }
 }
 
-@media (max-width: 380px) {
-    .timeline-line {
-        left: 14px;
+/* ===== LAPTOP / TABLET: description moves under the role ===== */
+@media (max-width: 1080px) {
+    .exp-row {
+        grid-template-columns: 120px minmax(0, 1fr);
+        row-gap: 12px;
     }
 
-    .timeline-item.left,
-    .timeline-item.right {
-        padding-left: 40px;
+    .exp-desc {
+        grid-column: 2;
+        max-width: 64ch;
+    }
+}
+
+/* ===== PHONE: stacked — date chip, role, company, description ===== */
+@media (max-width: 600px) {
+    .exp {
+        --exp-pad-x: 0px;
     }
 
-    .timeline-dot {
-        left: 14px;
-        width: 14px;
-        height: 14px;
+    .exp-groups {
+        gap: 48px;
     }
 
-    .timeline-dot-inner {
-        width: 6px;
-        height: 6px;
+    .exp-group-head {
+        padding-bottom: 14px;
+    }
+
+    .exp-row {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 0;
+        padding-block: 24px 26px;
+    }
+
+    .exp-row::before {
+        display: none;
+    }
+
+    /* A block (not flex) chip, so the spaces around the en dash survive. */
+    .exp-date {
+        justify-self: start;
+        height: 26px;
+        padding: 0 10px;
+        line-height: 24px;
+        margin-bottom: 14px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-pill);
+        background: var(--bg-elev);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        color: var(--fg-muted);
+    }
+
+    .exp-role {
+        font-size: var(--text-lg);
+    }
+
+    .exp-org {
+        margin-top: 2px;
+        font-size: var(--text-sm);
+    }
+
+    .exp-desc {
+        grid-column: auto;
+        margin-top: 10px;
+        font-size: var(--text-sm);
+        line-height: 1.65;
     }
 }

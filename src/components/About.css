@@ -1,84 +1,555 @@
-/* Single column since the avatar was removed — the portrait already leads the
-   hero, so About is a centred measure of text rather than a two-up layout. */
-.about-grid {
-    max-width: 780px;
-    margin: 0 auto;
+/* =========================================================
+   ABOUT — 01
+   A bento of small facts around one large intro card.
+   Desktop: 4 columns, 3 rows, interlocking spans (no holes).
+   ========================================================= */
+
+.about-bento {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-areas:
+        'intro  intro  now  place'
+        'intro  intro  do   lang'
+        'traits traits do   award';
+    gap: 16px;
 }
 
-.about-text h3 {
-    font-family: var(--font-display);
-    font-size: 1.9rem;
-    margin-bottom: 20px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-}
-
-.about-name-highlight {
-    background: linear-gradient(135deg, var(--accent-light), var(--cyan));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.about-text p {
-    color: var(--text-secondary);
-    margin-bottom: 18px;
-    font-size: 1.02rem;
-    line-height: 1.85;
-}
-
-.about-tags {
+/* ===== CARD SHELL ===== */
+.about-card {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 28px;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+    padding: clamp(22px, 2.2vw, 30px);
+    /* No transform transition: Reveal drives `transform` every frame. */
+    transition:
+        border-color var(--dur) ease,
+        box-shadow var(--dur) ease;
 }
 
-.about-tag {
-    padding: 8px 18px;
-    border-radius: 50px;
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    font-size: 0.82rem;
-    color: var(--accent-light);
-    transition: all 0.3s ease;
-    cursor: default;
+.about-card--intro { grid-area: intro; }
+.about-card--now { grid-area: now; }
+.about-card--place { grid-area: place; }
+.about-card--do { grid-area: do; }
+.about-card--lang { grid-area: lang; }
+.about-card--traits { grid-area: traits; }
+.about-card--award { grid-area: award; }
+
+.about-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 34px;
+}
+
+.about-card__label {
+    line-height: 1.2;
+}
+
+/* Content sits at the foot of the card, so cards stretched by the grid
+   keep their label up top and their facts grounded at the bottom. */
+.about-card__body {
+    margin-top: auto;
+}
+
+.about-card__title {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: var(--text-lg);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    text-wrap: balance;
+}
+
+.about-card__sub {
+    font-size: var(--text-sm);
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    color: var(--fg-muted);
+}
+
+.about-card__count {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+    color: var(--fg-subtle);
+    font-variant-numeric: tabular-nums;
+}
+
+.about-icon {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+    background: var(--bg-inset);
+    color: var(--fg-muted);
+    font-size: 0.8125rem;
+    transition:
+        color var(--dur) ease,
+        border-color var(--dur) ease,
+        transform 0.5s var(--ease-out);
+}
+
+.about-card:hover .about-icon {
+    color: var(--accent);
+    border-color: var(--line-strong);
+    transform: rotate(-8deg);
+}
+
+/* ===== 1. INTRO ===== */
+.about-card--intro {
+    gap: 28px;
+    overflow: hidden;
+}
+
+/* Faint grid texture fading out from the top-right corner. */
+.about .about-intro__grid {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    background-size: 40px 40px;
+    background-position: -1px -1px;
+    mask-image: radial-gradient(circle at 100% 0%, #000 0%, transparent 55%);
+    -webkit-mask-image: radial-gradient(circle at 100% 0%, #000 0%, transparent 55%);
+}
+
+.about-intro__title {
+    font-size: var(--display-sm);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    color: var(--fg);
+}
+
+.about-intro__title .serif {
+    letter-spacing: -0.015em;
+}
+
+.about-intro__copy {
+    display: grid;
+    gap: 18px;
+    max-width: 58ch;
+}
+
+.about-intro__copy .about-intro__title {
+    margin-bottom: 6px;
+}
+
+.about-intro__lede {
+    font-size: var(--text-xl);
+    line-height: 1.6;
+    letter-spacing: -0.012em;
+    color: var(--fg);
+}
+
+.about-intro__text {
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: var(--fg-muted);
+}
+
+/* ===== 2. CURRENTLY ===== */
+.about-card--now .about-card__body {
+    display: grid;
+    gap: 20px;
+}
+
+.about-degree {
+    display: grid;
+    gap: 10px;
+}
+
+/* Four academic years; the last (current) one is lit in the accent. */
+.about-degree__bar {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 3px;
+}
+
+.about-degree__bar > span {
+    height: 4px;
+    border-radius: var(--radius-pill);
+    background: var(--fg-subtle);
+}
+
+.about-degree__bar > .is-current {
+    background: var(--accent);
+}
+
+.about-degree__years {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    color: var(--fg-muted);
+    font-variant-numeric: tabular-nums;
     white-space: nowrap;
 }
 
-.about-tag:hover {
-    border-color: var(--accent);
-    background: var(--accent-subtle);
+/* ===== 3. BASED IN ===== */
+.about-place {
+    display: grid;
+    gap: 20px;
 }
 
-/* ===== ABOUT MOBILE ===== */
-@media (max-width: 900px) {
-    /* Kept from the previous two-column collapse — mobile stays centred. */
-    .about-grid {
-        text-align: center;
+.about-clock {
+    display: grid;
+    gap: 6px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+}
+
+.about-clock__label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--fg-subtle);
+}
+
+.about-clock__row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+/* Fixed-width digits: the minute ticking over never nudges the layout. */
+.about-clock__time {
+    min-width: 5ch;
+    font-family: var(--font-mono);
+    font-size: clamp(1.75rem, 2.4vw, 2.125rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+    color: var(--fg);
+}
+
+.about-clock__zone {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    color: var(--fg-muted);
+}
+
+/* ===== 4. WHAT I DO ===== */
+.about-do {
+    display: flex;
+    flex-direction: column;
+}
+
+/* On desktop the card spans two rows: the rows share its full height. */
+.about-card--do .about-do {
+    flex: 1;
+}
+
+.about-do__item {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    align-items: baseline;
+    align-content: center;
+    gap: 8px;
+    padding: 16px 0;
+    border-top: 1px solid var(--line);
+}
+
+.about-do__item:last-child {
+    padding-bottom: 0;
+}
+
+.about-do__text {
+    display: grid;
+    gap: 4px;
+    transition: transform 0.45s var(--ease-out);
+}
+
+.about-do__note {
+    font-size: var(--text-sm);
+    line-height: 1.45;
+    color: var(--fg-muted);
+    text-wrap: pretty;
+}
+
+.about-do__num {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+    color: var(--fg-subtle);
+    font-variant-numeric: tabular-nums;
+    transition: color var(--dur) ease;
+}
+
+.about-do__name {
+    font-size: var(--text-xl);
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+}
+
+.about-do__item:hover .about-do__num {
+    color: var(--accent);
+}
+
+.about-do__item:hover .about-do__text {
+    transform: translateX(4px);
+}
+
+/* ===== 5. TRAITS ===== */
+.about-traits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.about .about-traits__chip {
+    height: 32px;
+    padding: 0 14px;
+    background: var(--bg-inset);
+    color: var(--fg-muted);
+    transition:
+        color var(--dur) ease,
+        border-color var(--dur) ease,
+        background-color var(--dur) ease;
+}
+
+.about .about-traits__chip:hover {
+    color: var(--fg);
+    border-color: var(--line-strong);
+    background: var(--bg-elev);
+}
+
+/* ===== 6. LANGUAGES ===== */
+.about-lang {
+    display: grid;
+    gap: 18px;
+}
+
+.about-lang__item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    row-gap: 10px;
+    column-gap: 12px;
+}
+
+.about-lang__name {
+    font-size: var(--text-base);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    color: var(--fg);
+}
+
+.about-lang__level {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg-muted);
+}
+
+.about-lang__meter {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 3px;
+}
+
+.about-lang__meter > span {
+    height: 4px;
+    border-radius: var(--radius-pill);
+    background: var(--line-strong);
+}
+
+.about-lang__meter > .is-on {
+    background: var(--fg);
+}
+
+/* ===== 7. RECOGNITION ===== */
+.about-awards {
+    display: grid;
+}
+
+.about-awards__item {
+    display: grid;
+    gap: 4px;
+    padding: 14px 0;
+    border-top: 1px solid var(--line);
+}
+
+.about-awards__item:last-child {
+    padding-bottom: 0;
+}
+
+.about-awards__title {
+    font-size: var(--text-base);
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+    color: var(--fg);
+    text-wrap: balance;
+}
+
+.about-awards__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 12px;
+    font-size: var(--text-sm);
+    color: var(--fg-muted);
+}
+
+.about-awards__year {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    line-height: 1.9;
+    color: var(--fg-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ===== SMALL DESKTOP: narrow 4-column cards ===== */
+@media (max-width: 1240px) and (min-width: 1081px) {
+    /* Index above the name, so names get the full card width. */
+    .about-do__item {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 6px;
     }
 
-    .about-tags {
-        justify-content: center;
+    .about-do__name {
+        font-size: var(--text-lg);
+    }
+}
+
+/* ===== LAPTOP: 2 columns ===== */
+@media (max-width: 1080px) {
+    .about-bento {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-areas:
+            'intro  intro'
+            'now    place'
+            'do     lang'
+            'do     award'
+            'traits traits';
     }
 
-    .about-text h3 {
-        font-size: 1.5rem;
+    .about-intro__copy {
+        max-width: 68ch;
+    }
+}
+
+/* ===== PHONE: one column, still a bento ===== */
+@media (max-width: 600px) {
+    .about-bento {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            'intro'
+            'now'
+            'place'
+            'do'
+            'lang'
+            'traits'
+            'award';
+        gap: 12px;
     }
 
-    .about-text p {
-        font-size: 0.92rem;
-        line-height: 1.7;
+    .about-card {
+        gap: 20px;
+        padding: 22px;
+        border-radius: var(--radius);
     }
 
-    .about-tag {
-        padding: 6px 14px;
-        font-size: 0.75rem;
+    .about-card--intro {
+        padding: 24px 22px 26px;
+    }
+
+    .about-intro__title {
+        font-size: 1.875rem;
+    }
+
+    .about-intro__lede {
+        font-size: var(--text-base);
+    }
+
+    .about-intro__text {
+        font-size: 0.9375rem;
+    }
+
+    /* Location and clock side by side: a wide, short tile. */
+    .about-place {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+    }
+
+    .about-clock {
+        padding-top: 0;
+        border-top: 0;
+        justify-items: end;
+        text-align: right;
+    }
+
+    .about-do__item {
+        padding: 14px 0;
+    }
+
+    .about-do__name {
+        font-size: var(--text-lg);
+    }
+
+    .about-traits {
+        gap: 6px;
+    }
+
+    .about .about-traits__chip {
+        height: 30px;
+        padding: 0 12px;
+    }
+
+    /* Two languages side by side keep the tile short and square-ish. */
+    .about-lang {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 20px;
+    }
+
+    .about-lang__item {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 6px;
+    }
+
+    .about-lang__meter {
+        margin-top: 6px;
     }
 }
 
 @media (max-width: 380px) {
-    .about-text h3 {
-        font-size: 1.3rem;
+    .about-card {
+        padding: 20px 18px;
+    }
+
+    .about-intro__title {
+        font-size: 1.625rem;
+    }
+
+    .about-place {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .about-clock {
+        padding-top: 14px;
+        border-top: 1px solid var(--line);
+        justify-items: start;
+        text-align: left;
     }
 }
