@@ -3,18 +3,27 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preload" as="image" href="/portrait.jpg"
     imagesrcset="/portrait-sm.jpg 500w, /portrait.jpg 1000w"
     imagesizes="(max-width: 380px) 210px, (max-width: 900px) 250px, 430px" fetchpriority="high" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rand Zana | Software Engineer · Videographer · Content Creator</title>
   <meta name="description"
     content="Portfolio of Rand Zana - Software Engineer, Videographer, Marketing Manager & Content Creator." />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-    rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <meta name="theme-color" content="#f6f6f3" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0a0a0b" media="(prefers-color-scheme: dark)" />
+  <!-- Apply the saved (or system) theme before first paint so the page never flashes the wrong one. -->
+  <script>
+    (function () {
+      var theme;
+      try { theme = localStorage.getItem('theme'); } catch (e) { /* storage blocked */ }
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
 </head>
 
 <body>
