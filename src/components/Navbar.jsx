@@ -1,198 +1,257 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { flushSync } from 'react-dom';
+import {
+    motion,
+    AnimatePresence,
+    useScroll,
+    useSpring,
+    useReducedMotion,
+} from 'framer-motion';
+import { EASE_OUT } from '../lib/motion';
 import './Navbar.css';
 
 const navItems = [
     { label: 'About', href: '#about' },
-    { label: 'Skills', href: '#skills' },
-    { label: 'Certificates', href: '#certificates' },
     { label: 'Projects', href: '#projects' },
+    { label: 'Skills', href: '#skills' },
     { label: 'Experience', href: '#experience' },
+    { label: 'Certificates', href: '#certificates' },
     { label: 'Resume', href: '#resume' },
 ];
 
-export default function Navbar() {
-    const [scrolled, setScrolled] = useState(false);
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [activeSection, setActiveSection] = useState('');
-    const [scrollProgress, setScrollProgress] = useState(0);
-    const [showScrollTop, setShowScrollTop] = useState(false);
+const CONDENSE_AT = 24;
+const BACK_TO_TOP_AT = 600;
 
-    // Theme initialization (localStorage -> system setting -> default dark)
-    const [theme, setTheme] = useState(() => {
+function readStoredTheme() {
+    try {
         const saved = localStorage.getItem('theme');
-        if (saved) return saved;
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    });
+        return saved === 'light' || saved === 'dark' ? saved : null;
+    } catch {
+        return null;
+    }
+}
+
+function systemTheme() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+// index.html applies the theme before first paint, so start from what is
+// already on <html> and nothing flips on mount.
+function initialTheme() {
+    const applied = document.documentElement.dataset.theme;
+    if (applied === 'light' || applied === 'dark') return applied;
+    return readStoredTheme() ?? systemTheme();
+}
+
+function applyTheme(theme) {
+    const root = document.documentElement;
+    root.setAttribute('data-theme', theme);
+    // Keep the browser chrome (mobile address bar) in step with the page.
+    const bg = getComputedStyle(root).getPropertyValue('--bg').trim();
+    if (bg) {
+        document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
+            meta.setAttribute('content', bg);
+        });
+    }
+}
+
+export default function Navbar() {
+    const reduceMotion = useReducedMotion();
+    const [condensed, setCondensed] = useState(() => window.scrollY > CONDENSE_AT);
+    const [showScrollTop, setShowScrollTop] = useState(() => window.scrollY > BACK_TO_TOP_AT);
+    const [activeSection, setActiveSection] = useState('');
+    const [theme, setTheme] = useState(initialTheme);
+
+    const { scrollYProgress } = useScroll();
+    const progress = useSpring(scrollYProgress, { stiffness: 260, damping: 40, restDelta: 0.001 });
 
     useEffect(() => {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
+        applyTheme(theme);
     }, [theme]);
 
-    const toggleTheme = () => {
-        setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-    };
-
+    // Follow the OS theme until the visitor picks one themselves.
     useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
-            setShowScrollTop(window.scrollY > 500);
-
-            const sections = document.querySelectorAll('section[id]');
-            let current = '';
-            sections.forEach(s => {
-                if (window.scrollY >= s.offsetTop - 220) {
-                    current = s.id;
-                }
-            });
-            setActiveSection(current);
-
-            const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-            if (totalScroll > 0) {
-                setScrollProgress((window.scrollY / totalScroll) * 100);
-            }
+        const media = window.matchMedia('(prefers-color-scheme: dark)');
+        const onChange = event => {
+            if (!readStoredTheme()) setTheme(event.matches ? 'dark' : 'light');
         };
-
-        window.addEventListener('scroll', handleScroll);
-        handleScroll();
-        
-        return () => window.removeEventListener('scroll', handleScroll);
+        media.addEventListener('change', onChange);
+        return () => media.removeEventListener('change', onChange);
     }, []);
 
     useEffect(() => {
-        if (menuOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = '';
-        }
-        return () => { document.body.style.overflow = ''; };
-    }, [menuOpen]);
+        let frame = 0;
 
-    const scrollTo = (e, href) => {
-        e.preventDefault();
-        setMenuOpen(false);
+        const update = () => {
+            frame = 0;
+            const y = window.scrollY;
+            setCondensed(y > CONDENSE_AT);
+            setShowScrollTop(y > BACK_TO_TOP_AT);
+
+            let current = '';
+            document.querySelectorAll('section[id]').forEach(section => {
+                if (y >= section.offsetTop - 220) current = section.id;
+            });
+            setActiveSection(current);
+        };
+
+        const onScroll = () => {
+            if (!frame) frame = requestAnimationFrame(update);
+        };
+
+        // First measurement once the sections below have mounted.
+        frame = requestAnimationFrame(update);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        return () => {
+            cancelAnimationFrame(frame);
+            window.removeEventListener('scroll', onScroll);
+            window.removeEventListener('resize', onScroll);
+        };
+    }, []);
+
+    const scrollBehavior = reduceMotion ? 'auto' : 'smooth';
+
+    const scrollTo = (event, href) => {
+        event.preventDefault();
         const el = document.querySelector(href);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        if (el) el.scrollIntoView({ behavior: scrollBehavior });
     };
+
+    const scrollToTop = event => {
+        event?.preventDefault();
+        window.scrollTo({ top: 0, behavior: scrollBehavior });
+    };
+
+    const toggleTheme = event => {
+        const next = theme === 'dark' ? 'light' : 'dark';
+        try {
+            localStorage.setItem('theme', next);
+        } catch {
+            /* storage blocked — the choice still applies for this visit */
+        }
+
+        const commit = () => {
+            flushSync(() => setTheme(next));
+            applyTheme(next);
+        };
+
+        if (!document.startViewTransition || reduceMotion) {
+            commit();
+            return;
+        }
+
+        // Reveal the new theme in a circle growing out of the toggle.
+        const rect = event.currentTarget.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+        const root = document.documentElement;
+
+        root.classList.add('nav-theme-switching');
+        const transition = document.startViewTransition(commit);
+        transition.ready
+            .then(() => {
+                root.animate(
+                    { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+                    { duration: 560, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', pseudoElement: '::view-transition-new(root)' },
+                );
+            })
+            .catch(() => {});
+        transition.finished.finally(() => root.classList.remove('nav-theme-switching'));
+    };
+
+    const isDark = theme === 'dark';
+    const themeLabel = isDark ? 'Switch to light theme' : 'Switch to dark theme';
 
     return (
         <>
-            <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-                <div className="scroll-progress-container">
-                    <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} />
-                </div>
+            <a href="#hero" className="nav-skip">Skip to content</a>
 
-                <a href="#" className="nav-logo" onClick={e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-                    <span className="logo-text">RZ</span>
-                    <span className="logo-dot">.</span>
-                </a>
-
-                {/* Desktop nav links */}
-                <div className="nav-links-desktop">
-                    {navItems.map(item => (
-                        <a
-                            key={item.href}
-                            href={item.href}
-                            className={`nav-link ${activeSection === item.href.slice(1) ? 'active' : ''}`}
-                            onClick={e => scrollTo(e, item.href)}
-                        >
-                            {item.label}
-                            {activeSection === item.href.slice(1) && (
-                                <motion.span 
-                                    className="nav-indicator"
-                                    layoutId="navActiveIndicator"
-                                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                                />
-                            )}
-                        </a>
-                    ))}
-                    
-                    {/* Theme Toggle Button */}
-                    <button
-                        className="theme-toggle-btn"
-                        onClick={toggleTheme}
-                        aria-label="Toggle theme"
-                    >
-                        <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`} />
-                    </button>
-
-                    <a
-                        href="#contact"
-                        className="nav-cta"
-                        onClick={e => scrollTo(e, '#contact')}
-                    >
-                        <i className="fa-solid fa-paper-plane" /> Let's Talk
-                    </a>
-                </div>
-
-                {/* Mobile actions container */}
-                <div className="nav-right-mobile">
-                    <button
-                        className="theme-toggle-btn"
-                        onClick={toggleTheme}
-                        aria-label="Toggle theme"
-                    >
-                        <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`} />
-                    </button>
-                    <button
-                        className="menu-toggle"
-                        onClick={() => setMenuOpen(!menuOpen)}
-                        aria-label="Toggle navigation"
-                    >
-                        <i className={`fa-solid ${menuOpen ? 'fa-times' : 'fa-bars'}`} />
-                    </button>
-                </div>
-            </nav>
-
-            {/* Mobile full-screen overlay */}
-            <div className={`mobile-overlay ${menuOpen ? 'open' : ''}`}>
-                <button
-                    className="mobile-close-btn"
-                    onClick={() => setMenuOpen(false)}
-                    aria-label="Close menu"
-                >
-                    <i className="fa-solid fa-times" />
-                </button>
-
-                <div className="mobile-nav-content">
-                    {navItems.map((item, i) => (
-                        <a
-                            key={item.href}
-                            href={item.href}
-                            className="mobile-link"
-                            onClick={e => scrollTo(e, item.href)}
-                            style={{ transitionDelay: menuOpen ? `${i * 80}ms` : '0ms' }}
-                        >
-                            {item.label}
-                        </a>
-                    ))}
-                    <a
-                        href="#contact"
-                        className="btn btn-primary mobile-cta"
-                        onClick={e => scrollTo(e, '#contact')}
-                        style={{ transitionDelay: menuOpen ? '320ms' : '0ms' }}
-                    >
-                        <i className="fa-solid fa-paper-plane" /> Let's Talk
-                    </a>
-                </div>
+            <div className="nav-progress" aria-hidden="true">
+                <motion.div className="nav-progress-bar" style={{ scaleX: progress }} />
             </div>
 
-            {/* Back to top button */}
+            <header className={`nav ${condensed ? 'is-condensed' : ''}`}>
+                <nav className="nav-bar" aria-label="Primary">
+                    <a href="#" className="nav-brand" onClick={scrollToTop} aria-label="Rand Zana — back to top">
+                        <span className="nav-brand-tile" aria-hidden="true">RZ</span>
+                        <span className="nav-brand-name" aria-hidden="true">
+                            Rand Zana<span className="nav-brand-dot" />
+                        </span>
+                    </a>
+
+                    <ul className="nav-links">
+                        {navItems.map(item => {
+                            const isActive = activeSection === item.href.slice(1);
+                            return (
+                                <li key={item.href}>
+                                    <a
+                                        href={item.href}
+                                        className={`nav-link ${isActive ? 'is-active' : ''}`}
+                                        aria-current={isActive ? 'location' : undefined}
+                                        onClick={e => scrollTo(e, item.href)}
+                                    >
+                                        {isActive && (
+                                            <motion.span
+                                                className="nav-link-pill"
+                                                layoutId="nav-active-pill"
+                                                transition={{ type: 'spring', stiffness: 420, damping: 36 }}
+                                            />
+                                        )}
+                                        <span className="nav-link-label">{item.label}</span>
+                                    </a>
+                                </li>
+                            );
+                        })}
+                    </ul>
+
+                    <div className="nav-actions">
+                        <button
+                            type="button"
+                            className="icon-btn nav-theme"
+                            onClick={toggleTheme}
+                            aria-label="Toggle theme"
+                            title={themeLabel}
+                        >
+                            <AnimatePresence mode="wait" initial={false}>
+                                <motion.i
+                                    key={theme}
+                                    className={`fa-solid ${isDark ? 'fa-sun' : 'fa-moon'}`}
+                                    initial={{ opacity: 0, rotate: -90, scale: 0.6 }}
+                                    animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                                    exit={{ opacity: 0, rotate: 90, scale: 0.6 }}
+                                    transition={{ duration: 0.25, ease: EASE_OUT }}
+                                    aria-hidden="true"
+                                />
+                            </AnimatePresence>
+                        </button>
+
+                        <a href="#contact" className="btn btn-primary btn-sm nav-cta" onClick={e => scrollTo(e, '#contact')}>
+                            Let's talk
+                            <span className="btn-arrow" aria-hidden="true">
+                                <i className="fa-solid fa-arrow-right" />
+                            </span>
+                        </a>
+                    </div>
+                </nav>
+            </header>
+
             <AnimatePresence>
                 {showScrollTop && (
                     <motion.button
-                        className="scroll-to-top-btn"
-                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                        initial={{ opacity: 0, scale: 0.7, y: 15 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.7, y: 15 }}
-                        whileHover={{ scale: 1.1, translateY: -3 }}
-                        whileTap={{ scale: 0.95 }}
-                        transition={{ duration: 0.25 }}
+                        type="button"
+                        className="icon-btn nav-top"
+                        onClick={() => scrollToTop()}
+                        initial={{ opacity: 0, y: 16, scale: 0.85 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 16, scale: 0.85 }}
+                        whileTap={{ scale: 0.92 }}
+                        transition={{ duration: 0.35, ease: EASE_OUT }}
                         aria-label="Scroll to top"
+                        title="Back to top"
                     >
-                        <i className="fa-solid fa-arrow-up" />
+                        <i className="fa-solid fa-arrow-up" aria-hidden="true" />
                     </motion.button>
                 )}
             </AnimatePresence>

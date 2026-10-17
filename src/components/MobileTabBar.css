@@ -1,149 +1,139 @@
-/* ===== MOBILE TAB BAR — Floating Pill Design ===== */
+/* =========================================================
+   MOBILE DOCK + PAGE SYSTEM (≤900px, body.mobile-app-mode)
+   A floating glass dock. The active tab widens into an inverted
+   pill that carries its label; the others are icon-only.
+   This file also owns every page-level rule of app mode.
+   ========================================================= */
 
-.mobile-tab-bar {
+.dock {
     display: none;
 }
 
 @media (max-width: 900px) {
-
-    /* ---- Floating pill wrapper ---- */
-    .mobile-tab-bar {
-        display: flex;
+    .dock {
         position: fixed;
-        bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-        left: 50%;
-        transform: translateX(-50%);
+        inset: auto 0 calc(14px + env(safe-area-inset-bottom, 0px));
         z-index: 1100;
-        pointer-events: none; /* let clicks fall through outside the pill */
+        display: flex;
+        justify-content: center;
+        padding-inline: 12px;
+        pointer-events: none;
     }
 
-    .mtb-inner {
+    .dock-inner {
         display: flex;
         align-items: center;
-        justify-content: center;
         gap: 4px;
-        padding: 10px 14px;
-        /* Dark glassy pill */
-        background: rgba(14, 14, 18, 0.82);
-        backdrop-filter: blur(40px) saturate(1.8) brightness(1.1);
-        -webkit-backdrop-filter: blur(40px) saturate(1.8) brightness(1.1);
-        border-radius: 100px;
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        box-shadow:
-            0 8px 40px rgba(0, 0, 0, 0.55),
-            0 2px 8px rgba(0, 0, 0, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.06);
-        pointer-events: all;
+        width: min(356px, 100%);
+        padding: 6px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-pill);
+        background: var(--glass);
+        box-shadow: var(--shadow-lg), var(--shadow-sm), var(--highlight);
+        backdrop-filter: blur(16px) saturate(1.4);
+        -webkit-backdrop-filter: blur(16px) saturate(1.4);
+        pointer-events: auto;
     }
 
-    :root[data-theme='light'] .mtb-inner {
-        background: rgba(240, 240, 245, 0.82);
-        border: 1px solid rgba(0, 0, 0, 0.07);
-        box-shadow:
-            0 8px 40px rgba(0, 0, 0, 0.12),
-            0 2px 8px rgba(0, 0, 0, 0.06),
-            inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    }
-
-    /* ---- Individual Tab Button ---- */
-    .mtb-tab {
+    /* ----- Tabs ----- */
+    .dock-tab {
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 52px;
-        height: 52px;
-        border: none;
-        background: none;
-        cursor: pointer;
-        border-radius: 50px;
+        gap: 9px;
+        flex: 0 0 50px;
+        height: 50px;
+        min-width: 0;
+        padding: 0;
+        border-radius: var(--radius-pill);
+        color: var(--fg-muted);
         -webkit-tap-highlight-color: transparent;
-        outline: none;
-        transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
-                    opacity 0.18s ease;
-        flex-shrink: 0;
+        transition: color 0.25s ease;
     }
 
-    .mtb-tab:active {
-        transform: scale(0.84);
-        opacity: 0.7;
+    .dock-tab.is-active {
+        flex: 1 1 auto;
+        color: var(--inverse-fg);
     }
 
-    /* ---- Active animated background pill ---- */
-    .mtb-active-pill {
+    .dock-tab:not(.is-active):active .dock-icon {
+        transform: scale(0.86);
+    }
+
+    .dock-tab:focus-visible {
+        outline-offset: 2px;
+    }
+
+    .dock-pill {
         position: absolute;
         inset: 0;
-        border-radius: 50px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.1);
         z-index: 0;
+        background: var(--inverse-bg);
+        box-shadow: var(--shadow-sm);
     }
 
-    :root[data-theme='light'] .mtb-active-pill {
-        background: rgba(0, 0, 0, 0.07);
-        border: 1px solid rgba(0, 0, 0, 0.07);
-    }
-
-    /* ---- Icon ---- */
-    .mtb-icon {
-        font-size: 1.3rem;
-        color: rgba(255, 255, 255, 0.35);
+    .dock-icon {
         position: relative;
         z-index: 1;
+        font-size: 1.0625rem;
         line-height: 1;
-        transition: color 0.22s ease,
-                    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-                    filter 0.22s ease;
-        will-change: color, transform;
+        transition: transform 0.2s var(--ease-out);
     }
 
-    :root[data-theme='light'] .mtb-icon {
-        color: rgba(0, 0, 0, 0.28);
+    .dock-label {
+        position: relative;
+        z-index: 1;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1;
+        white-space: nowrap;
     }
 
-    .mtb-tab.active .mtb-icon {
-        color: rgba(255, 255, 255, 0.92);
-        transform: scale(1.1);
-    }
+    /* ===== PAGE SYSTEM ===== */
 
-    :root[data-theme='light'] .mtb-tab.active .mtb-icon {
-        color: rgba(0, 0, 0, 0.78);
-    }
-
-    /* ===== MOBILE PAGE SYSTEM ===== */
+    /* Room for the dock below the last section / footer. */
     body.mobile-app-mode {
-        padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+        padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
     }
 
-    .mobile-page {
-        animation: mobilePageIn 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    /* The first section of every tab clears the fixed top bar… */
+    body.mobile-app-mode section.mobile-page:not(.hero) {
+        padding-top: calc(var(--nav-h) + 24px);
     }
 
-    @keyframes mobilePageIn {
-        from {
-            opacity: 0;
-            transform: translateY(10px) scale(0.99);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
+    /* …and a second section on the same tab reads as a continuation. */
+    body.mobile-app-mode section.mobile-page ~ section.mobile-page {
+        padding-top: 24px;
     }
 
-    /* ---- scroll-to-top stays above the floating bar ---- */
-    .mobile-app-mode .scroll-to-top-btn {
-        bottom: calc(110px + env(safe-area-inset-bottom, 0px)) !important;
+    /* No fill-mode forwards: a lingering transform would trap any
+       position: fixed lightbox inside the section. */
+    body.mobile-app-mode .mobile-page {
+        animation: dockPageIn 0.5s var(--ease-out) backwards;
     }
 
-    .mobile-app-mode .nav-right-mobile .menu-toggle {
+    body.mobile-app-mode .scroll-indicator {
         display: none;
     }
+}
 
-    .mobile-app-mode .mobile-overlay {
-        display: none !important;
+@keyframes dockPageIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+}
+
+@media (max-width: 340px) {
+    .dock-tab,
+    .dock-tab.is-active {
+        flex: 1 1 0;
+        height: 46px;
     }
 
-    .mobile-app-mode .scroll-indicator {
+    .dock-label {
         display: none;
     }
 }

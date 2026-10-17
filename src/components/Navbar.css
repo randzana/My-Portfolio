@@ -1,364 +1,363 @@
-.navbar {
+/* =========================================================
+   NAVBAR
+   Transparent and container-wide at the top of the page; after
+   a few pixels of scroll it condenses into one floating glass
+   pill. ≤900px it is a slim bar (brand + theme) — the dock is
+   the navigation there.
+   ========================================================= */
+
+/* ----- Skip link (visible on keyboard focus only) ----- */
+.nav-skip {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    padding: 18px 40px;
-    display: flex;
+    top: 12px;
+    left: 12px;
+    z-index: 1200;
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    background: var(--nav-bg);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-bottom: 1px solid var(--glass-border);
-    transition: padding 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+    height: 40px;
+    padding: 0 18px;
+    border-radius: var(--radius-pill);
+    background: var(--inverse-bg);
+    color: var(--inverse-fg);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    transform: translateY(-200%);
+    transition: transform var(--dur) var(--ease-out);
 }
 
-.navbar.scrolled {
-    padding: 12px 40px;
-    background: var(--nav-bg-scrolled);
-    box-shadow: var(--nav-shadow);
+.nav-skip:focus-visible {
+    transform: none;
 }
 
-/* Scroll Progress Bar */
-.scroll-progress-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: transparent;
-    overflow: hidden;
+/* ----- Scroll progress ----- */
+.nav-progress {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 1001;
+    height: 2px;
     pointer-events: none;
 }
 
-.scroll-progress-bar {
+.nav-progress-bar {
     height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--cyan), var(--pink));
-    width: 0%;
-    transition: width 0.05s ease-out;
+    background: var(--accent);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
 }
 
-.nav-logo {
-    font-family: var(--font-display);
-    font-size: 1.6rem;
-    font-weight: 800;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
+/* ----- Bar ----- */
+.nav {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 1000;
+    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
+    pointer-events: none;
+    transition: padding 0.6s var(--ease-out);
+}
+
+.nav.is-condensed {
+    padding-top: calc(12px + env(safe-area-inset-top, 0px));
+    padding-inline: max(12px, env(safe-area-inset-left, 0px)) max(12px, env(safe-area-inset-right, 0px));
+}
+
+.nav-bar {
     position: relative;
-    z-index: 1002;
-}
-
-.logo-text {
-    background: linear-gradient(135deg, var(--accent-light), var(--cyan));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.logo-dot {
-    color: var(--pink);
-    -webkit-text-fill-color: var(--pink);
-    font-size: 2rem;
-    line-height: 1;
-}
-
-/* ===== DESKTOP NAV ===== */
-.nav-links-desktop {
-    display: flex;
-    gap: 6px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
+    gap: 16px;
+    max-width: calc(var(--container) + var(--gutter) * 2);
+    height: var(--nav-h);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    border: 1px solid transparent;
+    border-radius: var(--radius-pill);
+    background-color: transparent;
+    pointer-events: auto;
+    transition:
+        max-width 0.6s var(--ease-out),
+        height 0.6s var(--ease-out),
+        padding 0.6s var(--ease-out),
+        background-color 0.4s ease,
+        border-color 0.4s ease,
+        box-shadow 0.4s ease,
+        backdrop-filter 0.4s ease,
+        -webkit-backdrop-filter 0.4s ease;
+}
+
+.nav.is-condensed .nav-bar {
+    max-width: 980px;
+    height: 58px;
+    padding-inline: 8px;
+    background-color: var(--glass);
+    border-color: var(--line);
+    box-shadow: var(--shadow-md), var(--highlight);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+}
+
+/* ----- Brand ----- */
+.nav-brand {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    height: 40px;
+    padding-right: 8px;
+    border-radius: var(--radius-pill);
+    color: var(--fg);
+}
+
+/* Rounded tile at the top (echoes the favicon); turns into a circle
+   inside the pill so its curve stays concentric with the pill's. */
+.nav-brand-tile {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: var(--inverse-bg);
+    color: var(--inverse-fg);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    box-shadow: var(--shadow-sm);
+    transition:
+        border-radius 0.6s var(--ease-out),
+        transform 0.5s var(--ease-out);
+}
+
+.nav.is-condensed .nav-brand-tile {
+    border-radius: 50%;
+}
+
+.nav-brand:hover .nav-brand-tile {
+    transform: rotate(-8deg);
+}
+
+.nav-brand-name {
+    display: inline-flex;
+    align-items: baseline;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.nav-brand-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-left: 3px;
+    border-radius: 50%;
+    background: var(--accent);
+    transition: transform 0.5s var(--ease-out);
+}
+
+.nav-brand:hover .nav-brand-dot {
+    transform: scale(1.35);
+}
+
+/* ----- Links ----- */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    background-color: var(--glass);
+    box-shadow: var(--highlight);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    transition:
+        background-color 0.4s ease,
+        border-color 0.4s ease,
+        box-shadow 0.4s ease;
+}
+
+/* Inside the condensed pill the group drops its own chrome —
+   one surface, not a pill inside a pill. */
+.nav.is-condensed .nav-links {
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 .nav-link {
-    color: var(--text-secondary);
-    padding: 8px 18px;
-    border-radius: 50px;
-    font-size: 0.88rem;
-    font-weight: 500;
-    transition: color 0.3s ease, background 0.3s ease;
     position: relative;
-    letter-spacing: 0.2px;
-}
-
-.nav-link:hover {
-    color: var(--text-primary);
-    background: var(--glass-strong);
-}
-
-.nav-link.active {
-    color: var(--text-primary);
-}
-
-/* Optimized for Framer Motion LayoutId animations */
-.nav-indicator {
-    position: absolute;
-    bottom: 2px;
-    left: 20%;
-    right: 20%;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--cyan));
-    border-radius: 2px;
-}
-
-.nav-cta {
-    background: linear-gradient(135deg, var(--accent), #9333ea) !important;
-    color: #fff !important;
-    font-weight: 600 !important;
-    padding: 10px 24px !important;
-    box-shadow: 0 4px 20px var(--accent-glow);
-    border-radius: 50px;
-    margin-left: 8px;
-    font-size: 0.88rem;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 34px;
+    padding: 0 15px;
+    border-radius: var(--radius-pill);
+    color: var(--fg-muted);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    transition: color 0.25s ease;
 }
 
-.nav-cta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px var(--accent-glow);
+.nav-link:hover,
+.nav-link.is-active {
+    color: var(--fg);
 }
 
-/* ===== HAMBURGER TOGGLE ===== */
-.menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    color: var(--text-primary);
-    font-size: 1.3rem;
-    cursor: pointer;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    transition: background 0.3s ease;
-    z-index: 1002;
-    position: relative;
-}
-
-.menu-toggle:hover {
-    background: var(--glass-strong);
-}
-
-/* ===== MOBILE OVERLAY ===== */
-.mobile-overlay {
-    position: fixed;
-    inset: 0;
-    background: var(--overlay-bg);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    z-index: 1001;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transform: scale(1.04);
-    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-        visibility 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-        transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.mobile-overlay.open {
-    opacity: 1;
-    visibility: visible;
-    transform: scale(1);
-}
-
-.mobile-close-btn {
+.nav-link-pill {
     position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 48px;
-    height: 48px;
-    border: 1px solid var(--glass-border);
-    border-radius: 14px;
-    background: var(--glass-strong);
-    color: var(--text-primary);
-    font-size: 1.4rem;
-    cursor: pointer;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background: var(--bg-elev-2);
+    box-shadow: inset 0 0 0 1px var(--line), var(--shadow-sm);
+}
+
+:root[data-theme='light'] .nav-link-pill {
+    background: var(--bg-elev);
+    box-shadow: inset 0 0 0 1px var(--line), 0 1px 3px rgba(11, 11, 12, 0.08);
+}
+
+.nav-link-label {
+    position: relative;
+    z-index: 1;
+}
+
+/* ----- Actions ----- */
+.nav-actions {
+    justify-self: end;
     display: flex;
     align-items: center;
-    justify-content: center;
-    z-index: 1003;
-    transition: background 0.3s ease, border-color 0.3s ease;
+    gap: 8px;
 }
 
-.mobile-close-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--accent);
+.nav-theme {
+    overflow: hidden;
 }
 
-.mobile-nav-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 28pxPers;
-}
-
-.mobile-nav-content {
-    perspective: 800px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 28px;
-}
-
-.mobile-link {
-    font-family: var(--font-display);
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-secondary);
-    letter-spacing: -0.5px;
-    opacity: 0;
-    transform: translateY(24px) rotateX(-20deg);
-    transform-origin: top center;
-    transition:
-        opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-        transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-        color 0.25s ease;
-    will-change: opacity, transform;
+.nav-theme i {
     display: block;
 }
 
-.mobile-overlay.open .mobile-link {
-    opacity: 1;
-    transform: translateY(0) rotateX(0deg);
+.nav-cta.btn-sm {
+    --btn-h: 40px;
+    gap: 12px;
+    padding: 0 6px 0 18px;
 }
 
-.mobile-link:hover,
-.mobile-link:active {
-    color: var(--text-primary);
+.nav-cta .btn-arrow {
+    width: 28px;
+    height: 28px;
+    margin-right: 0;
+    font-size: 0.6875rem;
 }
 
-.mobile-cta {
-    margin-top: 16px;
-    opacity: 0;
-    transform: translateY(24px) rotateX(-15deg);
-    transform-origin: top center;
-    transition:
-        opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-        transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-        color 0.25s ease,
-        background 0.25s ease,
-        box-shadow 0.25s ease;
-    will-change: opacity, transform;
-}
-
-.mobile-overlay.open .mobile-cta {
-    opacity: 1;
-    transform: translateY(0) rotateX(0deg);
-}
-
-/* Floating Back-to-Top button */
-.scroll-to-top-btn {
+/* ----- Back to top ----- */
+.nav-top.icon-btn {
     position: fixed;
-    bottom: 32px;
-    right: 32px;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: var(--bg-card);
-    border: 1px solid var(--glass-border);
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    cursor: pointer;
-    box-shadow: var(--shadow-card), 0 0 30px var(--accent-glow);
+    right: max(24px, env(safe-area-inset-right, 0px));
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
     z-index: 999;
-    outline: none;
-    transition: border-color 0.3s ease, background 0.3s ease;
+    width: 46px;
+    height: 46px;
+    border-color: var(--line-strong);
+    background: var(--glass);
+    box-shadow: var(--shadow-md), var(--highlight);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
 }
 
-.scroll-to-top-btn:hover {
-    border-color: var(--accent);
-    background: var(--bg-card-hover);
-    color: var(--accent-light);
-    box-shadow: var(--shadow-hover), 0 0 35px var(--accent-glow);
+.nav-top.icon-btn:hover {
+    background: var(--bg-elev);
+    color: var(--accent);
 }
 
-/* Theme Toggle Button */
-.theme-toggle-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    transition: var(--transition-fast);
+.nav-top i {
+    transition: transform 0.35s var(--ease-out);
 }
 
-.theme-toggle-btn:hover {
-    color: var(--text-primary);
-    background: var(--glass-strong);
-    transform: scale(1.08) rotate(15deg);
+.nav-top:hover i {
+    transform: translateY(-2px);
 }
 
-.nav-right-mobile {
-    display: none;
-    align-items: center;
-    gap: 8px;
-    z-index: 1002;
+/* ----- Theme switch reveal (View Transitions) ----- */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+
+/* Freeze CSS colour transitions while the new theme is revealed, so
+   the circle uncovers the finished state rather than a crossfade. */
+html.nav-theme-switching *,
+html.nav-theme-switching *::before,
+html.nav-theme-switching *::after {
+    transition: none !important;
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 900px) {
-    .nav-links-desktop {
+@media (max-width: 1080px) {
+    .nav-link {
+        padding: 0 12px;
+    }
+
+    .nav-brand-name {
         display: none;
-    }
-
-    .nav-right-mobile {
-        display: flex;
-    }
-
-    .menu-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .navbar {
-        padding: 14px 16px;
-    }
-
-    .navbar.scrolled {
-        padding: 10px 16px;
-    }
-
-    .nav-logo {
-        font-size: 1.4rem;
-    }
-    
-    .scroll-to-top-btn {
-        bottom: 20px;
-        right: 20px;
-        width: 42px;
-        height: 42px;
-        font-size: 0.9rem;
     }
 }
 
-/* ===== When mobile tab bar is active ===== */
 @media (max-width: 900px) {
-    body.mobile-app-mode .nav-right-mobile .menu-toggle {
+    .nav-bar {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .nav-links,
+    .nav-cta {
         display: none;
     }
 
-    body.mobile-app-mode .mobile-overlay {
-        display: none !important;
+    .nav-brand-name {
+        display: inline-flex;
     }
 
-    body.mobile-app-mode .scroll-to-top-btn {
-        bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    .nav.is-condensed {
+        padding-top: calc(8px + env(safe-area-inset-top, 0px));
+        padding-inline: max(10px, env(safe-area-inset-left, 0px)) max(10px, env(safe-area-inset-right, 0px));
+    }
+
+    .nav.is-condensed .nav-bar {
+        max-width: none;
+        height: 54px;
+        padding-inline: 6px;
+    }
+
+    .nav-top.icon-btn {
+        right: max(16px, env(safe-area-inset-right, 0px));
+        bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+        width: 44px;
+        height: 44px;
+    }
+
+    /* Sit above the floating dock (see MobileTabBar.css). */
+    body.mobile-app-mode .nav-top.icon-btn {
+        bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+@media (max-width: 380px) {
+    .nav-brand {
+        gap: 10px;
+    }
+
+    .nav-brand-tile {
+        width: 38px;
+        height: 38px;
     }
 }
