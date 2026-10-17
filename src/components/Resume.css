@@ -1,0 +1,234 @@
+.resume-card {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 56px;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 48px;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+}
+
+.resume-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--cyan), var(--pink));
+}
+
+/* ===== PREVIEW ===== */
+.resume-preview {
+    display: block;
+    position: relative;
+    padding: 24px;
+    border-radius: var(--radius-sm);
+    background-image: radial-gradient(circle at 2px 2px, var(--dot-pattern) 1px, transparent 0);
+    background-size: 24px 24px;
+}
+
+.resume-paper {
+    position: relative;
+    border-radius: var(--radius-xs);
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.04);
+    transform: rotate(-2deg);
+    transition: var(--transition);
+}
+
+.resume-paper img {
+    width: 100%;
+    height: auto;
+}
+
+.resume-preview:hover .resume-paper,
+.resume-preview:focus-visible .resume-paper {
+    transform: rotate(0deg) translateY(-6px);
+    box-shadow: 0 30px 70px var(--accent-glow);
+}
+
+.resume-preview-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(0deg, rgba(10, 10, 20, 0.7) 0%, transparent 55%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.resume-preview:hover .resume-preview-overlay,
+.resume-preview:focus-visible .resume-preview-overlay {
+    opacity: 1;
+}
+
+.resume-preview-overlay span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+/* ===== DETAILS ===== */
+.resume-file {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 18px 10px 10px;
+    margin-bottom: 24px;
+    border-radius: var(--radius-sm);
+    background: var(--tag-bg);
+    border: 1px solid var(--glass-border);
+}
+
+.resume-file-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--warm);
+    background: var(--warm-glow);
+}
+
+.resume-file strong {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.resume-file small {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+}
+
+.resume-details h3 {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+}
+
+.resume-details > p {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.8;
+    margin-bottom: 28px;
+}
+
+.resume-contents-label {
+    font-size: 0.72rem;
+    color: var(--accent-light);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-family: var(--font-mono);
+    margin-bottom: 14px;
+}
+
+.resume-contents {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 20px;
+    margin-bottom: 36px;
+}
+
+.resume-contents li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+}
+
+.resume-contents i {
+    width: 18px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--accent-light);
+}
+
+.resume-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+/* ===== RESUME MOBILE ===== */
+@media (max-width: 900px) {
+    .resume-card {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        padding: 32px 24px;
+    }
+
+    .resume-preview {
+        max-width: 340px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 16px;
+    }
+
+    .resume-paper,
+    .resume-preview:hover .resume-paper {
+        transform: none;
+    }
+
+    .resume-preview-overlay {
+        display: none;
+    }
+
+    .resume-details h3 {
+        font-size: 1.3rem;
+    }
+
+    .resume-details > p {
+        font-size: 0.88rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .resume-card {
+        padding: 28px 18px;
+    }
+
+    .resume-file {
+        display: flex;
+    }
+
+    .resume-contents {
+        gap: 10px 12px;
+    }
+
+    .resume-contents li {
+        font-size: 0.82rem;
+    }
+
+    .resume-actions .btn {
+        flex: 1 1 100%;
+        justify-content: center;
+    }
+}

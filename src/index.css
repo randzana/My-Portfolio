@@ -401,6 +401,7 @@ section {
   body.mobile-app-mode .skill-card,
   body.mobile-app-mode .project-card,
   body.mobile-app-mode .timeline-card,
+  body.mobile-app-mode .resume-card,
   body.mobile-app-mode .cert-card,
   body.mobile-app-mode .contact-form-container,
   body.mobile-app-mode .contact-link {
@@ -420,6 +421,7 @@ section {
   :root[data-theme='light'] body.mobile-app-mode .skill-card,
   :root[data-theme='light'] body.mobile-app-mode .project-card,
   :root[data-theme='light'] body.mobile-app-mode .timeline-card,
+  :root[data-theme='light'] body.mobile-app-mode .resume-card,
   :root[data-theme='light'] body.mobile-app-mode .cert-card,
   :root[data-theme='light'] body.mobile-app-mode .contact-form-container,
   :root[data-theme='light'] body.mobile-app-mode .contact-link {
