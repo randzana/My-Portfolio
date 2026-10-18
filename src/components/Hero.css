@@ -3,23 +3,24 @@
    a full-bleed marquee. Tokens only (see index.css).
 
    On desktop the whole hero (stats band and marquee included)
-   fits the first screen from 1280×720 up: every vertical
-   measure below is a clamp() that runs linearly from its
-   720px-tall value to its 1080px-tall value
-   (value = a·svh + b). Phones reset them to fixed values.
+   fits the first screen from about 650px tall (a 1366×768
+   laptop once the browser's toolbars are taken off) up: every
+   vertical measure below is a clamp() that runs linearly with
+   the viewport height (value = a·svh + b) and tops out at
+   1080px tall. Phones reset them to fixed values.
    ========================================================= */
 
 .hero {
     /* Portrait width follows the height too, so the card never outgrows the copy beside it. */
     --hero-portrait-w: clamp(260px, min(30vw, 60px + 36.1svh), 420px);
-    --hero-pad-top: clamp(16px, 22.2svh - 144px, 96px);
-    --hero-space: clamp(14px, 6.1svh - 30px, 36px);
-    --hero-desc-space: clamp(18px, 6.1svh - 26px, 40px);
-    --hero-band-gap: clamp(20px, 12.2svh - 68px, 64px);
-    --hero-stat-pad: clamp(14px, 2.8svh - 6px, 24px);
-    --hero-stat-num: clamp(2rem, 2.2svh + 16px, 2.5rem);
-    --hero-marquee-pad: clamp(12px, 2.2svh - 4px, 20px);
-    --hero-cta-h: clamp(48px, 2.2svh + 32px, 56px);
+    --hero-pad-top: clamp(8px, 22.2svh - 144px, 96px);
+    --hero-space: clamp(14px, 5svh - 18px, 36px);
+    --hero-desc-space: clamp(14px, 6.1svh - 26px, 40px);
+    --hero-band-gap: clamp(12px, 12.2svh - 68px, 64px);
+    --hero-stat-pad: clamp(12px, 2.8svh - 6px, 24px);
+    --hero-stat-num: clamp(1.875rem, 2.2svh + 16px, 2.5rem);
+    --hero-marquee-pad: clamp(10px, 2.2svh - 4px, 20px);
+    --hero-cta-h: clamp(46px, 2.2svh + 32px, 56px);
 
     position: relative;
     isolation: isolate;
@@ -118,7 +119,7 @@
 .hero-title {
     /* Three caps: the type scale, the column (the widest line, "experiences
        that", is ~6.3em, so 15cqi always fits) and the screen height
-       (80px at 720 tall → 100px at 1080). */
+       (76px at 650 tall, 80px at 720, 100px at 1080). */
     font-size: min(var(--display-lg), 15cqi, 40px + 5.56svh);
     font-weight: 600;
     line-height: 0.95;
@@ -178,7 +179,7 @@
     font-size: var(--text-base);
     font-weight: 500;
     color: var(--fg);
-    margin-bottom: clamp(10px, 2.2svh - 6px, 18px);
+    margin-bottom: clamp(12px, 1.1svh + 6px, 18px);
 }
 
 .hero-role-prefix {
@@ -204,7 +205,7 @@
 }
 
 .hero-desc {
-    max-width: 52ch;
+    max-width: 54ch;
     font-size: clamp(var(--text-base), 12px + 0.556svh, var(--text-lg));
     line-height: 1.6;
     color: var(--fg-muted);
@@ -673,6 +674,27 @@
 
     .hero-stat {
         padding-inline: 22px;
+    }
+}
+
+/* ===== SHORT DESKTOP SCREENS ===== */
+/* Below ~700px tall the linear scale alone runs out of room; trim the
+   last few pixels from the small parts so the marquee still lands on screen. */
+@media (min-width: 901px) and (max-height: 700px) {
+    .hero {
+        --hero-space: 12px;
+    }
+
+    .hero-status {
+        height: 30px;
+    }
+
+    .hero-desc {
+        line-height: 1.5;
+    }
+
+    .hero-stat {
+        gap: 8px;
     }
 }
 

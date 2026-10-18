@@ -68,7 +68,9 @@ export default function MobileTabBar() {
     const [isMobile, setIsMobile] = useState(isAppModeWidth);
     const [activeTab, setActiveTab] = useState(initialTab);
     const [announcement, setAnnouncement] = useState('');
-    // Reader's place across a switch between the two layouts (see onResize).
+    // Where the reader is, recorded while the layout matches the viewport,
+    // and the place to restore after a switch between the two layouts.
+    const lastPosition = useRef(null);
     const pendingRestore = useRef(null);
 
     useLayoutEffect(() => {
@@ -92,7 +94,28 @@ export default function MobileTabBar() {
         const restore = pendingRestore.current;
         pendingRestore.current = null;
         if (restore) restoreReadingPosition(restore);
+        lastPosition.current = readingPosition();
     }, [isMobile, activeTab]);
+
+    // By the time a resize event arrives the page has already been re-laid
+    // out at the new width, so the reading position is sampled on scroll
+    // beforehand, skipping frames where the layout and viewport disagree.
+    useEffect(() => {
+        let frame = 0;
+        const record = () => {
+            frame = 0;
+            if (document.body.classList.contains('mobile-app-mode') !== isAppModeWidth()) return;
+            lastPosition.current = readingPosition();
+        };
+        const onScroll = () => {
+            if (!frame) frame = requestAnimationFrame(record);
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => {
+            cancelAnimationFrame(frame);
+            window.removeEventListener('scroll', onScroll);
+        };
+    }, []);
 
     // Rotating a tablet across 900px keeps the visitor's place instead of
     // throwing them back to Home.
@@ -100,7 +123,7 @@ export default function MobileTabBar() {
         const onResize = () => {
             const mobile = isAppModeWidth();
             if (mobile === isMobile) return;
-            const position = readingPosition();
+            const position = lastPosition.current ?? readingPosition();
             pendingRestore.current = position;
             flushSync(() => {
                 if (mobile) setActiveTab((position && tabForElement(position.el)?.id) || 'home');

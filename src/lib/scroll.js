@@ -94,7 +94,10 @@ export function landOnHash({ behavior = 'instant', focus = true } = {}) {
     return goToSection(null, id, { behavior, focus, updateHash: false });
 }
 
-const readingLine = () => px(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) + 24;
+// A third of the way down the viewport (never under the top bar): where the
+// reader's eye is, rather than the tail of the section scrolling away.
+const readingLine = () =>
+    Math.max(px(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) + 24, window.innerHeight * 0.3);
 
 /* The section (or footer) under the reading line and how far through it the
    reader is, so a layout switch across 900px (rotating a tablet) can put
