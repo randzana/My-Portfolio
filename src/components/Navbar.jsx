@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useSyncExternalStore } from 'react';
 import { flushSync } from 'react-dom';
 import {
     motion,
@@ -7,20 +7,33 @@ import {
     useSpring,
     useReducedMotion,
 } from 'framer-motion';
-import { EASE_OUT } from '../lib/motion';
+import { LuArrowRight, LuArrowUp, LuMoon, LuSun } from 'react-icons/lu';
+import { EASE_OUT, PILL_SPRING } from '../lib/motion';
+import { focusElement, goToSection, scrollToElement } from '../lib/scroll';
 import './Navbar.css';
 
 const navItems = [
-    { label: 'About', href: '#about' },
-    { label: 'Projects', href: '#projects' },
-    { label: 'Skills', href: '#skills' },
-    { label: 'Experience', href: '#experience' },
-    { label: 'Certificates', href: '#certificates' },
-    { label: 'Resume', href: '#resume' },
+    { label: 'About', id: 'about' },
+    { label: 'Projects', id: 'projects' },
+    { label: 'Skills', id: 'skills' },
+    { label: 'Experience', id: 'experience' },
+    { label: 'Certificates', id: 'certificates' },
+    { label: 'Resume', id: 'resume' },
 ];
 
 const CONDENSE_AT = 24;
 const BACK_TO_TOP_AT = 600;
+
+/* The floating back-to-top button only appears where the side gutter can
+   hold it without covering content. Below that the sticky nav, the footer's
+   "Back to top" and (in app mode) re-tapping the dock tab do the job. */
+const GUTTER_FITS = '(min-width: 1400px)';
+const subscribeGutter = onChange => {
+    const media = window.matchMedia(GUTTER_FITS);
+    media.addEventListener('change', onChange);
+    return () => media.removeEventListener('change', onChange);
+};
+const gutterFits = () => window.matchMedia(GUTTER_FITS).matches;
 
 function readStoredTheme() {
     try {
@@ -55,13 +68,24 @@ function applyTheme(theme) {
     }
 }
 
+// <main> is never hidden (dock pages hide sections, not the landmark), so the
+// skip link works on every page.
+function skipToContent(event) {
+    const main = document.getElementById('main');
+    if (!main) return;
+    event.preventDefault();
+    scrollToElement(main);
+    focusElement(main);
+}
+
 export default function Navbar() {
     const reduceMotion = useReducedMotion();
     const [condensed, setCondensed] = useState(() => window.scrollY > CONDENSE_AT);
-    const [showScrollTop, setShowScrollTop] = useState(() => window.scrollY > BACK_TO_TOP_AT);
+    const [pastFold, setPastFold] = useState(() => window.scrollY > BACK_TO_TOP_AT);
     const [activeSection, setActiveSection] = useState('');
     const [footerInView, setFooterInView] = useState(false);
     const [theme, setTheme] = useState(initialTheme);
+    const roomForTopButton = useSyncExternalStore(subscribeGutter, gutterFits);
 
     const { scrollYProgress } = useScroll();
     const progress = useSpring(scrollYProgress, { stiffness: 260, damping: 40, restDelta: 0.001 });
@@ -96,7 +120,7 @@ export default function Navbar() {
             frame = 0;
             const y = window.scrollY;
             setCondensed(y > CONDENSE_AT);
-            setShowScrollTop(y > BACK_TO_TOP_AT);
+            setPastFold(y > BACK_TO_TOP_AT);
 
             let current = '';
             document.querySelectorAll('section[id]').forEach(section => {
@@ -119,19 +143,6 @@ export default function Navbar() {
             window.removeEventListener('resize', onScroll);
         };
     }, []);
-
-    const scrollBehavior = reduceMotion ? 'auto' : 'smooth';
-
-    const scrollTo = (event, href) => {
-        event.preventDefault();
-        const el = document.querySelector(href);
-        if (el) el.scrollIntoView({ behavior: scrollBehavior });
-    };
-
-    const scrollToTop = event => {
-        event?.preventDefault();
-        window.scrollTo({ top: 0, behavior: scrollBehavior });
-    };
 
     const toggleTheme = event => {
         const next = theme === 'dark' ? 'light' : 'dark';
@@ -174,11 +185,12 @@ export default function Navbar() {
     };
 
     const isDark = theme === 'dark';
-    const themeLabel = isDark ? 'Switch to light theme' : 'Switch to dark theme';
+    const ThemeIcon = isDark ? LuSun : LuMoon;
+    const showTopButton = roomForTopButton && pastFold && !footerInView;
 
     return (
         <>
-            <a href="#hero" className="nav-skip">Skip to content</a>
+            <a href="#main" className="nav-skip" onClick={skipToContent}>Skip to content</a>
 
             <div className="nav-progress" aria-hidden="true">
                 <motion.div className="nav-progress-bar" style={{ scaleX: progress }} />
@@ -186,7 +198,12 @@ export default function Navbar() {
 
             <header className={`nav ${condensed ? 'is-condensed' : ''}`}>
                 <nav className="nav-bar" aria-label="Primary">
-                    <a href="#" className="nav-brand" onClick={scrollToTop} aria-label="Rand Zana — back to top">
+                    <a
+                        href="#hero"
+                        className="nav-brand"
+                        onClick={e => goToSection(e, 'hero')}
+                        aria-label="Rand Zana — home"
+                    >
                         <span className="nav-brand-tile" aria-hidden="true">RZ</span>
                         <span className="nav-brand-name" aria-hidden="true">
                             Rand Zana<span className="nav-brand-dot" />
@@ -195,20 +212,20 @@ export default function Navbar() {
 
                     <ul className="nav-links">
                         {navItems.map(item => {
-                            const isActive = activeSection === item.href.slice(1);
+                            const isActive = activeSection === item.id;
                             return (
-                                <li key={item.href}>
+                                <li key={item.id}>
                                     <a
-                                        href={item.href}
+                                        href={`#${item.id}`}
                                         className={`nav-link ${isActive ? 'is-active' : ''}`}
                                         aria-current={isActive ? 'location' : undefined}
-                                        onClick={e => scrollTo(e, item.href)}
+                                        onClick={e => goToSection(e, item.id)}
                                     >
                                         {isActive && (
                                             <motion.span
                                                 className="nav-link-pill"
                                                 layoutId="nav-active-pill"
-                                                transition={{ type: 'spring', stiffness: 420, damping: 36 }}
+                                                transition={PILL_SPRING}
                                             />
                                         )}
                                         <span className="nav-link-label">{item.label}</span>
@@ -223,26 +240,29 @@ export default function Navbar() {
                             type="button"
                             className="icon-btn nav-theme"
                             onClick={toggleTheme}
-                            aria-label="Toggle theme"
-                            title={themeLabel}
+                            aria-label="Dark theme"
+                            aria-pressed={isDark}
+                            title={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
                         >
                             <AnimatePresence mode="wait" initial={false}>
-                                <motion.i
+                                <motion.span
                                     key={theme}
-                                    className={`fa-solid ${isDark ? 'fa-sun' : 'fa-moon'}`}
+                                    className="nav-theme-icon"
                                     initial={{ opacity: 0, rotate: -90, scale: 0.6 }}
                                     animate={{ opacity: 1, rotate: 0, scale: 1 }}
                                     exit={{ opacity: 0, rotate: 90, scale: 0.6 }}
                                     transition={{ duration: 0.25, ease: EASE_OUT }}
                                     aria-hidden="true"
-                                />
+                                >
+                                    <ThemeIcon />
+                                </motion.span>
                             </AnimatePresence>
                         </button>
 
-                        <a href="#contact" className="btn btn-primary btn-sm nav-cta" onClick={e => scrollTo(e, '#contact')}>
-                            Let's talk
+                        <a href="#contact" className="btn btn-primary btn-sm nav-cta" onClick={e => goToSection(e, 'contact')}>
+                            Let’s talk
                             <span className="btn-arrow" aria-hidden="true">
-                                <i className="fa-solid fa-arrow-right" />
+                                <LuArrowRight />
                             </span>
                         </a>
                     </div>
@@ -250,20 +270,21 @@ export default function Navbar() {
             </header>
 
             <AnimatePresence>
-                {showScrollTop && !footerInView && (
+                {showTopButton && (
                     <motion.button
+                        key="back-to-top"
                         type="button"
                         className="icon-btn nav-top"
-                        onClick={() => scrollToTop()}
+                        onClick={e => goToSection(e, 'hero')}
                         initial={{ opacity: 0, y: 16, scale: 0.85 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 16, scale: 0.85 }}
                         whileTap={{ scale: 0.92 }}
                         transition={{ duration: 0.35, ease: EASE_OUT }}
-                        aria-label="Scroll to top"
+                        aria-label="Back to top"
                         title="Back to top"
                     >
-                        <i className="fa-solid fa-arrow-up" aria-hidden="true" />
+                        <LuArrowUp aria-hidden="true" />
                     </motion.button>
                 )}
             </AnimatePresence>

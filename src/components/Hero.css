@@ -1,16 +1,32 @@
 /* =========================================================
    HERO — editorial headline, portrait card, stats band and
    a full-bleed marquee. Tokens only (see index.css).
+
+   On desktop the whole hero (stats band and marquee included)
+   fits the first screen from 1280×720 up: every vertical
+   measure below is a clamp() that runs linearly from its
+   720px-tall value to its 1080px-tall value
+   (value = a·svh + b). Phones reset them to fixed values.
    ========================================================= */
 
 .hero {
-    --hero-portrait-w: clamp(300px, 30vw, 420px);
+    /* Portrait width follows the height too, so the card never outgrows the copy beside it. */
+    --hero-portrait-w: clamp(260px, min(30vw, 60px + 36.1svh), 420px);
+    --hero-pad-top: clamp(16px, 22.2svh - 144px, 96px);
+    --hero-space: clamp(14px, 6.1svh - 30px, 36px);
+    --hero-desc-space: clamp(18px, 6.1svh - 26px, 40px);
+    --hero-band-gap: clamp(20px, 12.2svh - 68px, 64px);
+    --hero-stat-pad: clamp(14px, 2.8svh - 6px, 24px);
+    --hero-stat-num: clamp(2rem, 2.2svh + 16px, 2.5rem);
+    --hero-marquee-pad: clamp(12px, 2.2svh - 4px, 20px);
+    --hero-cta-h: clamp(48px, 2.2svh + 32px, 56px);
+
     position: relative;
     isolation: isolate;
     display: flex;
     flex-direction: column;
     min-height: 100svh;
-    padding-top: calc(var(--nav-h) + clamp(40px, 7vw, 96px));
+    padding-top: calc(var(--nav-h) + var(--hero-pad-top));
     padding-bottom: 0;
     /* Contains the glow, the marquee track and the chips' parallax drift. */
     overflow: clip;
@@ -51,7 +67,7 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 12px 18px;
-    margin-bottom: clamp(24px, 2.8vw, 36px);
+    margin-bottom: var(--hero-space);
 }
 
 .hero-status {
@@ -93,18 +109,21 @@
     background: var(--line-strong);
 }
 
-.hero-loc i {
-    font-size: 0.7rem;
+.hero-loc svg {
+    width: 13px;
+    height: 13px;
     color: var(--fg-subtle);
 }
 
 .hero-title {
-    /* The widest line ("experiences that") is ~6.3em, so 15cqi always fits. */
-    font-size: min(var(--display-lg), 15cqi);
+    /* Three caps: the type scale, the column (the widest line, "experiences
+       that", is ~6.3em, so 15cqi always fits) and the screen height
+       (80px at 720 tall → 100px at 1080). */
+    font-size: min(var(--display-lg), 15cqi, 40px + 5.56svh);
     font-weight: 600;
     line-height: 0.95;
     letter-spacing: -0.05em;
-    margin-bottom: clamp(24px, 2.8vw, 36px);
+    margin-bottom: var(--hero-space);
 }
 
 /* Each line is its own clipping mask for the slide-up entrance. The padding
@@ -126,8 +145,28 @@
     padding-right: 0.04em;
 }
 
+/* The brand's round red dot (as in the nav and the footer wordmark) drawn
+   over a transparent full stop, so the text and its spacing stay intact.
+   Geist's square stop is ink from 0.033em to 0.189em, sitting on the
+   baseline, which is 0.3em above the bottom of the inline box. */
 .hero-title-dot {
-    color: var(--accent);
+    position: relative;
+    color: transparent;
+}
+
+.hero-title-dot::selection {
+    color: transparent;
+}
+
+.hero-title-dot::after {
+    content: '';
+    position: absolute;
+    left: 0.034em;
+    bottom: 0.292em;
+    width: 0.156em;
+    height: 0.156em;
+    border-radius: 50%;
+    background: var(--accent);
 }
 
 /* ===== ROTATING ROLE ===== */
@@ -139,7 +178,7 @@
     font-size: var(--text-base);
     font-weight: 500;
     color: var(--fg);
-    margin-bottom: 18px;
+    margin-bottom: clamp(10px, 2.2svh - 6px, 18px);
 }
 
 .hero-role-prefix {
@@ -165,11 +204,11 @@
 }
 
 .hero-desc {
-    max-width: 46ch;
-    font-size: var(--text-lg);
+    max-width: 52ch;
+    font-size: clamp(var(--text-base), 12px + 0.556svh, var(--text-lg));
     line-height: 1.6;
     color: var(--fg-muted);
-    margin-bottom: clamp(28px, 3vw, 40px);
+    margin-bottom: var(--hero-desc-space);
 }
 
 /* ===== CTAS ===== */
@@ -178,6 +217,10 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 12px;
+}
+
+.hero-ctas .btn-lg {
+    --btn-h: var(--hero-cta-h);
 }
 
 /* ===== PORTRAIT ===== */
@@ -257,10 +300,6 @@
     transition: opacity 0.6s ease;
 }
 
-.hero-portrait:hover .hero-sheen {
-    opacity: 1;
-}
-
 /* ===== GLASS CHIPS ===== */
 .hero-chip {
     position: absolute;
@@ -303,7 +342,11 @@
 .hero-chip-icon--accent {
     background: var(--accent-soft);
     color: var(--accent);
-    font-size: 0.85rem;
+}
+
+.hero-chip-icon--accent svg {
+    width: 16px;
+    height: 16px;
 }
 
 .hero-chip-icon--mark {
@@ -332,10 +375,10 @@
 
 .hero-chip-text span {
     font-family: var(--font-mono);
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     line-height: 1.2;
     color: var(--fg-muted);
 }
@@ -344,7 +387,7 @@
 .hero-band {
     display: flex;
     align-items: stretch;
-    margin-top: clamp(48px, 4.5vw, 64px);
+    margin-top: var(--hero-band-gap);
     border-top: 1px solid var(--line);
 }
 
@@ -358,7 +401,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 24px 28px 26px;
+    padding: var(--hero-stat-pad) 28px calc(var(--hero-stat-pad) + 2px);
     border-left: 1px solid var(--line);
 }
 
@@ -368,7 +411,7 @@
 }
 
 .hero-stat-num {
-    font-size: 2.5rem;
+    font-size: var(--hero-stat-num);
     font-weight: 600;
     line-height: 1;
     letter-spacing: -0.04em;
@@ -390,12 +433,23 @@
     color: var(--fg-muted);
 }
 
+/* The hairline column holds the link, so the link itself can be a compact
+   pill whose focus ring hugs the label and the arrow. */
+.hero-band-end {
+    display: flex;
+    align-items: center;
+    padding-left: 18px;
+    border-left: 1px solid var(--line);
+}
+
 .hero-scroll {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding-left: 28px;
-    border-left: 1px solid var(--line);
+    padding: 6px 6px 6px 10px;
+    /* Arrow flush with the container edge, in line with the motion toggle below. */
+    margin-right: -6px;
+    border-radius: var(--radius-pill);
     font-family: var(--font-mono);
     font-size: var(--text-xs);
     font-weight: 500;
@@ -413,34 +467,37 @@
     border-radius: 50%;
     border: 1px solid var(--line-strong);
     color: var(--fg);
-    font-size: 0.75rem;
     transition:
         border-color var(--dur) ease,
         background-color var(--dur) ease,
         transform 0.45s var(--ease-out);
 }
 
-.hero-scroll:hover {
-    color: var(--fg);
-}
-
-.hero-scroll:hover .hero-scroll-icon {
-    border-color: var(--fg-subtle);
-    background: var(--bg-elev);
-    transform: translateY(3px);
+.hero-scroll-icon svg {
+    width: 15px;
+    height: 15px;
 }
 
 /* ===== MARQUEE ===== */
 .hero-marquee {
+    --hero-motion-size: 40px;
+    /* The container's edge inside this full-bleed strip. */
+    --hero-edge: max(var(--gutter), (100% - var(--container)) / 2);
+    position: relative;
     border-block: 1px solid var(--line);
     background: color-mix(in srgb, var(--bg-elev) 40%, transparent);
 }
 
+/* Words drift in from the left edge and fade out just before the motion
+   toggle, which sits on the container's edge under the Scroll arrow. */
 .hero-marquee-viewport {
+    --fade-in: max(8%, var(--hero-edge));
+    --fade-end: calc(100% - var(--hero-edge) - var(--hero-motion-size) - 14px);
+    --fade: linear-gradient(90deg, transparent, #000 var(--fade-in), #000 calc(var(--fade-end) - 72px), transparent var(--fade-end));
     overflow: hidden;
-    padding-block: 20px;
-    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    padding-block: var(--hero-marquee-pad);
+    mask-image: var(--fade);
+    -webkit-mask-image: var(--fade);
 }
 
 .hero-marquee-track {
@@ -449,7 +506,8 @@
     animation: heroMarquee 52s linear infinite;
 }
 
-.hero-marquee:hover .hero-marquee-track {
+/* No point running the loop while nobody can see it. */
+.hero-marquee.is-offscreen .hero-marquee-track {
     animation-play-state: paused;
 }
 
@@ -478,7 +536,7 @@
 
 .hero-marquee-sep {
     font-size: 0.55em;
-    color: var(--accent);
+    color: var(--fg-subtle);
 }
 
 @keyframes heroMarquee {
@@ -487,11 +545,110 @@
     }
 }
 
+/* Pause / play toggle for every looping animation on the page (WCAG 2.2.2). */
+.hero-motion {
+    position: absolute;
+    top: 50%;
+    right: var(--hero-edge);
+    display: grid;
+    place-items: center;
+    width: var(--hero-motion-size);
+    height: var(--hero-motion-size);
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: var(--bg-elev);
+    box-shadow: var(--highlight);
+    color: var(--fg-muted);
+    transform: translateY(-50%);
+    -webkit-tap-highlight-color: transparent;
+    transition:
+        color var(--dur) ease,
+        border-color var(--dur) ease,
+        background-color var(--dur) ease;
+}
+
+.hero-motion svg {
+    width: 14px;
+    height: 14px;
+}
+
+.hero-motion[aria-pressed='true'] {
+    color: var(--fg);
+}
+
+.hero-motion:active {
+    transform: translateY(-50%) scale(0.94);
+}
+
+/* What a click will do, shown beside the button on hover and keyboard focus. */
+.hero-motion::after {
+    content: attr(data-hint);
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 10px);
+    padding: 5px 10px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--line);
+    background: var(--bg-elev);
+    box-shadow: var(--shadow-sm);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    color: var(--fg-muted);
+    opacity: 0;
+    transform: translate(6px, -50%);
+    transition:
+        opacity 0.25s ease,
+        transform 0.35s var(--ease-out);
+    pointer-events: none;
+}
+
+.hero-motion:focus-visible::after {
+    opacity: 1;
+    transform: translate(0, -50%);
+}
+
+/* Hover-only effects stay off touch screens, where a tap would leave them stuck on. */
+@media (hover: hover) {
+    .hero-portrait:hover .hero-sheen {
+        opacity: 1;
+    }
+
+    .hero-scroll:hover {
+        color: var(--fg);
+    }
+
+    .hero-scroll:hover .hero-scroll-icon {
+        border-color: var(--fg-subtle);
+        background: var(--bg-elev);
+        transform: translateY(3px);
+    }
+
+    .hero-marquee:hover .hero-marquee-track {
+        animation-play-state: paused;
+    }
+
+    .hero-motion:hover {
+        color: var(--fg);
+        border-color: var(--fg-subtle);
+        background: var(--bg-elev-2);
+    }
+
+    .hero-motion:hover::after {
+        opacity: 1;
+        transform: translate(0, -50%);
+    }
+}
+
 /* ===== LAPTOP ===== */
 @media (max-width: 1080px) {
     /* Slimmer portrait and buttons keep all three CTAs on one row down to 901px. */
     .hero {
-        --hero-portrait-w: clamp(272px, 29vw, 420px);
+        --hero-portrait-w: clamp(260px, min(29vw, 60px + 36.1svh), 420px);
     }
 
     .hero-ctas {
@@ -521,8 +678,20 @@
 
 /* ===== MOBILE APP MODE ===== */
 @media (max-width: 900px) {
+    /* One scrolling column: the first-screen fit no longer applies, so the
+       height-driven measures go back to fixed values. */
     .hero {
+        --hero-pad-top: clamp(40px, 7vw, 96px);
+        --hero-space: 24px;
+        --hero-desc-space: 28px;
+        --hero-band-gap: 64px;
+        --hero-stat-pad: 24px;
+        --hero-stat-num: 2.5rem;
+        --hero-marquee-pad: 18px;
+        --hero-cta-h: 56px;
         min-height: 0;
+        /* Room between the marquee and About, which follows on the same dock page. */
+        padding-bottom: 32px;
     }
 
     .hero-main {
@@ -537,30 +706,39 @@
         font-size: min(14.5cqi, 4.25rem);
     }
 
+    .hero-role {
+        margin-bottom: 18px;
+    }
+
+    .hero-desc {
+        max-width: 46ch;
+        font-size: var(--text-lg);
+    }
+
     .hero-portrait {
         justify-self: center;
         width: min(78%, 340px);
-    }
-
-    .hero-band {
-        margin-top: 64px;
     }
 
     .hero-stat {
         padding: 24px 20px 26px;
     }
 
-    .hero-scroll {
+    .hero-band-end {
         display: none;
     }
 
-    .hero-marquee-viewport {
-        padding-block: 18px;
+    .hero-marquee {
+        --hero-motion-size: 44px;
     }
 }
 
 /* ===== PHONE ===== */
 @media (max-width: 600px) {
+    .hero {
+        --hero-cta-h: 52px;
+    }
+
     /* The location wraps under the pill here, so drop the joining hairline. */
     .hero-loc::before {
         display: none;
@@ -634,8 +812,13 @@
         border-radius: 9px;
     }
 
-    .hero-stat-num {
-        font-size: 2.25rem;
+    .hero-chip-icon--accent svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .hero {
+        --hero-stat-num: 2.25rem;
     }
 }
 
@@ -647,8 +830,17 @@
 }
 
 /* ===== REDUCED MOTION ===== */
+/* Nothing loops here, so the strip needs no toggle and fades evenly at both ends. */
 @media (prefers-reduced-motion: reduce) {
     .hero-marquee-track {
         animation: none;
+    }
+
+    .hero-motion {
+        display: none;
+    }
+
+    .hero-marquee-viewport {
+        --fade: linear-gradient(90deg, transparent, #000 var(--fade-in), #000 calc(100% - var(--fade-in)), transparent);
     }
 }

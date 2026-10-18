@@ -11,11 +11,11 @@
     position: fixed;
     top: calc(var(--nav-h) + 8px);
     left: 50%;
-    z-index: 1200;
+    z-index: var(--z-skip);
     display: inline-flex;
     align-items: center;
-    height: 40px;
-    padding: 0 18px;
+    height: 44px;
+    padding: 0 20px;
     border-radius: var(--radius-pill);
     background: var(--inverse-bg);
     color: var(--inverse-fg);
@@ -36,11 +36,11 @@
     transform: translate(-50%, 0);
 }
 
-/* ----- Scroll progress ----- */
+/* ----- Scroll progress (a hairline above the bar) ----- */
 .nav-progress {
     position: fixed;
     inset: 0 0 auto;
-    z-index: 1001;
+    z-index: calc(var(--z-nav) + 1);
     height: 2px;
     pointer-events: none;
 }
@@ -56,7 +56,7 @@
 .nav {
     position: fixed;
     inset: 0 0 auto;
-    z-index: 1000;
+    z-index: var(--z-nav);
     padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
     pointer-events: none;
     transition: padding 0.6s var(--ease-out);
@@ -68,12 +68,12 @@
 }
 
 /* Soft fade of the page colour behind the floating pill, so text
-   scrolling past the top edge dissolves instead of being sliced. */
+   scrolling past the top edge dissolves instead of being sliced.
+   (It paints first; the positioned .nav-bar sits on top of it.) */
 .nav::before {
     content: '';
     position: absolute;
     inset: 0 0 -28px;
-    z-index: -1;
     background: linear-gradient(to bottom, var(--bg) 25%, transparent);
     opacity: 0;
     pointer-events: none;
@@ -129,7 +129,7 @@
     align-items: center;
     gap: 12px;
     min-width: 0;
-    height: 40px;
+    height: 44px;
     padding-right: 8px;
     border-radius: var(--radius-pill);
     color: var(--fg);
@@ -161,11 +161,6 @@
     border-radius: 50%;
 }
 
-.nav-brand:hover .nav-brand-tile {
-    background: var(--accent);
-    color: var(--on-accent);
-}
-
 .nav-brand-name {
     display: inline-flex;
     align-items: baseline;
@@ -184,10 +179,6 @@
     border-radius: 50%;
     background: var(--accent);
     transition: transform 0.5s var(--ease-out);
-}
-
-.nav-brand:hover .nav-brand-dot {
-    transform: scale(1.35);
 }
 
 /* ----- Links ----- */
@@ -233,15 +224,14 @@
     transition: color 0.25s ease;
 }
 
-.nav-link:hover,
 .nav-link.is-active {
     color: var(--fg);
 }
 
+/* The pill comes first in the markup, so the positioned label paints over it. */
 .nav-link-pill {
     position: absolute;
     inset: 0;
-    z-index: 0;
     border-radius: inherit;
     background: var(--bg-elev-2);
     box-shadow: inset 0 0 0 1px var(--line), var(--shadow-sm);
@@ -254,7 +244,6 @@
 
 .nav-link-label {
     position: relative;
-    z-index: 1;
 }
 
 /* ----- Actions ----- */
@@ -269,8 +258,14 @@
     overflow: hidden;
 }
 
-.nav-theme i {
-    display: block;
+.nav-theme-icon {
+    display: grid;
+    place-items: center;
+}
+
+.nav-theme-icon svg {
+    width: 17px;
+    height: 17px;
 }
 
 .nav-cta.btn-sm {
@@ -283,17 +278,22 @@
     width: 28px;
     height: 28px;
     margin-right: 0;
-    font-size: 0.6875rem;
 }
 
-/* ----- Back to top ----- */
+.nav-cta .btn-arrow svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* ----- Back to top (≥1400px only — see Navbar.jsx) -----
+   Centred in the right-hand gutter beside the 1240px content column. */
 .nav-top.icon-btn {
     position: fixed;
-    right: max(24px, env(safe-area-inset-right, 0px));
+    right: clamp(16px, calc((100% - var(--container)) / 4 - 22px), 32px);
     bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-    z-index: 999;
-    width: 46px;
-    height: 46px;
+    z-index: var(--z-float);
+    width: 44px;
+    height: 44px;
     border-color: var(--line-strong);
     background: var(--glass);
     box-shadow: var(--shadow-md), var(--highlight);
@@ -301,17 +301,35 @@
     -webkit-backdrop-filter: blur(16px) saturate(1.4);
 }
 
-.nav-top.icon-btn:hover {
-    background: var(--bg-elev);
-    color: var(--accent);
-}
-
-.nav-top i {
+.nav-top svg {
+    width: 18px;
+    height: 18px;
     transition: transform 0.35s var(--ease-out);
 }
 
-.nav-top:hover i {
-    transform: translateY(-2px);
+/* ----- Hover (pointer devices only, so taps never leave it stuck) ----- */
+@media (hover: hover) {
+    .nav-brand:hover .nav-brand-tile {
+        background: var(--accent);
+        color: var(--on-accent);
+    }
+
+    .nav-brand:hover .nav-brand-dot {
+        transform: scale(1.35);
+    }
+
+    .nav-link:hover {
+        color: var(--fg);
+    }
+
+    .nav-top.icon-btn:hover {
+        background: var(--bg-elev);
+        color: var(--accent);
+    }
+
+    .nav-top:hover svg {
+        transform: translateY(-2px);
+    }
 }
 
 /* ----- Theme switch reveal (View Transitions) ----- */
@@ -355,39 +373,32 @@ html.nav-theme-switching *::after {
         display: inline-flex;
     }
 
+    /* 44px touch targets; the 40px tile sits inside a 44px-tall link. */
+    .nav-brand {
+        padding-left: 2px;
+    }
+
+    .nav-theme.icon-btn {
+        width: 44px;
+        height: 44px;
+    }
+
     .nav.is-condensed {
         padding-top: calc(8px + env(safe-area-inset-top, 0px));
         padding-inline: max(10px, env(safe-area-inset-left, 0px)) max(10px, env(safe-area-inset-right, 0px));
     }
 
+    /* Equal insets (5px from the pill's outer edge to the toggle, 7px to
+       the tile) keep both circles concentric with the 54px pill. */
     .nav.is-condensed .nav-bar {
         max-width: none;
         height: 54px;
-        padding-inline: 6px;
-    }
-
-    .nav-top.icon-btn {
-        right: max(16px, env(safe-area-inset-right, 0px));
-        bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-        width: 42px;
-        height: 42px;
-    }
-
-    /* Just above the floating dock, flush with its right edge
-       (the dock is 328px wide and centred — see MobileTabBar.css). */
-    body.mobile-app-mode .nav-top.icon-btn {
-        right: max(12px, calc((100% - 328px) / 2));
-        bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+        padding-inline: 4px;
     }
 }
 
 @media (max-width: 380px) {
     .nav-brand {
         gap: 10px;
-    }
-
-    .nav-brand-tile {
-        width: 38px;
-        height: 38px;
     }
 }

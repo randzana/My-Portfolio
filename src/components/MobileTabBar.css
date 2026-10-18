@@ -10,29 +10,41 @@
 }
 
 @media (max-width: 900px) {
+    /* Anchor jumps and focus scrolling keep clear of the fixed chrome:
+       the top bar (64px) and the dock (64px tall, 14px off the bottom),
+       so a focused control is never hidden underneath either. */
+    html {
+        scroll-padding-top: calc(var(--nav-h) + 16px);
+        scroll-padding-bottom: calc(98px + env(safe-area-inset-bottom, 0px));
+    }
+
     .dock {
         position: fixed;
         inset: auto 0 calc(14px + env(safe-area-inset-bottom, 0px));
-        z-index: 1100;
+        z-index: var(--z-dock);
         display: flex;
         justify-content: center;
         padding-inline: 12px;
         pointer-events: none;
+        transition:
+            transform 0.4s var(--ease-out),
+            opacity 0.25s ease;
     }
 
-    /* Page colour fades in under the dock so content dissolves
-       into it rather than colliding with it. */
+    /* Page colour fades in under the dock so content dissolves into it
+       rather than colliding with it. (It paints first; the positioned
+       .dock-inner sits on top of it.) */
     .dock::before {
         content: '';
         position: absolute;
         inset: -28px 0 calc(-14px - env(safe-area-inset-bottom, 0px));
-        z-index: -1;
         background: linear-gradient(to top, var(--bg) 30%, transparent);
         opacity: 0.85;
         pointer-events: none;
     }
 
     .dock-inner {
+        position: relative;
         display: flex;
         align-items: center;
         gap: 4px;
@@ -47,6 +59,18 @@
         backdrop-filter: blur(16px) saturate(1.4);
         -webkit-backdrop-filter: blur(16px) saturate(1.4);
         pointer-events: auto;
+    }
+
+    /* While a text field has focus (MobileTabBar toggles body.dock-typing)
+       the dock slides away so it can't float over the form when the
+       keyboard shrinks the viewport. Tabbing onto it brings it back. */
+    body.dock-typing .dock {
+        transform: translateY(calc(100% + 14px + env(safe-area-inset-bottom, 0px)));
+        opacity: 0;
+    }
+
+    body.dock-typing .dock-inner {
+        pointer-events: none;
     }
 
     /* ----- Tabs ----- */
@@ -79,25 +103,29 @@
         outline-offset: 2px;
     }
 
+    /* The pill comes first in each tab, so the positioned icon and
+       label paint over it. */
     .dock-pill {
         position: absolute;
         inset: 0;
-        z-index: 0;
         background: var(--inverse-bg);
         box-shadow: var(--shadow-sm);
     }
 
     .dock-icon {
         position: relative;
-        z-index: 1;
-        font-size: 1.0625rem;
-        line-height: 1;
+        display: grid;
+        place-items: center;
         transition: transform 0.2s var(--ease-out);
+    }
+
+    .dock-icon svg {
+        width: 19px;
+        height: 19px;
     }
 
     .dock-label {
         position: relative;
-        z-index: 1;
         font-size: 0.8125rem;
         font-weight: 600;
         letter-spacing: -0.01em;
@@ -107,20 +135,25 @@
 
     /* ===== PAGE SYSTEM ===== */
 
-    /* Room below the last section / footer for the dock and the
-       back-to-top button that floats above it. */
+    /* Room below the last section / footer to scroll it clear of the
+       dock (14px offset + 64px dock + 24px breathing room). */
     body.mobile-app-mode {
-        padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px));
+        padding-bottom: calc(102px + env(safe-area-inset-bottom, 0px));
     }
 
-    /* The first section of every tab clears the fixed top bar… */
+    /* The first section of every page clears the fixed top bar: its
+       header sits 24px under the bar, which is also where a dock tap
+       (scroll to 0) leaves it… */
     body.mobile-app-mode section.mobile-page:not(.hero) {
         padding-top: calc(var(--nav-h) + 24px);
     }
 
-    /* …and a second section on the same tab reads as a continuation. */
+    /* …and a second section on the same page reads as a continuation.
+       Its scroll margin lands a jump to it with the header on that same
+       line: (nav-h + 24px) − 40px padding − (nav-h + 16px) scroll padding. */
     body.mobile-app-mode section.mobile-page ~ section.mobile-page {
         padding-top: 40px;
+        scroll-margin-top: -32px;
     }
 
     /* No fill-mode forwards: a lingering transform would trap any

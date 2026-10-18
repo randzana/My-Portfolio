@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
     AnimatePresence,
     animate,
@@ -9,7 +9,17 @@ import {
     useSpring,
     useTransform,
 } from 'framer-motion';
+import {
+    LuArrowDown,
+    LuArrowRight,
+    LuDownload,
+    LuMapPin,
+    LuPause,
+    LuPlay,
+    LuTrophy,
+} from 'react-icons/lu';
 import { EASE_OUT } from '../lib/motion';
+import { CV_FILE, CV_FILENAME } from '../lib/profile';
 import { goToSection } from '../lib/scroll';
 import './Hero.css';
 
@@ -17,7 +27,9 @@ const PORTRAIT = '/portrait.jpg';
 const PORTRAIT_SM = '/portrait-sm.jpg';
 // Keep in sync with the preload's `imagesizes` in index.html.
 const PORTRAIT_SIZES = '(max-width: 900px) 340px, (max-width: 1400px) 30vw, 420px';
-const CV_FILE = '/cv/Rand-Zana-CV.pdf';
+
+// localStorage key for the visitor's "pause motion" choice.
+const MOTION_KEY = 'motion';
 
 const ROLES = ['Software Engineer', 'Videographer', 'Content Creator', 'Brand Strategist'];
 
@@ -47,6 +59,14 @@ const MARQUEE = [
     { label: 'Branding', serif: true },
 ];
 
+function readMotionPaused() {
+    try {
+        return localStorage.getItem(MOTION_KEY) === 'paused';
+    } catch {
+        return false;
+    }
+}
+
 /* Counts up once the stat is half in view. Reduced motion shows the final value. */
 function Counter({ target }) {
     const ref = useRef(null);
@@ -67,14 +87,19 @@ function Counter({ target }) {
     return <span ref={ref}>{reduceMotion ? target : value}</span>;
 }
 
-/* Cycles the role line under the headline. The slot has a fixed size in CSS,
+/* Cycles the role line under the headline. It only ticks while the hero is on
+   screen (a hidden dock page counts as off screen) and stops when the visitor
+   pauses motion or prefers reduced motion. The slot has a fixed size in CSS,
    so swapping roles never shifts the layout below it. */
-function RotatingRole() {
-    const [index, setIndex] = useState(0);
+function RotatingRole({ paused }) {
+    const ref = useRef(null);
+    const inView = useInView(ref, { amount: 0 });
     const reduceMotion = useReducedMotion();
+    const [index, setIndex] = useState(0);
+    const running = inView && !paused && !reduceMotion;
 
     useEffect(() => {
-        if (reduceMotion) return;
+        if (!running) return;
         // Background tabs get no animation frames, so advancing there would
         // queue exit transitions that never finish and leave the slot blank.
         const id = setInterval(() => {
@@ -82,10 +107,10 @@ function RotatingRole() {
             setIndex(i => (i + 1) % ROLES.length);
         }, 2600);
         return () => clearInterval(id);
-    }, [reduceMotion]);
+    }, [running]);
 
     return (
-        <p className="hero-role">
+        <p className="hero-role" ref={ref}>
             <span className="sr-only">{ROLES.join(', ')}</span>
             <span className="hero-role-prefix" aria-hidden="true">
                 {'//'}
@@ -157,6 +182,7 @@ function HeroPortrait() {
         >
             <motion.div className="hero-card" style={{ rotateX, rotateY }}>
                 <div className="hero-photo">
+                    {/* The LCP image: preloaded in index.html, decoded synchronously. */}
                     <img
                         src={PORTRAIT}
                         srcSet={`${PORTRAIT_SM} 500w, ${PORTRAIT} 1000w`}
@@ -165,7 +191,6 @@ function HeroPortrait() {
                         height="1502"
                         alt="Rand Zana"
                         fetchPriority="high"
-                        decoding="async"
                     />
                     <span className="hero-frame-marks" aria-hidden="true" />
                     <motion.span
@@ -179,7 +204,7 @@ function HeroPortrait() {
             <motion.div className="hero-chip hero-chip--award" {...chipIn(0.75)}>
                 <motion.div className="hero-chip-inner" style={{ x: chipX, y: chipY }}>
                     <span className="hero-chip-icon hero-chip-icon--accent" aria-hidden="true">
-                        <i className="fa-solid fa-trophy" />
+                        <LuTrophy />
                     </span>
                     <span className="hero-chip-text">
                         <strong>Zanko Award</strong>
@@ -203,22 +228,59 @@ function HeroPortrait() {
     );
 }
 
+/* Full-bleed strip of disciplines and tools. The CSS loop is paused while the
+   strip is off screen, by the visitor's toggle (html[data-motion]) and, on
+   mouse devices, on hover. The toggle sits in the strip's clear right end. */
+function Marquee({ paused, onToggle }) {
+    const ref = useRef(null);
+    const inView = useInView(ref, { amount: 0 });
+
+    return (
+        <motion.div
+            ref={ref}
+            className={`hero-marquee${inView ? '' : ' is-offscreen'}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8, duration: 1 }}
+        >
+            <div className="hero-marquee-viewport" aria-hidden="true">
+                <div className="hero-marquee-track">
+                    {[0, 1].map(copy => (
+                        <ul className="hero-marquee-list" key={copy}>
+                            {MARQUEE.map(item => (
+                                <li key={item.label}>
+                                    <span className={item.serif ? 'serif' : undefined}>
+                                        {item.label}
+                                    </span>
+                                    <span className="hero-marquee-sep">✦</span>
+                                </li>
+                            ))}
+                        </ul>
+                    ))}
+                </div>
+            </div>
+
+            {/* A toggle keeps one name and reports its state through aria-pressed;
+                the visible hint says what a click will do next. */}
+            <button
+                type="button"
+                className="hero-motion"
+                aria-label="Pause motion"
+                aria-pressed={paused}
+                data-hint={paused ? 'Play motion' : 'Pause motion'}
+                onClick={onToggle}
+            >
+                {paused ? <LuPlay aria-hidden="true" /> : <LuPause aria-hidden="true" />}
+            </button>
+        </motion.div>
+    );
+}
+
 /* Orchestration lives on the parent's own variant — `staggerChildren` in a
    bare `transition` prop is ignored unless the parent is variant-driven. */
 const stagger = {
     hidden: {},
     show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
-};
-
-const rise = {
-    hidden: { opacity: 0, y: 24, filter: 'blur(8px)' },
-    show: {
-        opacity: 1,
-        y: 0,
-        filter: 'blur(0px)',
-        transition: { duration: 0.8, ease: EASE_OUT },
-        transitionEnd: { filter: 'none' },
-    },
 };
 
 const titleStagger = {
@@ -232,7 +294,51 @@ const lineUp = {
     show: { y: '0%', transition: { duration: 1, ease: EASE_OUT } },
 };
 
+// MotionConfig only drops transforms under reduced motion, so the blur is
+// removed here by hand (same as Reveal).
+function riseVariants(reduceMotion) {
+    if (reduceMotion) {
+        return {
+            hidden: { opacity: 0 },
+            show: { opacity: 1, transition: { duration: 0.6, ease: EASE_OUT } },
+        };
+    }
+    return {
+        hidden: { opacity: 0, y: 24, filter: 'blur(8px)' },
+        show: {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            transition: { duration: 0.8, ease: EASE_OUT },
+            transitionEnd: { filter: 'none' },
+        },
+    };
+}
+
 export default function Hero() {
+    const reduceMotion = useReducedMotion();
+    const rise = riseVariants(reduceMotion);
+    const [motionPaused, setMotionPaused] = useState(readMotionPaused);
+
+    // index.css pauses every CSS animation under html[data-motion="paused"];
+    // applied before paint so a saved choice never shows a frame of motion.
+    useLayoutEffect(() => {
+        const root = document.documentElement;
+        if (motionPaused) root.dataset.motion = 'paused';
+        else delete root.dataset.motion;
+    }, [motionPaused]);
+
+    const toggleMotion = () => {
+        const next = !motionPaused;
+        setMotionPaused(next);
+        try {
+            if (next) localStorage.setItem(MOTION_KEY, 'paused');
+            else localStorage.removeItem(MOTION_KEY);
+        } catch {
+            /* storage blocked: the choice lasts for this visit only */
+        }
+    };
+
     return (
         <section className="hero" id="hero">
             <div className="hero-backdrop bg-grid" aria-hidden="true" />
@@ -251,7 +357,7 @@ export default function Hero() {
                                 Available for opportunities
                             </span>
                             <span className="hero-loc">
-                                <i className="fa-solid fa-location-dot" aria-hidden="true" />
+                                <LuMapPin aria-hidden="true" />
                                 Koya, Kurdistan
                             </span>
                         </motion.div>
@@ -267,13 +373,15 @@ export default function Hero() {
                             </span>
                             <span className="hero-line">
                                 <motion.span variants={lineUp}>
+                                    {/* The full stop stays real text (the heading reads
+                                        "matter."); CSS paints the brand's round dot over it. */}
                                     matter<span className="hero-title-dot">.</span>
                                 </motion.span>
                             </span>
                         </motion.h1>
 
                         <motion.div variants={rise}>
-                            <RotatingRole />
+                            <RotatingRole paused={motionPaused} />
                         </motion.div>
 
                         <motion.p className="hero-desc" variants={rise}>
@@ -289,15 +397,11 @@ export default function Hero() {
                             >
                                 View my work
                                 <span className="btn-arrow" aria-hidden="true">
-                                    <i className="fa-solid fa-arrow-right" />
+                                    <LuArrowRight />
                                 </span>
                             </a>
-                            <a
-                                href={CV_FILE}
-                                download="Rand-Zana-CV.pdf"
-                                className="btn btn-secondary btn-lg"
-                            >
-                                <i className="fa-solid fa-download" aria-hidden="true" />
+                            <a href={CV_FILE} download={CV_FILENAME} className="btn btn-secondary btn-lg">
+                                <LuDownload aria-hidden="true" />
                                 Download CV
                             </a>
                             <a
@@ -335,39 +439,23 @@ export default function Hero() {
                         ))}
                     </ul>
 
-                    <a href="#about" className="hero-scroll" onClick={e => goToSection(e, 'about')}>
-                        Scroll
-                        <span className="hero-scroll-icon" aria-hidden="true">
-                            <i className="fa-solid fa-arrow-down" />
-                        </span>
-                    </a>
+                    <div className="hero-band-end">
+                        <a
+                            href="#about"
+                            className="hero-scroll"
+                            aria-label="Scroll to About"
+                            onClick={e => goToSection(e, 'about')}
+                        >
+                            Scroll
+                            <span className="hero-scroll-icon" aria-hidden="true">
+                                <LuArrowDown />
+                            </span>
+                        </a>
+                    </div>
                 </motion.div>
             </div>
 
-            <motion.div
-                className="hero-marquee"
-                aria-hidden="true"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8, duration: 1 }}
-            >
-                <div className="hero-marquee-viewport">
-                    <div className="hero-marquee-track">
-                        {[0, 1].map(copy => (
-                            <ul className="hero-marquee-list" key={copy}>
-                                {MARQUEE.map(item => (
-                                    <li key={item.label}>
-                                        <span className={item.serif ? 'serif' : undefined}>
-                                            {item.label}
-                                        </span>
-                                        <span className="hero-marquee-sep">✦</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        ))}
-                    </div>
-                </div>
-            </motion.div>
+            <Marquee paused={motionPaused} onToggle={toggleMotion} />
         </section>
     );
 }
