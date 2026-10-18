@@ -5,7 +5,7 @@ import './Resume.css';
 
 const CV_FILE = '/cv/Rand-Zana-CV.pdf';
 const CV_NAME = 'Rand-Zana-CV.pdf';
-const CV_PREVIEW = '/cv/cv-preview.jpg';
+const CV_PREVIEW = '/cv/cv-preview.webp';
 
 // The CV's own section headings, in the order they appear on the page.
 const CONTENTS = [

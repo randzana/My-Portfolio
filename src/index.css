@@ -24,6 +24,8 @@
   /* Lines */
   --line: rgba(255, 255, 255, 0.08);
   --line-strong: rgba(255, 255, 255, 0.16);
+  /* Form-field boundaries: 3:1 against their surface (WCAG 1.4.11). */
+  --line-field: rgba(255, 255, 255, 0.36);
 
   /* Accent — signal red, matches the CV and the portrait's rim light */
   --accent: #ff4a3d;
@@ -79,6 +81,14 @@
   --gutter: clamp(20px, 4vw, 40px);
   --section-y: clamp(88px, 11vw, 152px);
   --nav-h: 72px;
+
+  /* Layers, lowest to highest */
+  --z-float: 900;
+  --z-nav: 1000;
+  --z-dock: 1100;
+  --z-skip: 1200;
+  --z-noise: 1500;
+  --z-modal: 2000;
 }
 
 :root[data-theme='light'] {
@@ -96,11 +106,13 @@
 
   --line: rgba(11, 11, 12, 0.09);
   --line-strong: rgba(11, 11, 12, 0.18);
+  --line-field: rgba(11, 11, 12, 0.46);
 
-  --accent: #e5322d;
+  /* Darker than the dark-theme red so it stays AA as small text on the off-white page. */
+  --accent: #d12a24;
   --accent-ink: #c8241c;
-  --accent-soft: rgba(229, 50, 45, 0.09);
-  --accent-glow: rgba(229, 50, 45, 0.25);
+  --accent-soft: rgba(209, 42, 36, 0.09);
+  --accent-glow: rgba(209, 42, 36, 0.25);
 
   --inverse-bg: #0b0b0c;
   --inverse-fg: #fafafa;
@@ -197,6 +209,12 @@ p {
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
+}
+
+/* Targets that receive focus programmatically (skip link, in-page jumps,
+   dock page switches) need no ring of their own. */
+[tabindex='-1']:focus {
+  outline: none;
 }
 
 ::-webkit-scrollbar {
@@ -313,10 +331,6 @@ section {
   line-height: 1.6;
 }
 
-.section-head__aside {
-  justify-self: end;
-}
-
 /* Anchor jumps land the header just under the floating nav, not a full
    section padding below it. (App mode sets its own offsets in MobileTabBar.css.) */
 @media (min-width: 901px) {
@@ -362,9 +376,10 @@ section {
   cursor: not-allowed;
 }
 
-.btn i,
 .btn svg {
-  font-size: 0.95em;
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
 }
 
 .btn-primary {
@@ -492,8 +507,10 @@ section {
   white-space: nowrap;
 }
 
-.chip i {
-  font-size: 0.75rem;
+.chip svg {
+  flex-shrink: 0;
+  width: 0.8125rem;
+  height: 0.8125rem;
 }
 
 .chip-mono {
@@ -598,7 +615,7 @@ section {
 .noise-overlay {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: var(--z-noise);
   pointer-events: none;
   opacity: var(--noise-opacity);
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
@@ -633,8 +650,7 @@ section {
     gap: 16px;
   }
 
-  .section-head__desc,
-  .section-head__aside {
+  .section-head__desc {
     justify-self: start;
     font-size: var(--text-base);
   }
@@ -654,6 +670,13 @@ section {
   .btn-lg {
     --btn-h: 52px;
   }
+}
+
+/* The hero's "pause motion" toggle sets data-motion="paused" on <html> (WCAG 2.2.2). */
+[data-motion='paused'] *,
+[data-motion='paused'] *::before,
+[data-motion='paused'] *::after {
+  animation-play-state: paused !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

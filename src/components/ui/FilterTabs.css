@@ -1,0 +1,88 @@
+/* Holds the segmented control; on narrow screens it scrolls sideways
+   inside itself instead of widening the page. */
+.filter-tabs-scroll {
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+}
+
+.filter-tabs-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-tabs {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    background: var(--bg-elev);
+    box-shadow: var(--highlight);
+}
+
+.filter-tabs__btn {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 40px;
+    padding: 0 18px;
+    border-radius: var(--radius-pill);
+    color: var(--fg-muted);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    transition: color var(--dur) ease;
+}
+
+@media (hover: hover) {
+    .filter-tabs__btn:hover {
+        color: var(--fg);
+    }
+}
+
+.filter-tabs__btn.is-active {
+    color: var(--inverse-fg);
+}
+
+.filter-tabs__btn:focus-visible {
+    outline-offset: -2px;
+}
+
+.filter-tabs__pill {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--inverse-bg);
+    box-shadow: var(--shadow-sm);
+}
+
+.filter-tabs__count {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+    color: var(--fg-subtle);
+    transition: color var(--dur) ease, opacity var(--dur) ease;
+}
+
+.filter-tabs__btn.is-active .filter-tabs__count {
+    color: inherit;
+    opacity: 0.55;
+}
+
+/* Touch: 44px targets. */
+@media (max-width: 900px) {
+    .filter-tabs__btn {
+        height: 44px;
+        padding: 0 16px;
+    }
+}

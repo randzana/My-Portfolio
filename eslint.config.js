@@ -23,7 +23,8 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]' }],
+      // Core no-unused-vars doesn't see JSX usage: capitalised components and <motion.*> read as unused.
+      'no-unused-vars': ['warn', { varsIgnorePattern: '^(?:[A-Z_]|motion$)' }],
       'react-hooks/set-state-in-effect': 'warn',
       'react-hooks/unsupported-syntax': 'warn',
       'react-hooks/exhaustive-deps': 'warn',

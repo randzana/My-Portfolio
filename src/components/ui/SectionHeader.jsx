@@ -5,9 +5,8 @@ import Reveal from './Reveal';
      01  // ABOUT  ─────────────────────────────────────
      Turning vision into reality            short description
 
-   `title` may contain <em className="serif">…</em> for the accent word.
-   `aside` replaces the description slot (e.g. a filter control). */
-export default function SectionHeader({ index, label, title, desc, aside }) {
+   `title` may contain <em className="serif">…</em> for the accent word. */
+export default function SectionHeader({ index, label, title, desc }) {
     return (
         <header className="section-head">
             <Reveal className="section-head__meta" blur={false} y={12}>
@@ -22,11 +21,6 @@ export default function SectionHeader({ index, label, title, desc, aside }) {
                 {desc && (
                     <Reveal as="p" className="section-head__desc" delay={0.15}>
                         {desc}
-                    </Reveal>
-                )}
-                {aside && (
-                    <Reveal className="section-head__aside" delay={0.15}>
-                        {aside}
                     </Reveal>
                 )}
             </div>

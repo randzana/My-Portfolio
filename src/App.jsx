@@ -16,7 +16,7 @@ export default function App() {
     <MotionConfig reducedMotion="user">
       <div className="noise-overlay" aria-hidden="true" />
       <Navbar />
-      <main>
+      <main id="main" tabIndex={-1}>
         <Hero />
         <About />
         <Projects />
