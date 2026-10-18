@@ -19,7 +19,7 @@
   /* Text */
   --fg: #f4f4f5;
   --fg-muted: #a1a1aa;
-  --fg-subtle: #71717a;
+  --fg-subtle: #85858f;
 
   /* Lines */
   --line: rgba(255, 255, 255, 0.08);
@@ -92,7 +92,7 @@
 
   --fg: #0b0b0c;
   --fg-muted: #52525b;
-  --fg-subtle: #71717a;
+  --fg-subtle: #67676f;
 
   --line: rgba(11, 11, 12, 0.09);
   --line-strong: rgba(11, 11, 12, 0.18);
@@ -306,7 +306,7 @@ section {
 }
 
 .section-head__desc {
-  justify-self: end;
+  justify-self: start;
   max-width: 40ch;
   color: var(--fg-muted);
   font-size: var(--text-lg);
@@ -315,6 +315,14 @@ section {
 
 .section-head__aside {
   justify-self: end;
+}
+
+/* Anchor jumps land the header just under the floating nav, not a full
+   section padding below it. (App mode sets its own offsets in MobileTabBar.css.) */
+@media (min-width: 901px) {
+  section[id] {
+    scroll-margin-top: calc(24px - var(--section-y));
+  }
 }
 
 /* ===== BUTTONS ===== */
