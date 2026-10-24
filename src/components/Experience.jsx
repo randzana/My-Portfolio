@@ -1,5 +1,6 @@
 import SectionHeader from './ui/SectionHeader';
 import Reveal from './ui/Reveal';
+import { pad } from '../lib/format';
 import './Experience.css';
 
 // Each group is listed newest first. `end` marks a date range; `label` replaces
@@ -7,7 +8,7 @@ import './Experience.css';
 const GROUPS = [
     {
         id: 'work',
-        label: 'Experience',
+        label: 'Work',
         items: [
             {
                 start: '2026',
@@ -20,7 +21,7 @@ const GROUPS = [
                 end: 'Present',
                 role: 'Freelance Full-Stack Developer',
                 org: 'Self-employed',
-                desc: "Built and deployed a two-portal café management system that's live in production, a gym management system for KF and a real estate management system, gathering requirements directly with each business. Now building a management system for a kindergarten and a K–12 school.",
+                desc: 'Built and deployed a two-portal café management system that’s live in production; developed a gym management system for KF and a real estate management system, gathering requirements directly with each business. Now building a management system for a kindergarten and a K–12 school.',
             },
             {
                 start: '2025',
@@ -32,7 +33,7 @@ const GROUPS = [
                 start: '2025',
                 role: 'Videographer',
                 org: 'Self-employed',
-                desc: "Covering events for Diwaxani Nali and Koya University's social media.",
+                desc: 'Covering events for Diwaxani Nali and Koya University’s social media.',
             },
             {
                 label: '3 months',
@@ -56,8 +57,6 @@ const GROUPS = [
         ],
     },
 ];
-
-const pad = n => String(n).padStart(2, '0');
 
 function Period({ start, end, label }) {
     if (label) return <p className="exp-date">{label}</p>;
@@ -89,10 +88,13 @@ export default function Experience() {
                 <div className="exp-groups">
                     {GROUPS.map(group => (
                         <div key={group.id} className="exp-group">
+                            {/* Group heading: "// WORK ──────── 05" (same pattern as Projects). */}
                             <Reveal className="exp-group-head" y={12} blur={false}>
                                 <h3 id={`exp-${group.id}`} className="eyebrow exp-group-label">
                                     {group.label}
                                 </h3>
+                                <span className="exp-group-rule" aria-hidden="true" />
+                                {/* The list already announces its length. */}
                                 <span className="exp-group-count" aria-hidden="true">
                                     {pad(group.items.length)}
                                 </span>

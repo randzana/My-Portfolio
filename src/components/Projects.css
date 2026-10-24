@@ -4,7 +4,8 @@
    styles the "Other projects" index below them.
    ========================================================= */
 
-/* ---------- Sub-header ---------- */
+/* ---------- Sub-header ----------
+   The reference group-heading pattern: eyebrow + hairline + mono count. */
 .proj-subhead {
     display: flex;
     align-items: center;
@@ -26,7 +27,7 @@
     font-family: var(--font-mono);
     font-size: var(--text-xs);
     letter-spacing: 0.06em;
-    color: var(--fg-subtle);
+    color: var(--fg-muted);
 }
 
 /* ---------- Grid ---------- */
@@ -87,12 +88,18 @@
 .proj-card-links .icon-btn {
     width: 36px;
     height: 36px;
-    font-size: 0.875rem;
     color: var(--fg-muted);
 }
 
-.proj-card-links .icon-btn:hover {
-    color: var(--fg);
+.proj-card-links .icon-btn svg {
+    width: 15px;
+    height: 15px;
+}
+
+@media (hover: hover) {
+    .proj-card-links .icon-btn:hover {
+        color: var(--fg);
+    }
 }
 
 .proj-card-title {
@@ -154,12 +161,16 @@
     border: 1px solid var(--line);
     border-radius: 50%;
     color: var(--fg-muted);
-    font-size: 0.75rem;
     transition:
         transform 0.45s var(--ease-out),
         background-color var(--dur) ease,
         border-color var(--dur) ease,
         color var(--dur) ease;
+}
+
+.proj-card-arrow svg {
+    width: 14px;
+    height: 14px;
 }
 
 @media (hover: hover) {
@@ -208,7 +219,11 @@
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
     background: var(--bg-elev);
-    font-size: 1.25rem;
+}
+
+.proj-more-icon svg {
+    width: 20px;
+    height: 20px;
 }
 
 .proj-more-text {
@@ -241,6 +256,17 @@
 @media (max-width: 900px) {
     .proj-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* Touch targets: 44px, and a little apart so a near miss doesn't land
+       on the card's own link instead. */
+    .proj-card-links {
+        gap: 8px;
+    }
+
+    .proj-card-links .icon-btn {
+        width: 44px;
+        height: 44px;
     }
 
     .proj-card,

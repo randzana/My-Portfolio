@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { LuGraduationCap, LuMoon, LuSun, LuTrophy } from 'react-icons/lu';
 import SectionHeader from './ui/SectionHeader';
 import Reveal from './ui/Reveal';
 import { trackSpotlight } from '../lib/spotlight';
+import { pad } from '../lib/format';
 import './About.css';
 
 const TRAITS = [
@@ -27,7 +29,11 @@ const DISCIPLINES = [
     { name: 'Content Creation', note: 'Engaging, detail-first content' },
 ];
 
-// `level` drives the little meter (out of LEVEL_STEPS); the word is what's read.
+// A hyphenated word ("detail-first") never breaks at its hyphen when a note wraps.
+const keepHyphenated = text =>
+    text.split(/(\S+-\S+)/).map((part, i) => (i % 2 ? <span key={i} className="about-nowrap">{part}</span> : part));
+
+// `level` drives the little meter (out of LEVEL_STEPS); the word is what’s read.
 const LEVEL_STEPS = 5;
 const LANGUAGES = [
     { name: 'Kurdish Sorani', label: 'Native', level: 5 },
@@ -65,9 +71,7 @@ function koyaTime(date) {
     }
     // No time-zone support: Iraq has stayed on UTC+3 all year since 2008.
     const shifted = new Date(date.getTime() + 3 * 60 * 60 * 1000);
-    const hh = String(shifted.getUTCHours()).padStart(2, '0');
-    const mm = String(shifted.getUTCMinutes()).padStart(2, '0');
-    return { hour: shifted.getUTCHours(), text: `${hh}:${mm}` };
+    return { hour: shifted.getUTCHours(), text: `${pad(shifted.getUTCHours())}:${pad(shifted.getUTCMinutes())}` };
 }
 
 /* Current time in Koya, refreshed every 30s and as soon as a backgrounded
@@ -101,7 +105,7 @@ function BentoCard({ area, label, labelAs = 'h3', aside, index, children }) {
             onPointerMove={trackSpotlight}
         >
             <header className="about-card__head">
-                <Label className="about-card__label eyebrow">{label}</Label>
+                <Label className="about-card__label">{label}</Label>
                 {aside}
             </header>
             {children}
@@ -110,9 +114,10 @@ function BentoCard({ area, label, labelAs = 'h3', aside, index, children }) {
 }
 
 function IconTile({ icon }) {
+    const Icon = icon;
     return (
         <span className="about-icon" aria-hidden="true">
-            <i className={icon} />
+            <Icon />
         </span>
     );
 }
@@ -126,7 +131,7 @@ function BasedInCard({ index }) {
             area="place"
             label="Based in"
             index={index}
-            aside={<IconTile icon={isDay ? 'fa-solid fa-sun' : 'fa-solid fa-moon'} />}
+            aside={<IconTile icon={isDay ? LuSun : LuMoon} />}
         >
             <div className="about-card__body about-place">
                 <p className="about-card__title">
@@ -162,23 +167,28 @@ export default function About() {
                     desc="A passionate engineer who loves transforming ideas into impactful software solutions."
                 />
 
+                {/* DOM order follows the desktop rows: the wide intro, then the
+                    work facts (study, recognition, disciplines), then the
+                    personal ones (traits, languages, place and local time). */}
                 <div className="about-bento">
                     <BentoCard area="intro" label="Intro" labelAs="p" index={0}>
                         <div className="about-intro__grid bg-grid" aria-hidden="true" />
-                        <div className="about-card__body about-intro__copy">
+                        <div className="about-card__body about-intro">
                             <h3 className="about-intro__title">
-                                Hello, I&rsquo;m <em className="serif">Rand Zana</em>
+                                Hello, I’m <em className="serif about-intro__name">Rand Zana</em>
                             </h3>
-                            <p className="about-intro__lede">
-                                I bridge the gap between tech and creativity. As a software engineer,
-                                photographer, and brand strategist, I do everything from architecting
-                                complex systems to crafting marketing campaigns and cinematic content.
-                            </p>
-                            <p className="about-intro__text">
-                                From clean code to engaging content, I&rsquo;m obsessed with the details. I
-                                apply the same high standards to every project, whether it&rsquo;s technical
-                                or creative.
-                            </p>
+                            <div className="about-intro__copy">
+                                <p className="about-intro__lede">
+                                    I bridge the gap between tech and creativity. As a software engineer,
+                                    photographer, and brand strategist, I do everything from architecting
+                                    complex systems to crafting marketing campaigns and cinematic content.
+                                </p>
+                                <p className="about-intro__text">
+                                    From clean code to engaging content, I’m obsessed with the details. I
+                                    apply the same high standards to every project, whether it’s technical
+                                    or creative.
+                                </p>
+                            </div>
                         </div>
                     </BentoCard>
 
@@ -186,9 +196,9 @@ export default function About() {
                         area="now"
                         label="Currently"
                         index={1}
-                        aside={<IconTile icon="fa-solid fa-graduation-cap" />}
+                        aside={<IconTile icon={LuGraduationCap} />}
                     >
-                        <div className="about-card__body">
+                        <div className="about-card__body about-now">
                             <p className="about-card__title">
                                 Final-year Software Engineering student
                                 <span className="about-card__sub">Koya University, Faculty of Engineering</span>
@@ -211,25 +221,61 @@ export default function About() {
                         </div>
                     </BentoCard>
 
-                    <BasedInCard index={2} />
+                    <BentoCard
+                        area="award"
+                        label="Recognition"
+                        index={2}
+                        aside={<IconTile icon={LuTrophy} />}
+                    >
+                        <ul className="about-card__body about-awards">
+                            {RECOGNITION.map(item => (
+                                <li key={item.title} className="about-awards__item">
+                                    <span className="about-awards__title">{item.title}</span>
+                                    <span className="about-awards__meta">
+                                        <span>{item.org}</span>
+                                        <span className="about-awards__year">{item.year}</span>
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    </BentoCard>
 
                     <BentoCard area="do" label="What I do" index={3}>
                         <ol className="about-card__body about-do">
                             {DISCIPLINES.map((item, i) => (
                                 <li key={item.name} className="about-do__item">
                                     <span className="about-do__num" aria-hidden="true">
-                                        {String(i + 1).padStart(2, '0')}
+                                        {pad(i + 1)}
                                     </span>
                                     <span className="about-do__text">
                                         <span className="about-do__name">{item.name}</span>
-                                        <span className="about-do__note">{item.note}</span>
+                                        <span className="about-do__note">{keepHyphenated(item.note)}</span>
                                     </span>
                                 </li>
                             ))}
                         </ol>
                     </BentoCard>
 
-                    <BentoCard area="lang" label="Languages" index={4}>
+                    <BentoCard
+                        area="traits"
+                        label="Traits"
+                        index={4}
+                        aside={
+                            <span className="about-card__count" aria-hidden="true">
+                                {pad(TRAITS.length)}
+                            </span>
+                        }
+                    >
+                        <ul className="about-card__body about-traits">
+                            {TRAITS.map(trait => (
+                                <li key={trait} className="chip about-traits__chip">
+                                    {trait}
+                                </li>
+                            ))}
+                        </ul>
+                    </BentoCard>
+
+                    <BentoCard area="lang" label="Languages" index={5}>
                         <ul className="about-card__body about-lang">
                             {LANGUAGES.map(lang => (
                                 <li key={lang.name} className="about-lang__item">
@@ -245,39 +291,7 @@ export default function About() {
                         </ul>
                     </BentoCard>
 
-                    <BentoCard
-                        area="traits"
-                        label="Traits"
-                        index={5}
-                        aside={<span className="about-card__count">{String(TRAITS.length).padStart(2, '0')}</span>}
-                    >
-                        <ul className="about-card__body about-traits">
-                            {TRAITS.map(trait => (
-                                <li key={trait} className="chip about-traits__chip">
-                                    {trait}
-                                </li>
-                            ))}
-                        </ul>
-                    </BentoCard>
-
-                    <BentoCard
-                        area="award"
-                        label="Recognition"
-                        index={6}
-                        aside={<IconTile icon="fa-solid fa-trophy" />}
-                    >
-                        <ul className="about-card__body about-awards">
-                            {RECOGNITION.map(item => (
-                                <li key={item.title} className="about-awards__item">
-                                    <span className="about-awards__title">{item.title}</span>
-                                    <span className="about-awards__meta">
-                                        <span>{item.org}</span>
-                                        <span className="about-awards__year">{item.year}</span>
-                                    </span>
-                                </li>
-                            ))}
-                        </ul>
-                    </BentoCard>
+                    <BasedInCard index={6} />
                 </div>
             </div>
         </section>

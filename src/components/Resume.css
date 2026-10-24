@@ -109,8 +109,9 @@
         transform 0.5s var(--ease-out);
 }
 
-.resume-paper-cta i {
-    font-size: 0.8em;
+.resume-paper-cta svg {
+    width: 15px;
+    height: 15px;
 }
 
 .resume-stage:focus-visible {
@@ -167,7 +168,11 @@
     border-radius: 50%;
     background: var(--accent-soft);
     color: var(--accent-ink);
-    font-size: 0.9rem;
+}
+
+.resume-file-icon svg {
+    width: 16px;
+    height: 16px;
 }
 
 .resume-file-text {
@@ -214,10 +219,16 @@
     margin-top: clamp(28px, 3vw, 40px);
 }
 
+/* In-card label: mono caps, no "//" (that marks section-level groups). */
 .resume-contents-label {
     margin-bottom: 14px;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    text-transform: uppercase;
     letter-spacing: 0.1em;
     line-height: 1;
+    color: var(--fg-muted);
 }
 
 .resume-contents-list {
@@ -249,10 +260,9 @@
 }
 
 .resume-contents-icon {
-    width: 16px;
+    width: 15px;
+    height: 15px;
     flex-shrink: 0;
-    text-align: center;
-    font-size: 0.8125rem;
     color: var(--fg-muted);
     transition: color var(--dur) ease;
 }
@@ -272,22 +282,32 @@
     padding-top: clamp(28px, 3vw, 40px);
 }
 
-.resume-actions .fa-arrow-up-right-from-square {
-    font-size: 0.75rem;
+.resume-view-icon {
     color: var(--fg-muted);
+    transition: color var(--dur) ease;
 }
 
-/* A download icon shouldn't spin like the arrow — it drops instead. */
-.resume-download:hover .btn-arrow {
+/* A download icon shouldn't spin like the arrow chips elsewhere (index.css
+   rotates .btn-arrow on hover) — it drops instead. No :hover here, so the
+   override also holds on touch screens. */
+.resume-actions .btn.resume-download .btn-arrow {
     transform: none;
 }
 
-.resume-download .btn-arrow i {
+.resume-download .btn-arrow svg {
+    width: 14px;
+    height: 14px;
     transition: transform 0.45s var(--ease-out);
 }
 
-.resume-download:hover .btn-arrow i {
-    transform: translateY(2px);
+@media (hover: hover) {
+    .resume-download:hover .btn-arrow svg {
+        transform: translateY(2px);
+    }
+
+    .resume-view:hover .resume-view-icon {
+        color: var(--fg);
+    }
 }
 
 /* ===== LAPTOP ===== */
@@ -388,7 +408,7 @@
         display: grid;
     }
 
-    /* Uneven columns: "Leadership & Awards" (right) keeps to one line at 360-414px. */
+    /* Uneven columns: "Leadership & Awards" (right) keeps to one line at 375-414px. */
     .resume-contents-list {
         grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
         column-gap: 12px;
@@ -397,7 +417,7 @@
     .resume-contents-item {
         gap: 8px;
         padding: 12px 0;
-        font-size: 0.8125rem;
+        font-size: var(--text-sm);
     }
 
     .resume-contents-index {
@@ -405,7 +425,8 @@
     }
 }
 
-@media (max-width: 359px) {
+/* Below 375px "Leadership & Awards" no longer fits half the row at 14px. */
+@media (max-width: 374px) {
     .resume-contents-list {
         grid-template-columns: minmax(0, 1fr);
     }

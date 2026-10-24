@@ -1,26 +1,33 @@
 /* =========================================================
    ABOUT — 01
-   A bento of small facts around one large intro card.
-   Desktop: 4 columns, 3 rows, interlocking spans (no holes).
+   A wide intro card over a 4-column bento of small facts.
+   Cards that share a row have similar natural heights, so
+   no card is stretched far past its content, and every
+   card's content starts right under its label.
    ========================================================= */
+
+.about {
+    --about-pad: clamp(22px, 2.2vw, 30px);
+    --about-gap: 16px;
+}
 
 .about-bento {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-template-areas:
-        'intro  intro  now  place'
-        'intro  intro  do   lang'
-        'traits traits do   award';
-    gap: 16px;
+        'intro  intro  intro  intro'
+        'now    award  do     do'
+        'traits traits lang   place';
+    gap: var(--about-gap);
 }
 
 /* ===== CARD SHELL ===== */
 .about-card {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
     min-width: 0;
-    padding: clamp(22px, 2.2vw, 30px);
+    padding: var(--about-pad);
     /* No transform transition: Reveal drives `transform` every frame. */
     transition:
         border-color var(--dur) ease,
@@ -35,6 +42,7 @@
 .about-card--traits { grid-area: traits; }
 .about-card--award { grid-area: award; }
 
+/* Same height with or without an icon tile, so labels in a row line up. */
 .about-card__head {
     display: flex;
     align-items: center;
@@ -43,14 +51,24 @@
     min-height: 34px;
 }
 
+/* In-card label: mono caps in the muted grey, no "//" (that marks section
+   and group headings only). */
 .about-card__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
     line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--fg-muted);
 }
 
-/* Content sits at the foot of the card, so cards stretched by the grid
-   keep their label up top and their facts grounded at the bottom. */
-.about-card__body {
-    margin-top: auto;
+.about-card__count {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+    color: var(--fg-muted);
+    font-variant-numeric: tabular-nums;
 }
 
 .about-card__title {
@@ -73,14 +91,6 @@
     color: var(--fg-muted);
 }
 
-.about-card__count {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    letter-spacing: 0.06em;
-    color: var(--fg-subtle);
-    font-variant-numeric: tabular-nums;
-}
-
 .about-icon {
     display: grid;
     place-items: center;
@@ -91,17 +101,15 @@
     border: 1px solid var(--line);
     background: var(--bg-inset);
     color: var(--fg-muted);
-    font-size: 0.8125rem;
     transition:
         color var(--dur) ease,
         border-color var(--dur) ease,
         transform 0.5s var(--ease-out);
 }
 
-.about-card:hover .about-icon {
-    color: var(--accent);
-    border-color: var(--line-strong);
-    transform: rotate(-8deg);
+.about-icon svg {
+    width: 16px;
+    height: 16px;
 }
 
 /* ===== 1. INTRO ===== */
@@ -110,7 +118,8 @@
     overflow: hidden;
 }
 
-/* Faint grid texture fading out from the top-right corner. */
+/* Faint grid texture rising from the bottom-left corner, under the
+   greeting, where the shorter left column leaves room. */
 .about .about-intro__grid {
     position: absolute;
     inset: 0;
@@ -119,14 +128,25 @@
     pointer-events: none;
     background-size: 40px 40px;
     background-position: -1px -1px;
-    mask-image: radial-gradient(circle at 100% 0%, #000 0%, transparent 55%);
-    -webkit-mask-image: radial-gradient(circle at 100% 0%, #000 0%, transparent 55%);
+    mask-image: radial-gradient(circle 440px at 0% 100%, #000 0%, transparent 100%);
+    -webkit-mask-image: radial-gradient(circle 440px at 0% 100%, #000 0%, transparent 100%);
+}
+
+/* Greeting left, copy right. The halves are split like the bento below
+   (the gutter spans two card paddings plus the grid gap), so the copy
+   starts on the same line as the text of the cards under it. */
+.about-intro {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: calc(var(--about-pad) * 2 + var(--about-gap));
+    row-gap: 20px;
+    align-items: start;
 }
 
 .about-intro__title {
-    font-size: var(--display-sm);
-    line-height: 1.05;
-    letter-spacing: -0.04em;
+    font-size: clamp(2rem, 3.6vw, 3.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.045em;
     color: var(--fg);
 }
 
@@ -134,17 +154,20 @@
     letter-spacing: -0.015em;
 }
 
+.about-intro__name {
+    display: block;
+}
+
 .about-intro__copy {
     display: grid;
-    gap: 18px;
-    max-width: 58ch;
+    gap: 16px;
+    max-width: 60ch;
 }
 
-.about-intro__copy .about-intro__title {
-    margin-bottom: 6px;
-}
-
+/* Lift the lede so its first line sits on the greeting's cap height
+   instead of a half-leading lower. */
 .about-intro__lede {
+    margin-top: -0.3em;
     font-size: var(--text-xl);
     line-height: 1.6;
     letter-spacing: -0.012em;
@@ -157,10 +180,20 @@
     color: var(--fg-muted);
 }
 
-/* ===== 2. CURRENTLY ===== */
-.about-card--now .about-card__body {
-    display: grid;
+/* ===== 2. CURRENTLY + 3. BASED IN =====
+   The headline sits under the label; the degree bar and the clock keep to
+   the foot of the card when the row is a little taller than they are. */
+.about-now,
+.about-place {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     gap: 20px;
+}
+
+.about-degree,
+.about-clock {
+    margin-top: auto;
 }
 
 .about-degree {
@@ -190,17 +223,11 @@
     justify-content: space-between;
     gap: 8px;
     font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    letter-spacing: 0.04em;
+    font-size: var(--text-xs);
+    letter-spacing: 0.02em;
     color: var(--fg-muted);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
-}
-
-/* ===== 3. BASED IN ===== */
-.about-place {
-    display: grid;
-    gap: 20px;
 }
 
 .about-clock {
@@ -215,7 +242,7 @@
     font-size: 0.6875rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--fg-subtle);
+    color: var(--fg-muted);
 }
 
 .about-clock__row {
@@ -238,34 +265,29 @@
 
 .about-clock__zone {
     font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    font-size: var(--text-xs);
     letter-spacing: 0.06em;
     color: var(--fg-muted);
 }
 
-/* ===== 4. WHAT I DO ===== */
+/* ===== 4. WHAT I DO =====
+   Desktop: a two-by-two grid in a two-column card. */
 .about-do {
-    display: flex;
-    flex-direction: column;
-}
-
-/* On desktop the card spans two rows: the rows share its full height. */
-.about-card--do .about-do {
-    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
 }
 
 .about-do__item {
-    flex: 1;
     display: grid;
-    grid-template-columns: 28px minmax(0, 1fr);
+    grid-template-columns: 24px minmax(0, 1fr);
     align-items: baseline;
-    align-content: center;
     gap: 8px;
     padding: 16px 0;
     border-top: 1px solid var(--line);
 }
 
-.about-do__item:last-child {
+.about-do__item:nth-last-child(-n + 2) {
     padding-bottom: 0;
 }
 
@@ -273,13 +295,6 @@
     display: grid;
     gap: 4px;
     transition: transform 0.45s var(--ease-out);
-}
-
-.about-do__note {
-    font-size: var(--text-sm);
-    line-height: 1.45;
-    color: var(--fg-muted);
-    text-wrap: pretty;
 }
 
 .about-do__num {
@@ -299,55 +314,56 @@
     color: var(--fg);
 }
 
-.about-do__item:hover .about-do__num {
-    color: var(--accent);
+.about-do__note {
+    font-size: var(--text-sm);
+    line-height: 1.45;
+    color: var(--fg-muted);
+    text-wrap: pretty;
 }
 
-.about-do__item:hover .about-do__text {
-    transform: translateX(4px);
+.about-nowrap {
+    white-space: nowrap;
 }
 
 /* ===== 5. TRAITS ===== */
 .about-traits {
     display: flex;
     flex-wrap: wrap;
+    align-content: flex-start;
     gap: 8px;
 }
 
+/* Static tags, not controls: no hover state. */
 .about .about-traits__chip {
     height: 32px;
     padding: 0 14px;
     background: var(--bg-inset);
     color: var(--fg-muted);
-    transition:
-        color var(--dur) ease,
-        border-color var(--dur) ease,
-        background-color var(--dur) ease;
-}
-
-.about .about-traits__chip:hover {
-    color: var(--fg);
-    border-color: var(--line-strong);
-    background: var(--bg-elev);
 }
 
 /* ===== 6. LANGUAGES ===== */
 .about-lang {
     display: grid;
-    gap: 18px;
 }
 
 .about-lang__item {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: baseline;
-    row-gap: 10px;
+    row-gap: 12px;
     column-gap: 12px;
+    padding: 14px 0 16px;
+    border-top: 1px solid var(--line);
+}
+
+.about-lang__item:last-child {
+    padding-bottom: 0;
 }
 
 .about-lang__name {
     font-size: var(--text-base);
     font-weight: 500;
+    line-height: 1.35;
     letter-spacing: -0.015em;
     color: var(--fg);
 }
@@ -405,6 +421,7 @@
 .about-awards__meta {
     display: flex;
     flex-wrap: wrap;
+    align-items: baseline;
     justify-content: space-between;
     gap: 4px 12px;
     font-size: var(--text-sm);
@@ -413,19 +430,38 @@
 
 .about-awards__year {
     font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    letter-spacing: 0.04em;
-    line-height: 1.9;
+    font-size: var(--text-xs);
+    letter-spacing: 0.02em;
     color: var(--fg-muted);
     font-variant-numeric: tabular-nums;
 }
 
-/* ===== SMALL DESKTOP: narrow 4-column cards ===== */
+/* ===== HOVER (pointer devices only; a tap would leave it stuck on) ===== */
+@media (hover: hover) {
+    .about-card:hover .about-icon {
+        color: var(--accent);
+        border-color: var(--line-strong);
+        transform: rotate(-8deg);
+    }
+
+    .about-do__item:hover .about-do__num {
+        color: var(--accent);
+    }
+
+    .about-do__item:hover .about-do__text {
+        transform: translateX(4px);
+    }
+}
+
+/* ===== SMALL DESKTOP: narrower 4-column cards ===== */
 @media (max-width: 1240px) and (min-width: 1081px) {
-    /* Index above the name, so names get the full card width. */
+    /* Keeps names and notes on one line in a 2x2 cell down to ~1100px. */
+    .about-do {
+        column-gap: 16px;
+    }
+
     .about-do__item {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 6px;
+        grid-template-columns: 18px minmax(0, 1fr);
     }
 
     .about-do__name {
@@ -439,14 +475,56 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
         grid-template-areas:
             'intro  intro'
-            'now    place'
+            'now    award'
             'do     lang'
-            'do     award'
+            'do     place'
             'traits traits';
     }
 
+    /* One column of disciplines; spanning two rows, they share its height. */
+    .about-do {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Rows stay top-aligned under their hairlines: the first discipline
+       sits right under the label and the rules divide the height evenly. */
+    .about-do__item {
+        flex: 1;
+        align-content: start;
+    }
+
+    .about-do__item:nth-last-child(-n + 2) {
+        padding-bottom: 16px;
+    }
+
+    .about-do__item:last-child {
+        padding-bottom: 0;
+    }
+}
+
+/* ===== APP MODE: the intro stacks ===== */
+@media (max-width: 900px) {
+    .about-intro {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .about-intro__name {
+        display: inline;
+    }
+
+    .about-intro__title {
+        font-size: var(--display-sm);
+        line-height: 1.05;
+    }
+
     .about-intro__copy {
-        max-width: 68ch;
+        max-width: 64ch;
+    }
+
+    .about-intro__lede {
+        margin-top: 0;
     }
 }
 
@@ -457,11 +535,11 @@
         grid-template-areas:
             'intro'
             'now'
-            'place'
+            'award'
             'do'
-            'lang'
             'traits'
-            'award';
+            'lang'
+            'place';
         gap: 12px;
     }
 
@@ -489,6 +567,7 @@
 
     /* Location and clock side by side: a wide, short tile. */
     .about-place {
+        display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         align-items: end;
     }
@@ -517,7 +596,7 @@
         padding: 0 12px;
     }
 
-    /* Two languages side by side keep the tile short and square-ish. */
+    /* Two languages side by side keep the tile short. */
     .about-lang {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         column-gap: 20px;
@@ -526,6 +605,7 @@
     .about-lang__item {
         grid-template-columns: minmax(0, 1fr);
         row-gap: 6px;
+        padding-bottom: 0;
     }
 
     .about-lang__meter {

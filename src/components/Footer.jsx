@@ -1,10 +1,14 @@
+import { FaGithub, FaInstagram, FaLinkedinIn } from 'react-icons/fa6';
+import { LuArrowRight, LuArrowUp, LuArrowUpRight, LuMail } from 'react-icons/lu';
 import Reveal from './ui/Reveal';
+import { pad } from '../lib/format';
 import { goToSection, scrollBehavior } from '../lib/scroll';
+import { CV_FILE, CV_FILENAME, EMAIL, GITHUB_URL, LINKEDIN_URL } from '../lib/profile';
 import './Footer.css';
 
-const EMAIL = 'randzana1920@gmail.com';
+const [EMAIL_USER, EMAIL_DOMAIN] = EMAIL.split('@');
 
-const sections = [
+const SECTIONS = [
     { id: 'about', label: 'About' },
     { id: 'projects', label: 'Projects' },
     { id: 'skills', label: 'Skills' },
@@ -14,11 +18,11 @@ const sections = [
     { id: 'contact', label: 'Contact' },
 ];
 
-const socials = [
-    { icon: 'fa-brands fa-github', href: 'https://github.com/randzana', label: 'GitHub' },
-    { icon: 'fa-brands fa-linkedin-in', href: 'https://www.linkedin.com/in/rand-zana-5b78522b5', label: 'LinkedIn' },
-    { icon: 'fa-brands fa-instagram', href: 'https://www.instagram.com/rand.vision/', label: 'Instagram' },
-    { icon: 'fa-solid fa-envelope', href: 'mailto:randzana1920@gmail.com', label: 'Email' },
+const SOCIALS = [
+    { icon: FaGithub, href: GITHUB_URL, label: 'GitHub', external: true },
+    { icon: FaLinkedinIn, href: LINKEDIN_URL, label: 'LinkedIn', external: true },
+    { icon: FaInstagram, href: 'https://www.instagram.com/rand.vision/', label: 'Instagram', external: true },
+    { icon: LuMail, href: `mailto:${EMAIL}`, label: 'Email' },
 ];
 
 export default function Footer() {
@@ -27,20 +31,27 @@ export default function Footer() {
     return (
         <footer className="footer">
             <div className="container">
-                {/* ----- Closing call to action ----- */}
-                <div className="footer-cta">
-                    <Reveal as="h2" className="footer-cta__title">
-                        Have a project in <em className="serif">mind?</em>
+                {/* ----- Sign-off: where Rand is, and the one address to write to ----- */}
+                <div className="footer-signoff">
+                    <Reveal as="h2" className="footer-signoff__status" blur={false} y={12}>
+                        <span className="footer-signoff__avail">
+                            <span className="status-dot" aria-hidden="true" />
+                            Available for opportunities
+                        </span>
+                        <span className="footer-signoff__sep" aria-hidden="true">
+                            ·
+                        </span>
+                        <span className="sr-only">. </span>
+                        <span className="footer-signoff__place">Based in Koya, Kurdistan</span>
                     </Reveal>
-                    <Reveal className="footer-cta__action" delay={0.08}>
-                        <a
-                            href="#contact"
-                            className="btn btn-primary btn-lg"
-                            onClick={e => goToSection(e, 'contact')}
-                        >
-                            Let&rsquo;s talk
-                            <span className="btn-arrow" aria-hidden="true">
-                                <i className="fa-solid fa-arrow-right" />
+                    <Reveal className="footer-signoff__mail" delay={0.06}>
+                        <a href={`mailto:${EMAIL}`} className="footer-signoff__email">
+                            <span className="footer-signoff__text">
+                                {EMAIL_USER}
+                                <wbr />@{EMAIL_DOMAIN}
+                            </span>
+                            <span className="footer-signoff__chip" aria-hidden="true">
+                                <LuArrowRight />
                             </span>
                         </a>
                     </Reveal>
@@ -48,10 +59,11 @@ export default function Footer() {
 
                 {/* ----- Link columns ----- */}
                 <div className="footer-cols">
+                    {/* Hidden in app mode, where the dock does this job. */}
                     <nav className="footer-col footer-col--nav" aria-labelledby="footer-nav-title">
                         <h3 id="footer-nav-title" className="footer-col__title">Navigation</h3>
                         <ol className="footer-links footer-links--nav">
-                            {sections.map((s, i) => (
+                            {SECTIONS.map((s, i) => (
                                 <li key={s.id}>
                                     <a
                                         href={`#${s.id}`}
@@ -59,7 +71,7 @@ export default function Footer() {
                                         onClick={e => goToSection(e, s.id)}
                                     >
                                         <span className="footer-link__index" aria-hidden="true">
-                                            {String(i + 1).padStart(2, '0')}
+                                            {pad(i + 1)}
                                         </span>
                                         <span className="footer-link__label">{s.label}</span>
                                     </a>
@@ -71,23 +83,20 @@ export default function Footer() {
                     <div className="footer-col">
                         <h3 className="footer-col__title">Socials</h3>
                         <ul className="footer-links footer-links--socials">
-                            {socials.map(s => {
-                                const external = s.href.startsWith('http');
+                            {SOCIALS.map(s => {
+                                const Icon = s.icon;
                                 return (
                                     <li key={s.label}>
                                         <a
                                             href={s.href}
                                             className="footer-link"
-                                            {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}
+                                            {...(s.external ? { target: '_blank', rel: 'noreferrer' } : {})}
                                         >
-                                            <i className={`footer-link__icon ${s.icon}`} aria-hidden="true" />
+                                            <Icon className="footer-link__icon" aria-hidden="true" />
                                             <span className="footer-link__label">{s.label}</span>
-                                            {external && (
+                                            {s.external && (
                                                 <>
-                                                    <i
-                                                        className="footer-link__ext fa-solid fa-arrow-up-right"
-                                                        aria-hidden="true"
-                                                    />
+                                                    <LuArrowUpRight className="footer-link__ext" aria-hidden="true" />
                                                     <span className="sr-only"> (opens in a new tab)</span>
                                                 </>
                                             )}
@@ -107,25 +116,12 @@ export default function Footer() {
                                 </a>
                             </li>
                             <li>
-                                <a href="/cv/Rand-Zana-CV.pdf" className="footer-link" download>
+                                <a href={CV_FILE} className="footer-link" download={CV_FILENAME}>
                                     <span className="footer-link__label">Download CV</span>
                                     <span className="footer-link__meta" aria-hidden="true">PDF</span>
                                 </a>
                             </li>
                         </ul>
-                    </div>
-
-                    <div className="footer-col footer-col--top">
-                        <button
-                            type="button"
-                            className="footer-top"
-                            onClick={backToTop}
-                        >
-                            <span className="footer-top__label">Back to top</span>
-                            <span className="icon-btn footer-top__icon" aria-hidden="true">
-                                <i className="fa-solid fa-arrow-up" />
-                            </span>
-                        </button>
                     </div>
                 </div>
 
@@ -140,16 +136,25 @@ export default function Footer() {
                 {/* ----- Bottom bar ----- */}
                 <div className="footer-bottom">
                     <p className="footer-copy">
-                        © 2026 Rand Zana. Crafted with{' '}
-                        <span className="footer-heart" aria-hidden="true">♥</span>
-                        <span className="sr-only">love</span> and a lot of{' '}
-                        <span aria-hidden="true">☕</span>
-                        <span className="sr-only">coffee</span>
+                        © 2026 Rand Zana.{' '}
+                        {/* Wraps as one piece on narrow phones. */}
+                        <span className="footer-copy__craft">
+                            Crafted with{' '}
+                            {/* U+FE0E keeps the heart a text glyph, so it takes the accent colour. */}
+                            <span className="footer-heart" aria-hidden="true">
+                                {'\u2665\uFE0E'}
+                            </span>
+                            <span className="sr-only">love</span> and a lot of{' '}
+                            <span aria-hidden="true">☕</span>
+                            <span className="sr-only">coffee</span>
+                        </span>
                     </p>
-                    <p className="footer-loc">
-                        <i className="fa-solid fa-location-dot" aria-hidden="true" />
-                        Koya, Kurdistan
-                    </p>
+                    <button type="button" className="footer-top" onClick={backToTop}>
+                        <span className="footer-top__label">Back to top</span>
+                        <span className="footer-top__icon" aria-hidden="true">
+                            <LuArrowUp />
+                        </span>
+                    </button>
                 </div>
             </div>
         </footer>

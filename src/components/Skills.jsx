@@ -14,16 +14,38 @@ import {
     LuPenTool,
     LuNetwork,
     LuArrowRight,
+    LuArrowDown,
 } from 'react-icons/lu';
 import SectionHeader from './ui/SectionHeader';
 import Reveal from './ui/Reveal';
+import FilterTabs from './ui/FilterTabs';
 import { trackSpotlight } from '../lib/spotlight';
-import { EASE_OUT } from '../lib/motion';
+import { LAYOUT_SPRING, cardVariants } from '../lib/motion';
+import { pad } from '../lib/format';
+import { goToSection } from '../lib/scroll';
 import './Skills.css';
 
-// Order matters: it sets each card's 01–12 index and, with the dense grid,
-// lets the featured full-stack card interlock with its neighbours.
+// Order sets each skill's 01–12 index. The primary focus leads; the rest
+// run tech → creative → marketing, the same order as the filter tabs, so
+// the index reads top to bottom at every width.
 const SKILLS = [
+    {
+        Icon: LuLayers,
+        title: 'Full-Stack Development',
+        desc: 'Orchestrating robust end-to-end applications.',
+        areasLabel: 'Key areas to master',
+        areas: [
+            'System Design & Patterns',
+            'RESTful / GraphQL APIs',
+            'Client & Server-side State Management',
+            'Web Security (CORS, CSRF, JWT)',
+            'Database Optimization (indexing)',
+            'Deployment Pipelines (Docker, CI/CD)',
+        ],
+        techs: ['React/Next.js', 'Laravel', 'PostgreSQL', 'System Design', 'APIs & Security', 'Docker/Git'],
+        category: 'tech',
+        featured: true,
+    },
     {
         Icon: LuCodeXml,
         title: 'Frontend Development',
@@ -46,26 +68,9 @@ const SKILLS = [
         category: 'tech',
     },
     {
-        Icon: LuLayers,
-        title: 'Full-Stack Development',
-        desc: 'Orchestrating robust end-to-end applications.',
-        areasLabel: 'Key areas to master',
-        areas: [
-            'System Design & Patterns',
-            'RESTful / GraphQL APIs',
-            'Client & Server-side State Management',
-            'Web Security (CORS, CSRF, JWT)',
-            'Database Optimization (indexing)',
-            'Deployment Pipelines (Docker, CI/CD)',
-        ],
-        techs: ['React/Next.js', 'Laravel', 'PostgreSQL', 'System Design', 'APIs & Security', 'Docker/Git'],
-        category: 'tech',
-        featured: true,
-    },
-    {
         Icon: LuBrainCircuit,
         title: 'AI & Machine Learning',
-        desc: 'Building AI agents and machine-learning models that automate real-world tasks.',
+        desc: 'Building AI agents that automate tasks with Python.',
         techs: ['Python'],
         category: 'tech',
     },
@@ -91,18 +96,18 @@ const SKILLS = [
         category: 'tech',
     },
     {
+        Icon: LuNetwork,
+        title: 'Networking & Cybersecurity',
+        desc: 'Exploring computer networks, protocol suites, and modern cybersecurity strategies.',
+        techs: [],
+        category: 'tech',
+    },
+    {
         Icon: LuClapperboard,
         title: 'Videography & Editing',
         desc: 'Producing cinematic videos from concept to final cut — shooting, color grading, motion graphics.',
         techs: ['Premiere Pro', 'CapCut', 'After Effects', 'Drone'],
         category: 'creative',
-    },
-    {
-        Icon: LuMegaphone,
-        title: 'Marketing Management',
-        desc: 'Building brand strategies, running campaigns, and driving growth through data-driven marketing.',
-        techs: ['SEO/SEM', 'Google Ads', 'Meta Ads', 'Analytics', 'Email Marketing'],
-        category: 'marketing',
     },
     {
         Icon: LuPenTool,
@@ -112,13 +117,13 @@ const SKILLS = [
         category: 'creative',
     },
     {
-        Icon: LuNetwork,
-        title: 'Networking & Cybersecurity',
-        desc: 'Exploring computer networks, protocol suites, and modern cybersecurity strategies.',
-        techs: [],
-        category: 'tech',
+        Icon: LuMegaphone,
+        title: 'Marketing Management',
+        desc: 'Building brand strategies, running campaigns, and driving growth through data-driven marketing.',
+        techs: ['SEO/SEM', 'Google Ads', 'Meta Ads', 'Analytics', 'Email Marketing'],
+        category: 'marketing',
     },
-].map((skill, i) => ({ ...skill, index: String(i + 1).padStart(2, '0') }));
+].map((skill, i) => ({ ...skill, index: pad(i + 1) }));
 
 const CATEGORIES = [
     { id: 'all', label: 'All Toolkit' },
@@ -130,104 +135,111 @@ const CATEGORIES = [
     count: cat.id === 'all' ? SKILLS.length : SKILLS.filter(s => s.category === cat.id).length,
 }));
 
-const pad = n => String(n).padStart(2, '0');
-
 // Keeps hyphenated compounds ("end-to-end", "data-driven") on one line so
-// narrow cards never break them at the hyphen.
+// narrow columns never break them at the hyphen, and ties a dash to the
+// word before it so no line starts with "—".
 function keepCompounds(text) {
-    return text.split(/(\S+-\S+)/g).map((part, i) =>
+    return text.replace(/ —/g, ' —').split(/(\S+-\S+)/g).map((part, i) =>
         i % 2 ? <span key={i} className="skills-nowrap">{part}</span> : part,
     );
 }
 
-const PILL_SPRING = { type: 'spring', stiffness: 420, damping: 34, mass: 0.8 };
-const LAYOUT_SPRING = { type: 'spring', stiffness: 360, damping: 36, mass: 0.9 };
-
-function cardVariants(reduceMotion) {
+// Shared by every skill so cards, rows and the "view all" band enter,
+// leave and re-flow the same way when the filter changes.
+function motionProps(variants, delay) {
     return {
-        hidden: reduceMotion ? { opacity: 0 } : { opacity: 0, y: 24, filter: 'blur(8px)' },
-        shown: delay => ({
-            opacity: 1,
-            y: 0,
-            filter: 'blur(0px)',
-            transition: { duration: 0.7, ease: EASE_OUT, delay },
-            transitionEnd: { filter: 'none' },
-        }),
-        gone: reduceMotion
-            ? { opacity: 0, transition: { duration: 0.15 } }
-            : { opacity: 0, scale: 0.96, transition: { duration: 0.22, ease: EASE_OUT } },
+        // Position-only: rows change size as the grid re-flows, and
+        // scaling them would smear the text mid-flight.
+        layout: 'position',
+        variants,
+        custom: delay,
+        initial: 'hidden',
+        whileInView: 'shown',
+        exit: 'gone',
+        viewport: { once: true, amount: 0.2 },
+        transition: { layout: LAYOUT_SPRING },
     };
 }
 
-function SkillCard({ skill, delay, fill, variants, ref }) {
-    const { Icon, title, desc, techs, areas, areasLabel, featured, index } = skill;
-    const className = [
-        'skills-card card card-hover spotlight',
-        featured && 'skills-card--featured',
-        fill && 'skills-card--fill',
-    ].filter(Boolean).join(' ');
+function Techs({ title, techs }) {
+    if (techs.length === 0) {
+        // No tool list yet: say what the description already says.
+        return (
+            <p className="skills-exploring">
+                <span className="skills-exploring__dot" aria-hidden="true" />
+                Currently exploring
+            </p>
+        );
+    }
+    return (
+        <ul className="skills-techs" aria-label={`${title} tools`}>
+            {techs.map(tech => (
+                <li key={tech} className="chip">{tech}</li>
+            ))}
+        </ul>
+    );
+}
+
+function FeaturedSkill({ skill, variants }) {
+    const { Icon, title, desc, techs, areas, areasLabel, index } = skill;
+    const labelId = `skills-areas-${index}`;
 
     return (
         <motion.article
-            ref={ref}
-            // Position-only layout animation: cards change height as rows
-            // reflow, and scaling them would smear the text mid-flight.
-            layout="position"
-            className={className}
-            variants={variants}
-            custom={delay}
-            initial="hidden"
-            whileInView="shown"
-            exit="gone"
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ layout: LAYOUT_SPRING }}
+            className="skills-feat card card-hover spotlight"
             onPointerMove={trackSpotlight}
+            {...motionProps(variants, 0)}
         >
-            {featured && <span className="skills-feat__grid bg-grid" aria-hidden="true" />}
+            <span className="skills-feat__grid bg-grid" aria-hidden="true" />
 
-            <div className="skills-card__top">
-                <span className="skills-card__icon" aria-hidden="true">
-                    <Icon />
-                </span>
-                <span className="skills-card__meta">
-                    {featured && <span className="skills-card__tag chip chip-mono chip-accent">Primary focus</span>}
-                    <span className="skills-card__index" aria-hidden="true">{index}</span>
+            <div className="skills-feat__top">
+                <span className="skills-feat__icon" aria-hidden="true"><Icon /></span>
+                <span className="skills-feat__meta">
+                    <span className="chip chip-mono chip-accent">Primary focus</span>
+                    <span className="skills-index" aria-hidden="true">{index}</span>
                 </span>
             </div>
 
-            <div className="skills-card__body">
-                <h3 className="skills-card__title">{title}</h3>
-                <p className="skills-card__desc">{keepCompounds(desc)}</p>
-            </div>
-
-            {areas && (
-                <div className="skills-feat__areas">
-                    <p className="skills-feat__label eyebrow" id={`skills-areas-${index}`}>{areasLabel}</p>
-                    <ol className="skills-feat__list" aria-labelledby={`skills-areas-${index}`}>
-                        {areas.map((area, i) => (
-                            <li key={area}>
-                                <span className="skills-feat__num" aria-hidden="true">{pad(i + 1)}</span>
-                                <span>{keepCompounds(area)}</span>
-                            </li>
-                        ))}
-                    </ol>
+            <div className="skills-feat__body">
+                <h3 className="skills-feat__title">{title}</h3>
+                <p className="skills-feat__desc">{keepCompounds(desc)}</p>
+                <div className="skills-feat__techs">
+                    <Techs title={title} techs={techs} />
                 </div>
-            )}
+            </div>
 
-            <div className="skills-card__foot">
-                {techs.length > 0 ? (
-                    <ul className="skills-card__techs" aria-label={`${title} tools`}>
-                        {techs.map(tech => (
-                            <li key={tech} className="chip">{tech}</li>
-                        ))}
-                    </ul>
-                ) : (
-                    // No tool list yet: say what the card's copy already says.
-                    <p className="skills-card__exploring">
-                        <span className="skills-card__exploring-dot" aria-hidden="true" />
-                        Currently exploring
-                    </p>
-                )}
+            <div className="skills-feat__areas">
+                <p className="skills-feat__label" id={labelId}>{areasLabel}</p>
+                <ol className="skills-feat__list" aria-labelledby={labelId}>
+                    {areas.map((area, i) => (
+                        <li key={area}>
+                            <span className="skills-feat__num" aria-hidden="true">{pad(i + 1)}</span>
+                            {/* Balanced (see CSS), so no compound is held together here. */}
+                            <span>{area}</span>
+                        </li>
+                    ))}
+                </ol>
+            </div>
+        </motion.article>
+    );
+}
+
+function SkillRow({ skill, delay, fill, variants }) {
+    const { Icon, title, desc, techs, index } = skill;
+
+    return (
+        <motion.article
+            className={`skills-row${fill ? ' skills-row--fill' : ''}`}
+            {...motionProps(variants, delay)}
+        >
+            <span className="skills-row__index skills-index" aria-hidden="true">{index}</span>
+            <span className="skills-row__icon" aria-hidden="true"><Icon /></span>
+            <div className="skills-row__text">
+                <h3 className="skills-row__title">{title}</h3>
+                <p className="skills-row__desc">{keepCompounds(desc)}</p>
+            </div>
+            <div className="skills-row__techs">
+                <Techs title={title} techs={techs} />
             </div>
         </motion.article>
     );
@@ -236,7 +248,7 @@ function SkillCard({ skill, delay, fill, variants, ref }) {
 export default function Skills() {
     const [category, setCategory] = useState('all');
     const reduceMotion = useReducedMotion();
-    const scrollerRef = useRef(null);
+    const toolbarRef = useRef(null);
 
     const variants = useMemo(() => cardVariants(reduceMotion), [reduceMotion]);
 
@@ -244,30 +256,20 @@ export default function Skills() {
         () => (category === 'all' ? SKILLS : SKILLS.filter(s => s.category === category)),
         [category],
     );
+    const rows = visible.filter(s => !s.featured);
 
-    // In the two-column layout the featured card takes a full row, so an odd
-    // number of regular cards leaves the last one alone: let it fill the row.
-    const regularCount = visible.filter(s => !s.featured).length;
-    const fillLast = regularCount >= 3 && regularCount % 2 === 1;
+    // Two-column index: an odd row count leaves the last one alone, so it
+    // takes the whole line instead (tools move to its right).
+    const fillLast = rows.length % 2 === 1;
 
-    // A filter with only one or two results would leave the row half empty;
-    // a "view all" tile closes it and points back to the full toolkit.
+    // A filter with only one or two results reads as a dead end; a band
+    // under the list points back to the full toolkit.
     const showMore = category !== 'all' && visible.length < 3;
 
-    const selectCategory = id => {
-        setCategory(id);
-
-        // On phones the control scrolls sideways; bring the chosen tab to the middle.
-        const scroller = scrollerRef.current;
-        if (!scroller || scroller.scrollWidth <= scroller.clientWidth) return;
-        const tab = scroller.querySelector(`[data-category="${id}"]`);
-        if (!tab) return;
-        const box = scroller.getBoundingClientRect();
-        const rect = tab.getBoundingClientRect();
-        scroller.scrollBy({
-            left: rect.left + rect.width / 2 - (box.left + box.width / 2),
-            behavior: reduceMotion ? 'auto' : 'smooth',
-        });
+    const showAll = () => {
+        setCategory('all');
+        // The band is about to unmount; keep keyboard focus on the filter.
+        toolbarRef.current?.querySelector('[data-id="all"]')?.focus();
     };
 
     return (
@@ -280,85 +282,66 @@ export default function Skills() {
                     desc="A versatile skill set covering the full spectrum of modern software development."
                 />
 
-                <Reveal className="skills-toolbar" y={16} blur={false}>
-                    {/* layoutScroll: lets the pill's layout animation account for this scroller. */}
-                    <motion.div className="skills-filter-scroll" ref={scrollerRef} layoutScroll>
-                        <div className="skills-filter" role="group" aria-label="Filter skills by category">
-                            {CATEGORIES.map(cat => {
-                                const active = category === cat.id;
-                                return (
-                                    <button
-                                        key={cat.id}
-                                        type="button"
-                                        className={`skills-filter__btn${active ? ' is-active' : ''}`}
-                                        data-category={cat.id}
-                                        aria-pressed={active}
-                                        onClick={() => selectCategory(cat.id)}
-                                    >
-                                        {active && (
-                                            <motion.span
-                                                className="skills-filter__pill"
-                                                layoutId="skills-filter-pill"
-                                                transition={PILL_SPRING}
-                                                aria-hidden="true"
-                                            />
-                                        )}
-                                        <span className="skills-filter__label">{cat.label}</span>
-                                        <span className="skills-filter__count" aria-hidden="true">{pad(cat.count)}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </motion.div>
-                    <p className="skills-toolbar__status">
-                        <span className="skills-toolbar__count" aria-hidden="true">
-                            <span className="skills-toolbar__num">{pad(visible.length)}</span>
-                            <span className="skills-toolbar__sep">/</span>
-                            {pad(SKILLS.length)} skills
-                        </span>
-                        <span className="sr-only" aria-live="polite">
-                            Showing {visible.length} of {SKILLS.length} skills
-                        </span>
-                    </p>
+                <Reveal className="skills-toolbar" y={16} blur={false} ref={toolbarRef}>
+                    <FilterTabs
+                        items={CATEGORIES}
+                        value={category}
+                        onChange={setCategory}
+                        label="Filter skills by category"
+                        layoutId="skills-filter-pill"
+                        className="skills-tabs"
+                    />
+                    <div className="skills-toolbar__aside">
+                        <p className="skills-toolbar__status">
+                            <span className="skills-toolbar__count" aria-hidden="true">
+                                <span className="skills-toolbar__num">{pad(visible.length)}</span>
+                                <span className="skills-toolbar__sep">/</span>
+                                {pad(SKILLS.length)} skills
+                            </span>
+                            <span className="sr-only" aria-live="polite">
+                                Showing {visible.length} of {SKILLS.length} skills
+                            </span>
+                        </p>
+                        {/* App mode only: certificates share this dock page but sit far below. */}
+                        <a
+                            href="#certificates"
+                            className="skills-jump"
+                            onClick={event => goToSection(event, 'certificates')}
+                        >
+                            Jump to certificates
+                            <span className="skills-jump__arrow" aria-hidden="true"><LuArrowDown /></span>
+                        </a>
+                    </div>
                 </Reveal>
 
-                <div className="skills-grid">
+                <div className="skills-stage">
                     <AnimatePresence mode="popLayout">
-                        {visible.map((skill, i) => (
-                            <SkillCard
-                                key={skill.title}
-                                skill={skill}
-                                delay={(i % 3) * 0.06}
-                                fill={fillLast && i === visible.length - 1}
-                                variants={variants}
-                            />
-                        ))}
+                        {visible.map(skill => {
+                            if (skill.featured) {
+                                return <FeaturedSkill key={skill.title} skill={skill} variants={variants} />;
+                            }
+                            const i = rows.indexOf(skill);
+                            return (
+                                <SkillRow
+                                    key={skill.title}
+                                    skill={skill}
+                                    delay={(i % 2) * 0.06}
+                                    fill={fillLast && i === rows.length - 1}
+                                    variants={variants}
+                                />
+                            );
+                        })}
                         {showMore && (
-                            <motion.div
-                                key="skills-more"
-                                layout="position"
-                                className={`skills-more skills-more--after-${visible.length}`}
-                                variants={variants}
-                                custom={(visible.length % 3) * 0.06}
-                                initial="hidden"
-                                whileInView="shown"
-                                exit="gone"
-                                viewport={{ once: true, amount: 0.2 }}
-                                transition={{ layout: LAYOUT_SPRING }}
-                            >
-                                <p className="skills-more__label eyebrow">Filtered view</p>
-                                <div className="skills-more__body">
-                                    <p className="skills-more__count">+{SKILLS.length - visible.length}</p>
-                                    <p className="skills-more__text">more skills in the full toolkit</p>
-                                </div>
+                            <motion.div key="skills-more" className="skills-more" {...motionProps(variants, 0.06)}>
+                                <p className="skills-more__label">Filtered view</p>
+                                <p className="skills-more__body">
+                                    <span className="skills-more__count">+{SKILLS.length - visible.length}</span>
+                                    <span className="skills-more__text">more skills in the full toolkit</span>
+                                </p>
                                 <button
                                     type="button"
                                     className="btn btn-secondary btn-sm skills-more__btn"
-                                    onClick={() => {
-                                        selectCategory('all');
-                                        // This tile is about to unmount; keep keyboard focus on the filter.
-                                        scrollerRef.current?.querySelector('[data-category="all"]')?.focus();
-                                    }}
+                                    onClick={showAll}
                                 >
                                     View all skills
                                     <span className="btn-arrow" aria-hidden="true"><LuArrowRight /></span>

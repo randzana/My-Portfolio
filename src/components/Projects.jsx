@@ -1,7 +1,11 @@
+import { FaFigma, FaGithub } from 'react-icons/fa6';
+import { LuArrowRight, LuArrowUpRight } from 'react-icons/lu';
 import Reveal from './ui/Reveal';
 import SectionHeader from './ui/SectionHeader';
 import FeaturedProject from './FeaturedProject';
 import { trackSpotlight } from '../lib/spotlight';
+import { pad } from '../lib/format';
+import { GITHUB_URL } from '../lib/profile';
 import './Projects.css';
 
 // `hue` is the tiny colour marker that replaces the old gradient covers.
@@ -42,7 +46,7 @@ const projects = [
         github: null,
         live: 'https://www.figma.com/design/npfRyscSUXG7W4tz3eBtwK/Easy-Sale?node-id=4-2&t=GtJvMQxcpTZqNBXM-1',
         liveLabel: 'Figma',
-        liveIcon: 'fa-brands fa-figma',
+        liveIcon: FaFigma,
     },
     {
         title: 'Live Menu',
@@ -55,14 +59,18 @@ const projects = [
     },
 ];
 
-const GITHUB_PROFILE = 'https://github.com/randzana';
-
 // '#' is a placeholder for "no live build yet" — never render it as a link.
 const hasLive = project => Boolean(project.live) && project.live !== '#';
+
+/* An icon link that goes where the card's own (stretched) title link
+   already goes stays clickable, but is kept out of the tab order and the
+   accessibility tree so keyboard users don't get two stops for one URL. */
+const duplicateProps = duplicate => (duplicate ? { tabIndex: -1, 'aria-hidden': true } : {});
 
 function ProjectCard({ project }) {
     const live = hasLive(project);
     const liveLabel = project.liveLabel || 'Live demo';
+    const LiveIcon = project.liveIcon || LuArrowUpRight;
     // The whole card opens the live build when there is one, else the repo.
     const primaryHref = live ? project.live : project.github;
 
@@ -82,8 +90,9 @@ function ProjectCard({ project }) {
                             className="icon-btn"
                             aria-label={`${project.title}: source code on GitHub (opens in a new tab)`}
                             title="Source code"
+                            {...duplicateProps(project.github === primaryHref)}
                         >
-                            <i className="fa-brands fa-github" aria-hidden="true" />
+                            <FaGithub aria-hidden="true" />
                         </a>
                     )}
                     {live && (
@@ -94,18 +103,20 @@ function ProjectCard({ project }) {
                             className="icon-btn"
                             aria-label={`${project.title}: ${liveLabel} (opens in a new tab)`}
                             title={liveLabel}
+                            {...duplicateProps(project.live === primaryHref)}
                         >
-                            <i className={project.liveIcon || 'fa-solid fa-arrow-up-right-from-square'} aria-hidden="true" />
+                            <LiveIcon aria-hidden="true" />
                         </a>
                     )}
                 </div>
             </div>
 
-            <h3 className="proj-card-title">
+            <h4 className="proj-card-title">
                 <a href={primaryHref} target="_blank" rel="noreferrer" className="proj-card-link">
                     {project.title}
+                    <span className="sr-only"> (opens in a new tab)</span>
                 </a>
-            </h3>
+            </h4>
             <p className="proj-card-desc">{project.desc}</p>
 
             <div className="proj-card-foot">
@@ -115,7 +126,7 @@ function ProjectCard({ project }) {
                     ))}
                 </ul>
                 <span className="proj-card-arrow" aria-hidden="true">
-                    <i className="fa-solid fa-arrow-right" />
+                    <LuArrowRight />
                 </span>
             </div>
         </article>
@@ -139,7 +150,7 @@ export default function Projects() {
                     <h3 className="eyebrow proj-subhead-title">Other projects</h3>
                     <span className="proj-subhead-rule" aria-hidden="true" />
                     <span className="proj-count">
-                        {String(projects.length).padStart(2, '0')}
+                        {pad(projects.length)}
                         <span className="sr-only"> projects</span>
                     </span>
                 </Reveal>
@@ -152,20 +163,20 @@ export default function Projects() {
                     ))}
                     <Reveal as="li" className="proj-item proj-item--more" delay={projects.length * 0.06}>
                         <a
-                            href={GITHUB_PROFILE}
+                            href={GITHUB_URL}
                             target="_blank"
                             rel="noreferrer"
                             className="proj-more card"
                         >
                             <span className="proj-more-icon" aria-hidden="true">
-                                <i className="fa-brands fa-github" />
+                                <FaGithub />
                             </span>
                             <span className="proj-more-text">
                                 <span className="proj-more-title">More on GitHub</span>
                                 <span className="proj-more-url">github.com/randzana</span>
                             </span>
                             <span className="proj-card-arrow" aria-hidden="true">
-                                <i className="fa-solid fa-arrow-right" />
+                                <LuArrowRight />
                             </span>
                             <span className="sr-only"> (opens in a new tab)</span>
                         </a>

@@ -1,9 +1,11 @@
 /* =========================================================
    FEATURED CASE STUDIES — 02 Projects
-   One large card per project: framed screenshot (7 cols) +
-   content (5 cols), alternating sides, hairline stats row.
-   Stacks at ≤1180px (content in two columns), single column
-   at ≤900px.
+   One large card per project. Side by side (≥1200px): the
+   image panel with its stats strip underneath (13/24) and the
+   content (11/24, wide enough for two-line titles), alternating
+   sides. Stacked (≤1199px): 4:3
+   image on top, content in two columns, stats at the bottom.
+   Single column at ≤900px.
    ========================================================= */
 
 .fp-list {
@@ -11,145 +13,56 @@
     gap: clamp(20px, 2.4vw, 32px);
 }
 
-/* Data-driven theme hue — only ever a faint tint behind the shot. */
-.fp-card--indigo {
-    --fp-hue: #6366f1;
-}
-
-.fp-card--amber {
-    --fp-hue: #f59e0b;
-}
-
-.fp-card--green {
-    --fp-hue: #22c55e;
-}
-
-.fp-body {
+/* The card is a size container so the image panel can be kept at least
+   as tall as it is wide (see .fp-media). */
+.fp-card {
+    container-type: inline-size;
     display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 13fr) minmax(0, 11fr);
+    grid-template-rows: 1fr auto;
     padding: 10px;
 }
 
 /* ---------- Media ---------- */
+/* The square marketing shots fill the panel (object-fit: cover). Beside
+   the text the panel is kept between 1:1 and 1:1.08 (w:h), so the crop
+   only ever trims the shots' side margins; the project's `focus` position
+   picks which side. A taller text column just leaves a little more air
+   above the stats. The hue is only a faint tint shown while loading. */
 .fp-media {
-    --fp-inset: clamp(28px, 3vw, 44px);
-    --fp-bar: 36px;
-    grid-column: 1 / span 7;
+    grid-column: 1;
     grid-row: 1;
     position: relative;
-    min-height: 480px;
+    min-height: calc(100cqw * 13 / 24);
+    max-height: calc(100cqw * 13 / 24 * 1.08);
     margin: 0;
     overflow: hidden;
     isolation: isolate;
-    container-type: size;
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    background: var(--bg-inset);
-    background:
-        radial-gradient(90% 75% at 50% 0%, color-mix(in srgb, var(--fp-hue) 16%, transparent), transparent 72%),
-        var(--bg-inset);
+    background: color-mix(in srgb, var(--fp-hue, var(--fg-subtle)) 6%, var(--bg-inset));
 }
 
-/* Faint grid so the tint reads as a surface, not a flat fill. */
-.fp-media::before {
-    content: '';
+.fp-media img {
     position: absolute;
     inset: 0;
-    z-index: -1;
-    background-image:
-        linear-gradient(var(--grid-line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 32px 32px;
-    mask-image: linear-gradient(180deg, #000, transparent 60%);
-    -webkit-mask-image: linear-gradient(180deg, #000, transparent 60%);
-}
-
-.fp-card--flip .fp-media {
-    grid-column: 6 / span 7;
-}
-
-/* Browser window rising from the bottom edge of the panel. It is always
-   wide enough for the (top-trimmed) square screenshot to fill its height;
-   when the panel is taller than it is wide, the window bleeds off the
-   right edge instead of the shot being cropped on both sides. */
-.fp-window {
-    position: absolute;
-    top: var(--fp-inset);
-    left: var(--fp-inset);
-    right: var(--fp-inset); /* fallback; ignored once width resolves */
-    bottom: -1px;
-    width: max(
-        calc(100cqw - 2 * var(--fp-inset)),
-        calc((100cqh - var(--fp-inset) - var(--fp-bar)) / (1 - var(--fp-trim, 0)))
-    );
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border: 1px solid var(--line-strong);
-    border-bottom: 0;
-    border-radius: 14px 14px 0 0;
-    background: var(--bg-elev);
-    box-shadow: var(--shadow-md);
-}
-
-.fp-window-bar {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    height: var(--fp-bar);
-    padding: 0 14px;
-    flex-shrink: 0;
-    border-bottom: 1px solid var(--line);
-    background: var(--bg-elev);
-}
-
-.fp-window-dots {
-    display: flex;
-    gap: 6px;
-    flex-shrink: 0;
-}
-
-.fp-window-dots span {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--line-strong);
-}
-
-.fp-window-label {
-    min-width: 0;
-    overflow: hidden;
-    padding: 4px 12px;
-    border-radius: var(--radius-pill);
-    background: var(--bg-inset);
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    letter-spacing: 0.02em;
-    color: var(--fg-muted);
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-.fp-shot {
-    position: relative;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
-    background: var(--bg-inset);
-}
-
-/* Width-fit and pinned to the top; --fp-trim skips the margin baked into
-   each marketing shot so the UI starts right under the browser bar. */
-.fp-shot img {
     width: 100%;
-    height: auto;
-    translate: 0 calc(var(--fp-trim, 0) * -100%);
-    transform-origin: 50% 0;
+    height: 100%;
+    object-fit: cover;
     transition: scale 0.9s var(--ease-out);
 }
 
+.fp-card--flip {
+    grid-template-columns: minmax(0, 11fr) minmax(0, 13fr);
+}
+
+.fp-card--flip .fp-media,
+.fp-card--flip .fp-stats {
+    grid-column: 2;
+}
+
 @media (hover: hover) {
-    .fp-card:hover .fp-shot img {
+    .fp-card:hover .fp-media img {
         scale: 1.03;
     }
 
@@ -160,21 +73,21 @@
 
 /* ---------- Content ---------- */
 .fp-content {
-    grid-column: 8 / span 5;
-    grid-row: 1;
+    grid-column: 2;
+    grid-row: 1 / span 2;
     display: flex;
     flex-direction: column;
     min-width: 0;
-    padding: clamp(24px, 2.6vw, 36px) clamp(20px, 2.4vw, 32px) clamp(20px, 2.2vw, 28px) clamp(24px, 3vw, 44px);
+    padding: clamp(24px, 2.6vw, 36px) clamp(20px, 2.4vw, 32px) 14px clamp(24px, 3vw, 44px);
 }
 
 .fp-card--flip .fp-content {
-    grid-column: 1 / span 5;
+    grid-column: 1;
     padding-left: clamp(20px, 2.4vw, 32px);
     padding-right: clamp(24px, 3vw, 44px);
 }
 
-/* Side-by-side: one flat column with the CTAs anchored at the bottom. */
+/* Side by side: one flat column with the CTAs anchored at the bottom. */
 .fp-intro,
 .fp-specs {
     display: contents;
@@ -185,7 +98,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: clamp(28px, 3.4vw, 44px);
+    margin-bottom: clamp(28px, 3.4vw, 40px);
 }
 
 .fp-index {
@@ -222,8 +135,10 @@
     color: var(--fg);
 }
 
-.fp-ribbon-badge i {
-    font-size: 0.5625rem;
+.fp-ribbon-badge svg {
+    width: 10px;
+    height: 10px;
+    fill: currentColor;
     color: var(--accent);
 }
 
@@ -252,6 +167,7 @@
     border-top: 1px solid var(--line);
 }
 
+/* In-card label: mono, uppercase, muted, no "//". */
 .fp-label {
     display: block;
     margin-bottom: 14px;
@@ -260,7 +176,7 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--fg-subtle);
+    color: var(--fg-muted);
 }
 
 .fp-features {
@@ -289,8 +205,12 @@
     border-radius: var(--radius-xs);
     background: var(--bg-elev-2);
     color: var(--fg-muted);
-    font-size: 0.6875rem;
     transition: border-color var(--dur) ease;
+}
+
+.fp-feature-icon svg {
+    width: 14px;
+    height: 14px;
 }
 
 .fp-tech {
@@ -299,7 +219,7 @@
     gap: 6px;
 }
 
-.fp-tech .chip i {
+.fp-tech .chip svg {
     color: var(--fg-subtle);
 }
 
@@ -313,10 +233,14 @@
 }
 
 /* ---------- Stats ---------- */
+/* Side by side they caption the image: same column, no rule above (the
+   panel's edge is the divider). */
 .fp-stats {
+    grid-column: 1;
+    grid-row: 2;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    border-top: 1px solid var(--line);
+    margin: 0;
 }
 
 .fp-stat {
@@ -325,7 +249,8 @@
     justify-content: flex-end;
     gap: 8px;
     min-width: 0;
-    padding: 22px clamp(20px, 2.4vw, 32px) 24px;
+    margin-top: 10px;
+    padding: 14px clamp(14px, 1.5vw, 24px) 12px;
     border-left: 1px solid var(--line);
 }
 
@@ -342,10 +267,6 @@
     overflow-wrap: anywhere;
 }
 
-.fp-stat dd i {
-    font-size: 0.9em;
-}
-
 .fp-stat dt {
     font-family: var(--font-mono);
     font-size: 0.6875rem;
@@ -354,27 +275,27 @@
     color: var(--fg-muted);
 }
 
-/* ---------- Stacked: wide shot on top, content in two columns ---------- */
-@media (max-width: 1180px) {
-    .fp-body {
+/* ---------- Stacked: 4:3 shot on top, content in two columns ---------- */
+@media (max-width: 1199px) {
+    .fp-card,
+    .fp-card--flip {
         grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto;
     }
 
     .fp-media,
-    .fp-card--flip .fp-media,
+    .fp-card--flip .fp-media {
+        grid-column: 1;
+        grid-row: 1;
+        min-height: 0;
+        max-height: none;
+        aspect-ratio: 4 / 3;
+    }
+
     .fp-content,
     .fp-card--flip .fp-content {
         grid-column: 1;
-        grid-row: auto;
-    }
-
-    .fp-media {
-        min-height: 0;
-        aspect-ratio: 16 / 10;
-    }
-
-    .fp-content,
-    .fp-card--flip .fp-content {
+        grid-row: 2;
         display: grid;
         grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
         gap: clamp(32px, 5vw, 56px);
@@ -405,16 +326,26 @@
         margin-top: auto;
         padding-top: 0;
     }
+
+    /* Full-bleed strip along the card's bottom edge. */
+    .fp-stats,
+    .fp-card--flip .fp-stats {
+        grid-column: 1;
+        grid-row: 3;
+        margin: 0 -10px -10px;
+        border-top: 1px solid var(--line);
+    }
+
+    .fp-stat {
+        margin-top: 0;
+        padding: 22px clamp(20px, 2.4vw, 32px) 24px;
+    }
 }
 
 /* ---------- Mobile: single column, CTAs right after the pitch ---------- */
 @media (max-width: 900px) {
-    .fp-body {
+    .fp-card {
         padding: 8px;
-    }
-
-    .fp-media {
-        aspect-ratio: 5 / 4;
     }
 
     .fp-content,
@@ -446,17 +377,17 @@
         padding-bottom: 20px;
     }
 
+    .fp-stats,
+    .fp-card--flip .fp-stats {
+        margin: 0 -8px -8px;
+    }
+
     .fp-stat {
         padding: 18px 20px 20px;
     }
 }
 
 @media (max-width: 600px) {
-    .fp-media {
-        --fp-inset: 20px;
-        --fp-bar: 30px;
-    }
-
     .fp-stats {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -469,30 +400,10 @@
         border-top: 1px solid var(--line);
     }
 
-    .fp-window {
-        border-radius: 10px 10px 0 0;
-    }
-
-    .fp-window-bar {
-        gap: 10px;
-        padding: 0 10px;
-    }
-
-    .fp-window-dots span {
-        width: 7px;
-        height: 7px;
-    }
-
-    .fp-window-label {
-        padding: 3px 10px;
-        font-size: 0.625rem;
-    }
-
     .fp-ribbon {
         gap: 8px;
         padding: 0 10px;
-        font-size: 0.625rem;
-        letter-spacing: 0.03em;
+        letter-spacing: 0.04em;
     }
 
     .fp-actions {
@@ -504,12 +415,8 @@
     }
 }
 
-@media (max-width: 380px) {
-    .fp-features {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    /* Too narrow for one line: badge and subtitle stack inside the chip. */
+/* Too narrow for one line: badge and subtitle stack inside the chip. */
+@media (max-width: 440px) {
     .fp-ribbon {
         flex-direction: column;
         align-items: flex-start;
@@ -521,5 +428,11 @@
 
     .fp-ribbon-sep {
         display: none;
+    }
+}
+
+@media (max-width: 380px) {
+    .fp-features {
+        grid-template-columns: minmax(0, 1fr);
     }
 }

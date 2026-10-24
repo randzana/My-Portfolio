@@ -1,11 +1,12 @@
 /* =========================================================
    04 — EXPERIENCE & EDUCATION
    Editorial list: [date] [role + company] [description],
-   hairline separated, grouped under mono eyebrows.
+   hairline separated, grouped under mono eyebrows. Text sits
+   on the container edge; the hover marker lives in the gutter.
    ========================================================= */
 
 .exp {
-    --exp-pad-x: 20px;
+    --exp-pad-y: 30px;
 }
 
 .exp-groups {
@@ -13,12 +14,12 @@
     gap: clamp(56px, 6vw, 88px);
 }
 
-/* ===== GROUP HEAD ===== */
+/* ===== GROUP HEAD — "// WORK ──────── 05" =====
+   Its rule doubles as the top line of the list below. */
 .exp-group-head {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 0 var(--exp-pad-x) 18px;
+    gap: 14px;
 }
 
 .exp-group-label {
@@ -26,20 +27,19 @@
     line-height: 1;
 }
 
+.exp-group-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+}
+
 .exp-group-count {
-    display: inline-grid;
-    place-items: center;
-    min-width: 30px;
-    height: 22px;
-    padding: 0 8px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-pill);
     font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.04em;
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
     line-height: 1;
-    color: var(--fg-subtle);
+    color: var(--fg-muted);
+    font-variant-numeric: tabular-nums;
 }
 
 /* ===== ROWS ===== */
@@ -53,19 +53,22 @@
     grid-template-columns: 140px minmax(0, 1fr) minmax(0, 1.2fr);
     column-gap: clamp(24px, 3vw, 48px);
     align-items: baseline;
-    padding: 30px var(--exp-pad-x);
-    border-top: 1px solid var(--line);
-    transition: background-color var(--dur) ease;
+    padding-block: var(--exp-pad-y);
 }
 
-/* Accent marker that grows from the row's centre on hover. */
+.exp-row + .exp-row {
+    border-top: 1px solid var(--line);
+}
+
+/* Hover marker: a 2px accent bar in the gutter, as tall as the row's text. */
 .exp-row::before {
     content: '';
     position: absolute;
-    left: -1px;
-    top: -1px;
-    bottom: 0;
+    left: calc(var(--gutter) / -2 - 1px);
+    top: var(--exp-pad-y);
+    bottom: var(--exp-pad-y);
     width: 2px;
+    border-radius: 2px;
     background: var(--accent);
     transform: scaleY(0);
     transition: transform 0.45s var(--ease-out);
@@ -85,7 +88,6 @@
 
 .exp-heading {
     min-width: 0;
-    transition: transform 0.45s var(--ease-out);
 }
 
 .exp-role {
@@ -111,24 +113,14 @@
     transition: color var(--dur) ease;
 }
 
-/* Hover only where a real pointer can hover (no sticky taps). */
+/* Rows aren't links, so the hover only lifts the text and shows the
+   marker — no fill, no shift. Real pointers only (no sticky taps). */
 @media (hover: hover) and (pointer: fine) {
-    .exp-row:hover {
-        background: var(--bg-elev);
-    }
-
     .exp-row:hover::before {
         transform: scaleY(1);
     }
 
-    .exp-row:hover .exp-date {
-        color: var(--fg);
-    }
-
-    .exp-row:hover .exp-heading {
-        transform: translateX(8px);
-    }
-
+    .exp-row:hover .exp-date,
     .exp-row:hover .exp-desc {
         color: var(--fg);
     }
@@ -150,7 +142,7 @@
 /* ===== PHONE: stacked — date chip, role, company, description ===== */
 @media (max-width: 600px) {
     .exp {
-        --exp-pad-x: 0px;
+        --exp-pad-y: 24px;
     }
 
     .exp-groups {
@@ -158,17 +150,13 @@
     }
 
     .exp-group-head {
-        padding-bottom: 14px;
+        gap: 12px;
     }
 
     .exp-row {
         grid-template-columns: minmax(0, 1fr);
         row-gap: 0;
-        padding-block: 24px 26px;
-    }
-
-    .exp-row::before {
-        display: none;
+        padding-bottom: calc(var(--exp-pad-y) + 2px);
     }
 
     /* A block (not flex) chip, so the spaces around the en dash survive. */
@@ -181,8 +169,8 @@
         border: 1px solid var(--line);
         border-radius: var(--radius-pill);
         background: var(--bg-elev);
-        font-size: 0.6875rem;
-        letter-spacing: 0.06em;
+        font-size: var(--text-xs);
+        letter-spacing: 0.04em;
         color: var(--fg-muted);
     }
 
