@@ -25,7 +25,7 @@ export default function Resume() {
                     index="06"
                     label="Resume"
                     title={<>Download my <em className="serif">CV</em></>}
-                    desc="Everything on one page — my skills, projects and experience, ready to save or print."
+                    desc="My skills, projects and experience in one document, ready to save or print."
                 />
 
                 <Reveal className="resume-card card card-hover spotlight" onPointerMove={trackSpotlight} delay={0.1}>
@@ -59,7 +59,7 @@ export default function Resume() {
 
                         <span className="resume-stage-meta resume-stage-meta--bottom" aria-hidden="true">
                             <span>Rand Zana</span>
-                            <span>1 / 1</span>
+                            <span>1 / 2</span>
                         </span>
                     </a>
 
@@ -70,7 +70,7 @@ export default function Resume() {
                             </span>
                             <span className="resume-file-text">
                                 <strong>{CV_NAME}</strong>
-                                <small>PDF · A4 · 1 page</small>
+                                <small>PDF · A4 · 2 pages</small>
                             </span>
                         </div>
 
