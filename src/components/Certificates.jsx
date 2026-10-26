@@ -62,6 +62,16 @@ const CERTIFICATES = [
         badge: 'Leadership',
     },
     {
+        title: 'SOFTSPACE trip to HITEX, led by Rand',
+        issuer: 'SOFTSPACE Group, Koya University',
+        date: 'Academic Year 2025–2026',
+        image: '/certificates/softspace-hitex-trip.webp',
+        height: 768,
+        color: '#0d56a6',
+        category: 'networking',
+        badge: 'Leadership',
+    },
+    {
         title: 'Introduction to ERP with Odoo',
         issuer: 'Koya Lab, The Foundation',
         date: '13 May 2025',
