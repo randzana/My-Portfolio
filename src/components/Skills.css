@@ -587,9 +587,13 @@
         line-height: 1.3;
     }
 
-    .skills-row__desc {
+    .skills-row__copy {
         grid-area: desc;
         margin-top: 10px;
+        min-width: 0;
+    }
+
+    .skills-row__desc {
         max-width: none;
     }
 
@@ -635,27 +639,33 @@
     }
 }
 
-/* "See my work" link under a skill's description. */
+/* "See my work" link under a skill's description. Inline, so the arrow stays
+   with the last word when the text wraps on narrow screens. */
 .skills-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    display: inline-block;
     margin-top: 10px;
     font-size: var(--text-sm);
     font-weight: 500;
+    line-height: 1.5;
     color: var(--accent-ink);
-    transition: gap var(--dur) var(--ease-out);
 }
 
 .skills-link svg {
+    display: inline-block;
     width: 14px;
     height: 14px;
+    margin-left: 4px;
+    vertical-align: -2px;
+    transition: transform var(--dur) var(--ease-out);
 }
 
 @media (hover: hover) {
     .skills-link:hover {
-        gap: 10px;
         text-decoration: underline;
         text-underline-offset: 3px;
+    }
+
+    .skills-link:hover svg {
+        transform: translate(2px, -2px);
     }
 }
