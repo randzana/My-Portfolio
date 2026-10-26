@@ -71,6 +71,15 @@ const CERTIFICATES = [
         category: 'coding',
     },
     {
+        title: 'Storytelling in the Digital Era',
+        issuer: 'Koya Lab, The Foundation',
+        date: 'September 2024',
+        image: '/certificates/koya-storytelling.webp',
+        height: 679,
+        color: '#875a7b',
+        category: 'networking',
+    },
+    {
         title: 'Getting Started with Cisco Packet Tracer',
         issuer: 'Cisco Networking Academy',
         date: '01 March 2026',
