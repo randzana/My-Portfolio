@@ -15,6 +15,7 @@ import {
     LuNetwork,
     LuArrowRight,
     LuArrowDown,
+    LuArrowUpRight,
 } from 'react-icons/lu';
 import SectionHeader from './ui/SectionHeader';
 import Reveal from './ui/Reveal';
@@ -108,6 +109,7 @@ const SKILLS = [
         desc: 'Producing cinematic videos from concept to final cut — shooting, color grading, motion graphics.',
         techs: ['Premiere Pro', 'CapCut', 'After Effects', 'Drone'],
         category: 'creative',
+        link: { href: 'https://www.instagram.com/rand.vision/', label: 'See my videography & photography work' },
     },
     {
         Icon: LuPenTool,
@@ -115,6 +117,7 @@ const SKILLS = [
         desc: 'Crafting compelling stories across platforms — from social media to YouTube.',
         techs: ['YouTube', 'Instagram', 'TikTok', 'Facebook', 'Photoshop'],
         category: 'creative',
+        link: { href: 'https://www.instagram.com/rand.vision/', label: 'See my videography & photography work' },
     },
     {
         Icon: LuMegaphone,
@@ -225,7 +228,7 @@ function FeaturedSkill({ skill, variants }) {
 }
 
 function SkillRow({ skill, delay, fill, variants }) {
-    const { Icon, title, desc, techs, index } = skill;
+    const { Icon, title, desc, techs, index, link } = skill;
 
     return (
         <motion.article
@@ -237,6 +240,13 @@ function SkillRow({ skill, delay, fill, variants }) {
             <div className="skills-row__text">
                 <h3 className="skills-row__title">{title}</h3>
                 <p className="skills-row__desc">{keepCompounds(desc)}</p>
+                {link && (
+                    <a className="skills-link" href={link.href} target="_blank" rel="noreferrer">
+                        {link.label}
+                        <LuArrowUpRight aria-hidden="true" />
+                        <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                )}
             </div>
             <div className="skills-row__techs">
                 <Techs title={title} techs={techs} />

@@ -634,3 +634,28 @@
         gap: 8px;
     }
 }
+
+/* "See my work" link under a skill's description. */
+.skills-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--accent-ink);
+    transition: gap var(--dur) var(--ease-out);
+}
+
+.skills-link svg {
+    width: 14px;
+    height: 14px;
+}
+
+@media (hover: hover) {
+    .skills-link:hover {
+        gap: 10px;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+}
